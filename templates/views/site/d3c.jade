@@ -1,0 +1,17 @@
+extends ../../layouts/dcc
+<<<<<<< HEAD
+=======
+block css
+>>>>>>> modulate
+block content
+	include ../api/mixins/prettymessages.jade
+	#snow-login.col-xs-10.col-md-6
+		.content
+		.clearfix
+	#snow-d3c
+		
+block js
+	script.
+		var mykey = '#{d3ckey}';
+		var _csrf = '';		
+	script(src='/js/views/d3c.js')

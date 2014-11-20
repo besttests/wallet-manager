@@ -1,0 +1,139 @@
+.snow-dashboard
+	include mixins/prettymessages.jade
+	.col-xs-12.col-sm-12.col-md-12
+		.snow-block.snow-balance
+			.snow-block-heading
+				p balance
+			.snow-balance-body
+				- var bal = numeral(getinfo.balance).format('0,0.00000000').replace(/\.?0+$/, "")
+				p #{bal} 
+					span.coinstamp #{coinstamp} 
+	.clearfix
+	.col-xs-12.col-sm-6.col-md-6
+		.snow-block-lg.snow-options
+			.snow-block-heading
+				p wallet options
+			.snow-block-body
+				if wally.coinapi=='rpc' 
+					div: a.backupwalletbutton.text-muted Backup Wallet
+				div: a.updatecoin Update #{wally.name.toUpperCase()} 	
+	
+	.col-xs-12.col-sm-6.col-md-6
+		.snow-block-lg.snow-encrypt
+			.snow-block-heading
+				p wallet lock status
+			.snow-block-body
+				if wally.coinapi=='rpc'
+					#encryptwallet(style=lockstatus.locked==2?'':'display:none;')
+						#encryptwalletbutton
+							p Your wallet is not encrypted.
+							button.btn.btn-warning(onclick="$('#encryptwalletbackupfirst,#encryptwalletbutton').toggle();") Encrypt Now
+						#encryptwalletform(style='display:none;')
+							.adderror(style='display:none;')
+							p Encrypt your wallet.
+							.form-group.input-group
+								span.input-group-addon.input-group-sm.coinstamp Pass Phrase
+								input.form-control.coinstamp( type="text" required id="epassword" name="epassword" placeholder="enter pass phrase") 
+							.form-group.input-group
+								span.input-group-addon.input-group-sm.coinstamp Confirm
+								input.form-control.coinstamp( type="text" required id="econfirm" name="econfirm" placeholder="confirm pass phrase") 
+							.form-group
+								p Do <strong>NOT</strong> lose this pass phrase or you will lose your coin.  To be secure you must delete all your old unencrypted backups.
+								button#confirmencrypt.btn.btn-warning(rel="confirmencrypt") Encrypt Wallet
+								button.btn.btn-default(onclick="$('#encryptwalletform,#encryptwalletbutton').toggle();" style='float:right;') Cancel
+						#encryptwalletbackupfirst(style='display:none;')
+							p Before you encrypt your wallet please make a backup of "wallet.dat" first for safety.  After
+								| you have verified your pass phrase works you can delete the unsecure backup.
+							p Your wallet software will have to stop after encrypting your wallet.  Be sure you can restart it before you continue.
+							button.btn.btn-default(onclick="$('#encryptwalletbackupfirst,#encryptwalletbutton').toggle();" ) Cancel
+							button.btn.btn-info.backupwalletbutton: span Backup Wallet
+							button#confirmencryptbackup.btn.btn-warning.pull-right(onclick="$('#encryptwalletbackupfirst,#encryptwalletform').toggle();") Continue to Encrypt		
+					#unlockedwallet(style=lockstatus.locked==1?'':'display:none;')
+						p Unlocked until #{lockstatus.formatTime}
+					#unlockwallet(style=lockstatus.locked==0?'':'display:none;')
+						#unlockwalletbutton
+							p Your wallet is locked.
+							button.btn.btn-info.btn-sm.snowunlockwalletclick: span Unlock Wallet
+							button.btn.btn-info.btn-sm.snowchangewalletpassclick: span Change Wallet Passphrase
+						form#unlockwalletbalanceform(style='display:none;')
+							p Unlock your wallet.
+							.adderror(style='display:none;')
+							.form-group.input-group
+								span.input-group-addon.input-group-sm.coinstamp Pass Phrase
+								input.form-control.coinstamp( type="password" required id="unlockphrase" name="upl" placeholder="enter pass phrase") 
+							.form-group.input-group
+								span.input-group-addon.input-group-sm.coinstamp Timeout (sec)
+								select.form-control.coinstamp.col-md-4(id="unlocktime" )
+									option(value='5') 5
+									option(value='15') 15
+									option(value='30') 30
+									option(value='45') 45
+									option(value='60') 60
+									option(value='120') 120
+									option(value='180') 180
+									option(value='300') 300
+							.form-group
+								button#confirmunlock.btn.btn-warning.btn-sm(type="submit" rel="confirmunlock") Unlock Wallet
+								button.btn.btn-default.btn-sm(type="button" onclick="$('#unlockwalletbalanceform,#unlockwalletbutton').toggle();" style='float:right;') Cancel
+				else
+					p Encryption is only available with rpc
+	
+	.clearfix
+	//-
+		.snow-tickerbar.snow-ticker
+			.col-xs-12.col-md-4
+				iframe.snow-ticker(src="https://www.cryptocoincharts.info/v2/webmasters/priceBox/"+wally.cointicker+"/usd" style="width: 275px; height: 160px;overflow:hidden;background:#F8F8F8" frameborder="0")
+			.col-xs-12.col-md-4
+				iframe.snow-ticker(src="https://www.cryptocoincharts.info/v2/webmasters/priceBox/"+wally.cointicker+"/btc" style="width: 275px; height: 160px;overflow:hidden;background:#F8F8F8" frameborder="0")
+			.col-xs-12.col-md-4
+				iframe.snow-ticker(src="https://www.cryptocoincharts.info/v2/webmasters/priceBox/"+wally.cointicker+"/ltc" style="width: 275px; height: 160px;overflow:hidden;background:#F8F8F8" frameborder="0")
+			.clearfix
+
+							
+.snow-status
+	each val, ix in getinfo
+		if(val=='')
+			- val='&nbsp;';
+		if(ix=='balance')
+			- val = numeral(val).format('0,0[.]00000000').replace(/\.?0+$/, "")
+			- if(val=='')val=0
+			- val = val + ' '+ coinstamp
+		.col-xs-12.col-sm-6.col-md-6
+			.snow-status.snow-block
+				.snow-block-heading
+					p=ix
+				.snow-status-body
+					p!=val 
+.clearfix
+#dashboardrates.col-xs-11.col-md-10
+	.table-responsive
+		table.table.table-hover
+			- val = snowmoney[wally.cointicker]
+			- i = wally.cointicker	
+			- if(!val.usd)val.usd={}
+			- if(!val.btc)val.btc={}
+			- if(!val.ltc)val.ltc={}
+			- if(!val.eur)val.eur={}
+			thead
+				tr
+					if i !== 'usd'
+						th usd
+					if i !== 'eur' && val.eur.price
+						th eur
+					if i !== 'btc'
+						th btc
+					if i !== 'ltc'
+						th ltc
+					th date
+			tbody
+			
+			tr
+				if i !== 'usd'
+					td: span.bstooltip(data-toggle="tooltip" data-container="body" data-placement="top" title="1 #{i.toUpperCase()} equals #{val.usd.price || 'n/a'} USD") #{val.usd.price || ''}
+				if i !== 'eur' && val.eur.price
+					td: span.bstooltip(data-toggle="tooltip"  data-container="body"  data-placement="top" title="1 #{i.toUpperCase()} equals #{val.eur.price || 'n/a'} EUR") #{val.eur.price || ''}
+				if i !== 'btc'
+					td: span.bstooltip(data-toggle="tooltip"  data-container="body"  data-placement="top" title="1 #{i.toUpperCase()} equals #{val.btc.price || 'n/a'} BTC") #{val.btc.price || ''}
+				if i !== 'ltc'
+					td: span.bstooltip(data-toggle="tooltip"  data-container="body"  data-placement="top" title="1 #{i.toUpperCase()} equals #{val.ltc.price || 'n/a'} LTC") #{val.ltc.price || ''}
+				td: span.bstooltip(data-toggle="tooltip"  data-container="body"  data-placement="top" title="value recorded at #{val.usd.published}") #{moment(val.usd.published).format("YYYY-MM-DD HH:mm:ss")}	

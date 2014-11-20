@@ -1,0 +1,84 @@
+#addwalletwrap
+	#addwallet.row(style='padding:5px 20px;')
+		.col-xs-10.col-sm-10.col-md-9
+			h4.profile-form__heading Wallet
+		.col-sm-2.col-xs-2.col-md-1.text-muted(style='cursor:pointer;text-align:right;font-size:24px;')
+			span.glyphicon.glyphicon-remove-circle.closeaddwallet
+		.adderror.col-sm-10.col-sm-offset-1.col-md-8
+		.clearfix
+		.col-sm-10.col-sm-offset-1.col-md-8
+			.form-group.input-group
+				span.input-group-addon.input-group-md.coinstamp: div(style='width:130px;')   Name
+				input.form-control.coinstamp(type='text', name='name',id='aw-name'  ).input.input-labelled.input-faded
+		.col-sm-10.col-sm-offset-1.col-md-8
+			.form-group.input-group
+				span.input-group-addon.input-group-md.coinstamp: div(style='width:130px;')  Coin 
+				input.form-control.coinstamp(type='text', name='coin' id='aw-coin',).input.input-labelled.input-faded
+	
+		.col-sm-10.col-sm-offset-1.col-md-8
+			.form-group.input-group
+				span.input-group-addon.input-group-md.coinstamp: div(style='width:130px;') Coin Stamp 
+				input.form-control.coinstamp(type='text', name='coinstamp' id='aw-coinstamp',).input.input-labelled.input-faded
+	
+		.col-sm-10.col-sm-offset-1.col-md-8
+			.form-group.input-group
+				span.input-group-addon.input-group-md.coinstamp: div(style='width:130px;') Conv Currency 
+				select(name='currency',id='aw-currency').form-control.coinstamp.input-labelled.input-faded
+					option(value='usd') USD
+					option(value='eur') EUR
+		.col-sm-10.col-sm-offset-1.col-md-8
+			.form-group.input-group
+				span.input-group-addon.input-group-md.coinstamp: div(style='width:130px;') Ticker Symbol 
+				input.form-control.coinstamp(type='text', name='cointicker' id='aw-cointicker' ).input.input-labelled.input-faded
+		
+		.col-sm-10.col-sm-offset-1.col-md-8
+			.form-group.input-group
+				span.input-group-addon.input-group-md.coinstamp: div(style='width:130px;')   Api Type
+				select.form-control.coinstamp(name='coinapi',id='aw-coinapi'  )
+					each val,ii in apilist
+						option(value=val selected=val == 'rpc') #{val}
+		.col-sm-10.col-sm-offset-1.col-md-8
+			.form-group.input-group
+				span.input-group-addon.input-group-md.coinstamp: div(style='width:130px;')   Host 
+				input.form-control.coinstamp(type='text', name='address' id='aw-address' ).input.input-labelled.input-faded
+		
+		.col-sm-10.col-sm-offset-1.col-md-8
+			.form-group.input-group
+				span.input-group-addon.input-group-md.coinstamp: div(style='width:130px;')   SSL
+				select.form-control.coinstamp(name='isSSL',id='aw-ssl'  )
+					option(value=0) No
+					option(value=1) Yes
+		.col-sm-10.col-sm-offset-1.col-md-8
+			.form-group.input-group
+				span.input-group-addon.input-group-md.coinstamp: div(style='width:130px;')  CA File 
+				input.form-control.coinstamp(type='text',  name='ca' id='aw-ca' placeholder="full file path"  ).input.input-labelled.input-faded
+	
+	
+		.col-sm-10.col-sm-offset-1.col-md-8
+			.form-group.input-group
+				span.input-group-addon.input-group-md.coinstamp: div(style='width:130px;')  Port 
+				input.form-control.coinstamp(type='number',  name='port' id='aw-port' value="22555",  ).input.input-labelled.input-faded
+	
+	
+		.col-sm-10.col-sm-offset-1.col-md-8
+			.form-group.input-group
+				span.input-group-addon.input-group-md.coinstamp: div(style='width:130px;')  RPC User
+				input.form-control.coinstamp(type='text', name='apiuser' id='aw-apiuser',).input.input-labelled.input-faded
+	
+		.col-sm-10.col-sm-offset-1.col-md-8
+			.form-group.input-group
+				span.input-group-addon.input-group-md.coinstamp: div(style='width:130px;')  RPC Pass || Api Pin
+				input.form-control.coinstamp(type='text', name='apipassword' id='aw-apipassword',).input.input-labelled.input-faded
+		.col-sm-10.col-sm-offset-1.col-md-8
+			.form-group.input-group
+				span.input-group-addon.input-group-md.coinstamp: div(style='width:130px;')  API Key
+				input.form-control.coinstamp(type='text', name='apikey' id='aw-apikey',).input.input-labelled.input-faded
+		
+		
+		.col-sm-10.col-sm-offset-1.col-md-8
+			.form-group
+				input(type='hidden', name='key' id='aw-key') 
+				button.addwalletbutton(type='button', data-loading-text="Adding...").btn.btn-primary.awbutton Add Wallet 
+				
+				button(type='button', data-loading-text="Canceling...").btn.btn-default.closeaddwallet Cancel
+				

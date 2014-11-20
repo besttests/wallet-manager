@@ -1,0 +1,102 @@
+- var snowmoney = locals.data.snowmoney;
+.snow-send.snow-receive.bs-example.snow-dccsettings(id='snow-receive')
+	include prettymessages
+	.tab-content
+		nav.navbar.navbar-inverse(role="navigation")
+			.navbar-header
+				button.navbar-toggle.navbar-toggle-menu.navbar-toggle-right(style='margin-left:8px;float:left' type='button', data-toggle='collapse', data-target='.navbar-dccnav-collapse')
+					span.sr-only Toggle navigation
+					!='<span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>'
+				//a.navbar-brand(href="#") Menu
+			.collapse.navbar-collapse.navbar-dccnav-collapse
+				ul.nav.navbar-nav.dccnavlis
+					li#licurrency.active: a(href="#receive?tab=settings&list=currency"  ) Currency Rates
+					li#liwithdraw: a(href="#receive?tab=settings&list=withdraw" ) Auto Withdrawal
+					//li.dropdown
+					//	a.dropdown-toggle(data-toggle="dropdown") more <span class="caret"></span>
+					//	ul.dropdown-menu(role="menu")
+					//		li: a more
+					li: a(onclick="location.reload();"): span.glyphicon.glyphicon-refresh
+		.tabbox.clearfix(style="padding:20px 10px 0 10px;")
+			.col-sm-12.dccsetuphide#divcurrency
+				.snow-block-heading Currency Rates
+					
+				.snow-block-body
+					button#craddbymodal.btn.btn-xs.btn-info: span Edit / Update Now
+					
+					.clear(style="height:15px")
+					if snowmoney.usd
+						.table-responsive
+							table.table
+								tbody
+									tr
+										td(style="border:none;")
+											div.crcurrency 1 USD
+											div #{numeral(snowmoney.usd.btc.price || 0).format('0,0.00000000').replace(/\.?0+$/, "") || 'n/a'} 
+												span.coinstamp BTC
+											div #{numeral(snowmoney.usd.ltc.price || 0).format('0,0.00000000').replace(/\.?0+$/, "") || 'n/a'} 
+												span.coinstamp LTC
+											div #{snowmoney.usd.doge.price ? numeral(snowmoney.usd.doge.price).format('0,0.00000000').replace(/\.?0+$/, "") : 'n/a'} 
+												span.coinstamp Ð
+											div 
+												span.coinstamp € 
+												span #{snowmoney.eur.usd.price ? numeral(1/snowmoney.eur.usd.price).format('0,0.00000000').replace(/\.?0+$/, "") : 'n/a'} 
+												
+										td(style="border:none;")
+											div.crcurrency 1 BTC
+											div
+												span.coinstamp $ 
+												span #{numeral(snowmoney.btc.usd.price).format('0,0.00000000').replace(/\.?0+$/, "") || 'n/a'} 	 
+											div #{numeral(1/snowmoney.ltc.btc.price).format('0,0.00000000').replace(/\.?0+$/, "") || 'n/a'} 
+												span.coinstamp LTC
+											div #{numeral(1/snowmoney.doge.btc.price).format('0,0.00000000').replace(/\.?0+$/, "") || 'n/a'} 
+												span.coinstamp Ð
+											div 
+												span.coinstamp € 
+												span #{numeral(snowmoney.btc.eur.price).format('0,0.00000000').replace(/\.?0+$/, "") || 'n/a'}
+										td(style="border:none;")
+											div.crcurrency 1 EUR
+											div #{numeral(snowmoney.btc.eur.price).format('0,0.00000000').replace(/\.?0+$/, "") || 'n/a'} 
+												span.coinstamp BTC	 
+											div #{numeral(1/snowmoney.ltc.eur.price).format('0,0.00000000').replace(/\.?0+$/, "") || 'n/a'} 
+												span.coinstamp LTC
+											div #{numeral(1/snowmoney.doge.eur.price).format('0,0.00000000').replace(/\.?0+$/, "") || 'n/a'} 
+												span.coinstamp Ð
+											div 
+												span.coinstamp $ 
+												span #{numeral(snowmoney.eur.usd.price).format('0,0.00000000').replace(/\.?0+$/, "") || 'n/a'}
+										
+					.table-responsive( id='dccratechart')
+						table.table.table-hover
+							thead
+								tr
+									th: span.glyphicon.glyphicon-sort coin
+									th: span.glyphicon.glyphicon-sort usd
+									th: span.glyphicon.glyphicon-sort eur
+									th: span.glyphicon.glyphicon-sort btc
+									th: span.glyphicon.glyphicon-sort ltc
+									th: span.glyphicon.glyphicon-sort doge
+									th: span date
+							tbody
+							each val,i in locals.data.snowmoney	
+								- if(!val.usd)val.usd={}
+								- if(!val.btc)val.btc={}
+								- if(!val.ltc)val.ltc={}
+								- if(!val.doge)val.doge={}
+								- if(!val.eur)val.eur={}
+								
+								tr
+									td: span.bstooltip(data-toggle="tooltip"  data-placement="bottom" title="1 #{i.toUpperCase()} equals") #{i}
+									td: span.bstooltip(data-toggle="tooltip"  data-placement="bottom" title="1 #{i.toUpperCase()} equals #{val.usd.price || 'n/a'} USD") #{val.usd.price || ''}
+									td: span.bstooltip(data-toggle="tooltip"  data-placement="bottom" title="1 #{i.toUpperCase()} equals #{val.eur.price || 'n/a'} EUR") #{val.eur.price || ''}
+									td: span.bstooltip(data-toggle="tooltip"  data-placement="bottom" title="1 #{i.toUpperCase()} equals #{val.btc.price || 'n/a'} BTC") #{val.btc.price || ''}
+									td: span.bstooltip(data-toggle="tooltip"  data-placement="bottom" title="1 #{i.toUpperCase()} equals #{val.ltc.price || 'n/a'} LTC") #{val.ltc.price || ''}
+									td: span.bstooltip(data-toggle="tooltip"  data-placement="bottom" title="1 #{i.toUpperCase()} equals #{val.doge.price || 'n/a'} DOGE") #{val.doge.price || ''}
+									td: span.bstooltip(data-toggle="tooltip"  data-placement="bottom" title="value recorded at #{val.published}") #{moment(val.published).format("YYYY-MM-DD HH:mm:ss")}
+			.col-sm-12.dccsetuphide#divwithdraw(style="display:none")
+				.snow-block-heading Auto Withdrawals
+				.snow-block-body
+					button#awaddbymodal.btn.btn-xs.btn-info: span Create New
+					.clear(style="height:15px")
+			.clearfix
+		.clearfix

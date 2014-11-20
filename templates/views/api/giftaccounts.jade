@@ -1,0 +1,16 @@
+.bs-example(id='snow-status')
+	each val, ix in info
+		if(val=='')
+			- val='&nbsp;';
+		if(ix=='balance')
+			- val = numeral(val).format('0,0[.]00000000').replace(/\.?0+$/, "")
+			- if(val=='')val=0
+			- val = val + ' '+ coinstamp
+		.col-xs-5.col-md-4
+			.snow-status.snow-block
+				.snow-block-heading
+					p=ix
+				.snow-status-body
+					p!=val 
+	.clearfix
+.clearfix

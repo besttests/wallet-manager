@@ -1,0 +1,99 @@
+extends ../../layouts/alternate1
+block css
+	script #{locals.data.defaultcoins}
+block intro
+	if !user
+		.page-intro: .container
+			h1 snowcoins
+			p snowcoins, a digital coin coordinator and wallet manager, is a node project built with <a href="http://keystonejs.com" target="_blank">KeystoneJS</a>.    
+			p Dogecoin,bitcoin,litecoin, vertcoin and any bitcoin based rpc wallet should work.  Support for other apis is available (an unfinished dogeApi is included).  Additional wallets can be added with the included api.  
+			
+			.row
+				.col-xs-10.col-xs-offset-2.col-mb-11.col-md-offset-1(style='margin-top:20px;')
+					button.btn.btn-primary(onclick="location.href='/signin'") Sign In 
+block content
+	if user
+		#walletbarspyhelper
+		#walletbar(data-spy="affix" data-offset-top="0" )
+			.wallet
+				.button-grp
+					button.btn.btn-link.dropdown-toggle(data-toggle="dropdown")  #{snowtext.menu.menu.name} 
+					ul.dropdown-menu(role="menu")
+						li.nav-item-add: a() #{snowtext.menu.plus.name}						
+						li.nav-item-home: a(href='/#{locals.path.wm}#overview') #{snowtext.menu.list.name}
+						li.nav-item-receive: a(href='/#{locals.path.wm}#receive?tab=dcc') #{snowtext.menu.receive.name}
+						li: .divider
+						li.nav-item-snowcat: a(href='/#{locals.path.wm}#snowcat') #{locals.user.username}
+						li: .divider
+						li
+							div
+								.walletmenuspan.changetheme.bstooltip(title='Switch between the light and dark theme' data-toggle="tooltip" data-placement="bottom" data-container="body"): a: span.glyphicon.glyphicon-adjust
+								.walletmenuspan.bstooltip(title='inquisive queue' data-toggle="tooltip" data-placement="bottom" data-container="body"): a.nav-item-inq(href='/#{locals.path.wm}#inqueue')
+								.walletmenuspan.bstooltip(title='Logout' data-toggle="tooltip" data-placement="right" data-container="body"): a(href='/signout'): span.glyphicon.glyphicon-log-out
+								.clearfix
+			.list
+				.walletmsg(style='display:none;')
+				select(id='walletselect',name='walletselect')
+<<<<<<< HEAD
+					each wallet in data.wallets
+=======
+					each wallet in data.wallets	
+>>>>>>> modulate
+						option(id=wallet.key value=wallet.key)=wallet.name
+					optgroup
+					option(value='overview') #{snowtext.menu.list.name}
+					option(value='receive?tab=dcc') #{snowtext.menu.receive.name}
+					option(value='inqueue') #{snowtext.menu.inqueue.name}
+					option(value='snowcat') #{user.username}
+			.logo
+				a(href='/', title="inquisive.io snowcoins build info" data-container="body" data-placement="bottom" data-toggle="tooltip").walletbar-logo
+			#wallet-lock.hidden.snowunlockwalletclick(data-toggle="tooltip"  data-placement="bottom" title='Wallet is encrypted' alt='Wallet is encrypted')
+			#wallet-unlock.hidden(snowlink='dashboard' data-toggle="tooltip"  data-placement="bottom" title='You should encrypt this wallet soon.')
+			#wallet-unlocked.hidden
+			#wallet-ssl.hidden(data-toggle="tooltip"  data-placement="bottom" title='SSL Connection to wallet' alt='ssl connection')
+				span.glyphicon.glyphicon-link
+			
+		.dogewrap.container-fluid
+			#menuspy.dogemenu.col-xs-1.col-md-2(data-spy="affix" data-offset-top="0" )
+				#testnet-flash.dogemenulink(title='This wallet is on the TESTNET!' data-toggle="tooltip" data-placement="right" data-container="body") <span class="glyphicon glyphicon-text-width"></span> TESTNET 
+				#menuwallet
+					a.dogemenulink(snowlink='dashboard' id='dogedash' data-container="#menuspy" title='#{snowtext.menu.dashboard.title}' )  <span class="glyphicon glyphicon-th"></span> #{snowtext.menu.dashboard.name}
+					a.dogemenulink(snowlink='accounts' id='dogeacc' data-container="#menuspy"  title='#{snowtext.menu.accounts.title}')  <span class="glyphicon glyphicon-list"></span> #{snowtext.menu.accounts.name}
+					a.dogemenulink(snowlink='send' id='dogesend'  data-container="#menuspy" title='#{snowtext.menu.send.title}')  <span class="glyphicon glyphicon-share"></span> #{snowtext.menu.send.name}
+					//a.dogemenulink(snowlink='give' id='dogegive' data-container="#menuspy"  title='#{snowtext.menu.give.title}') <span class="glyphicon glyphicon-gift"></span> #{snowtext.menu.give.name}
+					a.dogemenulink(snowlink='transactions' id='dogetx' data-container="#menuspy"  title='#{snowtext.menu.tx.title}')  <span class="glyphicon glyphicon-list-alt"></span> #{snowtext.menu.tx.name}
+					//a.dogemenulink(snowlink='status' id='dogestatus' data-container="#menuspy"  title='#{snowtext.menu.status.title}')  <span class="glyphicon glyphicon-signal"></span> #{snowtext.menu.status.name}
+					a.dogemenulink(snowlink='update' id='dogeupdate' data-container="#menuspy"  title='#{snowtext.menu.update.title}') <span class="glyphicon glyphicon-pencil"></span> #{snowtext.menu.update.name} <span id="updatecoinspan" style="display:none"></span>
+				#menudcc(style='display:none;')
+					a.dogedccmenulink(snowlink='dcc' id='dogedccsetup' data-container="#menuspy"  title='#{snowtext.menu.dccsetup.title}')  <span class="glyphicon glyphicon-tasks"></span> #{snowtext.menu.dccsetup.name}
+					a.dogedccmenulink(snowlink='settings' id='dogedccsettings' data-container="#menuspy"  title='#{snowtext.menu.dccsettings.title}')  <span class="glyphicon glyphicon-cog"></span> #{snowtext.menu.dccsettings.name}
+				a.dogemenulink(snowlink='info' id='dogeinfo' data-container="#menuspy"  title='#{snowtext.menu.help.title}' )  <span class="glyphicon glyphicon-info-sign"></span> #{snowtext.menu.help.name}
+				
+			#menuspyhelper.dogemenu.hidden.col-xs-1.col-md-2
+			.dogeboard.col-xs-11.col-md-10
+				#easter-egg(style='display: none;')
+					div
+						include ../../mixins/egg
+				.row
+					include ../api/wallet.jade
+					.dogeboard-left.col-xs-12.col-md-12
+						.loading 
+							| Loading <br />
+							div#loadgif(style="")
+						.content
+						#console
+						.clearfix
+							
+					.dogeboard-right.col-xs-0.col-md-0
+						.loading 
+							p Loading
+						.content
+						.clear
+			.clear
+
+block js
+	script.
+		var _csrf = '#{locals.token}';
+		
+		
+		

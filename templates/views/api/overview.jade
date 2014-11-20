@@ -1,0 +1,25 @@
+.bs-example(id='snow-overview')
+	include mixins/prettymessages.jade
+	button.btn.btn-info.btn-xs.nav-item-add Add New Wallet
+	.table-responsive
+		table.table.table-hover
+			thead
+				tr
+					th: span.glyphicon.glyphicon-pencil
+					th: span.glyphicon.glyphicon-sort name
+					th: span.glyphicon.glyphicon-sort coin
+					th: span.glyphicon.glyphicon-sort address
+					th.snowsortisempty: span.glyphicon.glyphicon-sort ssl
+					th: span.text-danger.glyphicon.glyphicon-remove-sign
+			tbody
+			each val in wally	
+				tr
+					td: a(href='/snowcoins##{val.key}?moon=update'): span.glyphicon.glyphicon-pencil &nbsp;
+					
+					td: a(href='/snowcoins##{val.key}?moon=dashboard') #{val.name}
+					td  #{val.coin}
+					td #{val.address}:#{val.port}
+					td
+						if val.isSSL==true
+							span.glyphicon.glyphicon-link
+					td: span.removewallet( data-wid='#{val._id}' style="cursor:pointer" ).text-danger.glyphicon.glyphicon-remove-sign &nbsp;

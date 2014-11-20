@@ -1,0 +1,115 @@
+.bs-example(id='snow-accounts')
+	include mixins/prettymessages.jade
+	button.btn.btn-info.btn-xs.snowaddaccount(id='addaccount' style='margin-left:10px;') New Address
+	button.btn.btn-link.btn-sm.helppopover(rel='popover' data-container="body" data-toggle="popover" data-placement="auto" data-html="true" data-content="Click Add New Address and enter an account name to create a new address. <br><br> The balance column is your Wallet balance. You can create a negative individual  \"Account\" balance, but your Wallet balance should never be negative.<br />  The received columnn is the total coin the address has received. <br /><br /> The total of the balance column  may not equal the total of the received column for each distinct row.  <br /><br />  If you mine you may not show addresses to match your mined coins since the coins were not received.") help
+	#snowaddaddress(role="form")
+		.row
+			.form-group.col-xs-12.col-md-6.input-group
+				span.input-group-addon.input-group-md account
+				input.form-control(id="addaddressname" name="addaddressname" placeholder="Account Name")
+	#snowmoveaddress.form-inline(role="form")
+		.row(role="form")
+			.form-group.input-group
+				span.input-group-addon.input-group-md.coinstamp move
+				input.form-control.coinstamp( id="moveaddressaddress" name="moveaddressaddress" placeholder="Address" readonly=true)
+		.row(role="form")
+			.form-group.input-group
+				span.input-group-addon.input-group-md.coinstamp to
+				input.form-control.coinstamp( id="moveaddressname" name="moveaddressname" placeholder="Account Name")
+	#snowmovecoin
+		.row(role="form")
+			.form-group.col-xs-8.col-md-4.input-group
+				
+				input.form-control.coinstamp(id="movecoinamount" name="movecoinamount" placeholder="Amount") 
+				span.input-group-addon.input-group-sm.coinstamp #{coinstamp}
+		.row(role="form")
+			.form-group.col-xs-12.col-md-8.input-group
+				span.input-group-addon.input-group-sm.coinstamp from
+				input.form-control.coinstamp( id="movecoinfromaccount" name="movecoinfromaccount" readonly=true)
+				span#smcamt.input-group-addon.input-group-sm.bg-info.coinstamp 
+		.row(role="form")
+			.form-group.col-xs-12.col-md-8.input-group
+				span.input-group-addon.input-group-sm.coinstamp to
+				input.form-control.coinstamp( id="movecointoaccount" name="movecointoaccount" placeholder="New Account Name" readonly=true)
+				span#smctoamt.input-group-addon.input-group-sm.bg-default.coinstamp 
+		
+	.accresults.table-responsive(style='position:relative;margin:0 10px;')
+		- var abal=0,bbal=0;
+		table.table.table-hover
+			thead
+				tr
+					th: span.glyphicon.glyphicon-sort name
+					th: span.glyphicon.glyphicon-sort balance
+					th.snowsortcountitems: span.glyphicon.glyphicon-sort address
+					th: span.glyphicon received
+			tbody
+				each val,ii in accounts
+					if (val.name=='(main account)')
+						- var account=val.truename
+						- var newacc=val.name
+					else
+						- var newacc=val.name
+						- var account=val.name
+					tr
+						td
+							.dropdown
+								a.dropdown-toggle(data-toggle="dropdown") #{val.name}  <span class="caret"></span>
+								ul.dropdown-menu(role="menu" aria-labelledby="dda2")
+									li(role="presentation"): a.snowaddaccount(data-snowacc=account role="menuitem" tabindex="-1") add new address
+									li(role="presentation"): a.snowgotx(href="##{wally.key}?moon=transactions&account=#{account}" role="menuitem" tabindex="-1") view transactions
+						td 
+							
+							.dropdown
+								- console.log(val.balance); var bal = (val.balance<=0) ? val.balance : numeral(val.balance).format('0,0.000000000').replace(/\.?0+$/, "")
+								- bbal+=parseFloat(val.balance)
+								if(val.balance)
+									a.dropdown-toggle(data-toggle="dropdown") #{bal} <span class="coinstamp">#{coinstamp}</span> <span class="caret"></span>
+									ul.dropdown-menu(role="menu" aria-labelledby="dda1")
+										li(role="presentation"): a.snowsendfromaccountlink(href="##{wally.key}?moon=send&fromaccount=#{val.name}" role="menuitem" tabindex="-1") Send Coin
+										li.divider(role="presentation")
+										li.dropdown-header(role="presentation") Move coin to account
+										each vl in accounts
+											if(vl.name!=val.name)
+												- var showname=(vl.name.trim()!='')?vl.name:'(unnamed)'
+												li(role="presentation"): a.snowmovecoinlink(data-snowfromacc=account data-snowtoacc=vl.name data-snowamount=bal data-snowtoamount=vl.balance role="menuitem" tabindex="-1") #{showname}
+							
+										li.divider(role="presentation")
+											li(role="presentation"): a.snowmovecoinlink(role="menuitem" tabindex="-1" data-snowfromacc=account data-snowtoacc='new' data-snowamount=bal) Move coin to new account 
+								else
+									| #{bal} <span class="coinstamp">#{coinstamp}</span> 
+						td
+							if(val.addresses)
+								each da in val.addresses
+									.clearfix
+										div(style='display:inline;margin-right:3px;')
+											a.qrcode-link(id="da.a" title=da.a alt=da.a rel='qrpopover' data-toggle="popover" data-placement="bottom" data-qr=da.a data-html='true' data-container='body' data-content='<div id='+da.a+' style="width:300px;"></div>'): span.glyphicon.glyphicon-qrcode
+										div.dropdown(style='display:inline;')
+											a.dropdown-toggle.snowshortcoin(data-toggle="dropdown" ) #{da.a} <span class="caret"></span>
+											ul.dropdown-menu(role="menu" aria-labelledby="ddm1")
+												li.dropdown-header(role="presentation") Move to
+												each vl,iv in accounts
+													if(vl.name!=val.name && vl.name!='(unassigned)')
+														- var shownames=(vl.name.trim()!='')?vl.name:'(unassigned)'
+														li(role="presentation"): a.snowmoveaddresslink(role="menuitem" tabindex="-1" data-snowacc=vl.name data-address=da.a)  #{shownames}
+												li.divider(role="presentation")
+												li(role="presentation"): a.snowmoveaddresslink(role="menuitem" tabindex="-1"  data-snowacc='new' data-address=da.a) Move to a new account 
+											
+											
+						td
+							if(val.addresses)
+								each da in val.addresses
+									.clearfix
+									- var balam = numeral(da.b).format('0,0.00000000').replace(/\.?0+$/, "")
+									- if(balam=='')balam=0
+											| #{balam} <span class="coinstamp">#{coinstamp}</span>
+									- abal+=parseFloat(da.b);
+			tfoot
+				tr
+					td
+					td
+						//#{bbal}
+						#{numeral(bbal).format('0,0.00000000').replace(/\.?0+$/, "")} <span class="coinstamp">#{coinstamp}</span>
+					td
+					td
+						//#{abal}
+						#{numeral(abal).format('0,0.00000000').replace(/\.?0+$/, "")}<span class="coinstamp">#{coinstamp}</span>

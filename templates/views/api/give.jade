@@ -1,0 +1,20 @@
+#snow-gift
+	.menu-link.col-md-4
+		a(href='##{wally.key}?moon=give&trail=create' ) Create Cards
+	.menu-link.col-md-4
+		a(href='##{wally.key}?moon=give&trail=manage' ) Manage Cards
+	.menu-link.col-md-4.bg-danger
+		a(href='##{wally.key}?moon=give&trail=wallets' ) Gift Wallet
+	.clearfix
+	.help(style='display:none')
+		p help
+	.create(style=q.trail=='create' ? '':'display:none')
+		p create
+	.manage(style=q.trail=='manage' ? '':'display:none')
+		p manage
+	.wallets.row(style=q.trail=='wallets' ? '':'display:none')
+		.pull-right
+			button.btn.btn-warning Add Gift Wallet
+			button.btn.btn-info(onclick="$('.help').slideToggle();" ) Help
+	
+	

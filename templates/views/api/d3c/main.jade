@@ -1,0 +1,63 @@
+div
+	#walletbar
+		.wallet.button-grp.col-sm-2.col-md-1
+			button#d3cmenu.btn.btn-link.dropdown-toggle(data-toggle="dropdown") menu
+			ul.dropdown-menu.dropdown-menu-right(role="menu")
+				li
+					div
+						.walletmenuspan.changetheme.bstooltip(title='Switch between the light and dark theme' data-toggle="tooltip" data-placement="left" data-container="body"): a: span.glyphicon.glyphicon-adjust
+						.walletmenuspan.bstooltip(title='inquisive.link' data-toggle="tooltip" data-placement="bottom" data-container="body"): a.nav-item-inq(href='/#{local.path.wm}#.link')
+						.walletmenuspan.bstooltip(title='Logout' data-toggle="tooltip" data-placement="bottom" data-container="body"): a(onclick="location.reload()"): span.glyphicon.glyphicon-log-out
+						
+						
+				
+						
+				
+		.search.col-xs-10.col-sm-10.col-md-11
+			.search-bar
+				.btn-group.search-go
+					button.btn.btn-default#findme #{snowtext.d3c.searchbar.findledger} <div id="searchfor" snow-link="ledgerid" style="display:inline-block;">ID</div>
+					button.btn.btn-default.dropdown-toggle(data-toggle="dropdown")
+						span.caret
+						span.sr-only Toggle
+					ul.dropdown-menu(role="menu")
+						li.findthing: a(snow-link="ledgerid") ID
+						li.findthing: a(snow-link="status") status
+						li.findthing: a(snow-link="total") total
+						li.findthing: a(snow-link="totalreceived") received
+						li.findthing: a(snow-link="clients") client
+				input( id="searchbar" placeholder="#{snowtext.d3c.searchbar.placeholder}")
+			
+	#menubar(data-spy="affix" data-offset-top="50" )
+		.col-xs-9
+			.create.col-xs-6
+				.head: span #{snowtext.d3c.menu.create.name}	
+				.body.moveup
+					a.ledger: span.glyphicon.glyphicon-book(title='#{snowtext.d3c.menu.create.links.ledger.title}' data-toggle="tooltip" data-placement="bottom" data-container="body")
+					
+					a.item: span.glyphicon.glyphicon-th-list(title='#{snowtext.d3c.menu.create.links.item.title}' data-toggle="tooltip" data-placement="bottom" data-container="body")
+					
+			.view.col-xs-6
+				.head: span #{snowtext.d3c.menu.view.name}
+				.body.moveup
+					a.ledger: span.glyphicon.glyphicon-book(title='#{snowtext.d3c.menu.view.links.ledger.title}' data-toggle="tooltip" data-placement="bottom" data-container="body")
+					a.tx: span.glyphicon.glyphicon-credit-card(title='#{snowtext.d3c.menu.view.links.tx.title}' data-toggle="tooltip" data-placement="bottom" data-container="body")
+					a.item: span.glyphicon.glyphicon-th-list(title='#{snowtext.d3c.menu.view.links.item.title}' data-toggle="tooltip" data-placement="bottom" data-container="body")
+					
+		.col-xs-3
+			.connect.col-xs-12
+				.head: span #{snowtext.d3c.menu.connect.name}
+				.body.moveup
+					a.client: span.glyphicon.glyphicon-phone(title='#{snowtext.d3c.menu.connect.links.clients.title}' data-toggle="tooltip" data-placement="bottom" data-container="body")
+					a.customer: span.glyphicon.glyphicon-user(title='#{snowtext.d3c.menu.connect.links.customers.title}' data-toggle="tooltip" data-placement="bottom" data-container="body")
+	#menuspy.hidden(style="height:60px")
+	#content
+		#manage.col-xs-12.col-sm-10.col-md-10
+			include ../mixins/prettymessages.jade
+			include ./chatbox.jade
+			.content
+
+		.buffer.col-xs-12.col-sm-2.col-md-2
+	#trackers.col-xs-12.col-sm-2.col-md-2
+		.content
+			.listtracker

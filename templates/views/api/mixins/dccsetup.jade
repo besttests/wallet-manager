@@ -1,0 +1,151 @@
+.snow-send.snow-receive.bs-example.snow-dccsetup(id='snow-receive')
+	include prettymessages
+	.tab-content
+		nav.navbar.navbar-inverse(role="navigation")
+			.navbar-header
+				button.navbar-toggle.navbar-toggle-menu.navbar-toggle-right(style='margin-left:8px;float:left' type='button', data-toggle='collapse', data-target='.navbar-dccnav-collapse')
+					span.sr-only Toggle navigation
+					!='<span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>'
+				//a.navbar-brand(href="#") Menu
+			.collapse.navbar-collapse.navbar-dccnav-collapse
+				ul.nav.navbar-nav.dccnavlis
+					li#liattended.active: a(href="#receive?tab=dcc&list=attended" ) Attended
+					li#liunattended: a(href="#receive?tab=dcc&list=unattended" ) Un-Attended
+					li#likeys: a(href="#receive?tab=dcc&list=keys" ) API Keys
+					li#litrackers: a(href="#receive?tab=dcc&list=trackers" ) Trackers
+					//li.dropdown
+					//	a.dropdown-toggle(data-toggle="dropdown") more <span class="caret"></span>
+					//	ul.dropdown-menu(role="menu")
+					//		li: a more
+					li: a(onclick="location.reload();"): span.glyphicon.glyphicon-refresh
+		.tabbox.clearfix(style="padding:20px 10px 0 10px;")
+			.col-md-12.dccsetuphide#divattended
+				.snow-block-heading Attended Coin Receivers
+				.snow-block-body
+					button.btn.btn-xs.btn-info.adddccwalletbutton: span Add Attended Receiver
+					.table-responsive
+						table.table.table-hover
+							thead
+								tr
+									th: span.glyphicon.glyphicon-remove
+									th: span.glyphicon.glyphicon-sort coin
+									th: span.glyphicon.glyphicon-sort receiver
+									th: span.glyphicon.glyphicon-sort wallet
+									th(title='confirmations'): span.glyphicon.glyphicon-sort cfms
+									th: span.glyphicon.glyphicon-sort account
+									th: span.glyphicon.glyphicon-sort address
+							tbody
+							each val in locals.data.current	
+								- if(val.wallet) val.wally=val.wallet.name; else val.wally='--';
+								tr(id='#{val._id}')
+									td: span.removedccwallet( data-dccwid='#{val._id}' style="cursor:pointer" ).text-danger.glyphicon.glyphicon-remove &nbsp;
+									td #{val.coin}
+									td #{val.name}
+									td #{val.wally}
+									td #{val.confirmations}
+									td #{val.account || '--'} 
+									td #{val.address || '--'}  			
+				.clearfix
+			.col-md-12.dccsetuphide#divunattended(style="display:none")
+				.snow-block-heading Unattended Coin Receivers
+				.snow-block-body
+					button.btn.btn-xs.btn-info.addofflinebutton: span Add Unattended Receiver
+					.accresults.table-responsive
+						table.table.table-hover
+							thead
+								tr
+									th: span.glyphicon.glyphicon-remove
+									th: span.glyphicon.glyphicon-sort name
+									th: span.glyphicon.glyphicon-sort coin
+									th: span.glyphicon.glyphicon-sort findme
+									th: span.glyphicon.glyphicon-sort account
+									th: span.glyphicon.glyphicon-sort address
+									th: span.glyphicon.glyphicon-sort expires
+							tbody
+							each val in locals.data.offline	
+								tr(id='#{val._id}')
+									td: span.removeoffline( data-offlineid='#{val._id}' style="cursor:pointer" ).text-danger.glyphicon.glyphicon-remove &nbsp;
+									td(title='#{val.address}') #{val.name}
+									td #{val.coin}
+									td 
+										.dropdown
+											a.dropdown-toggle(data-toggle="dropdown") #{val.apikey}
+											ul.dropdown-menu(role="menu" aria-labelledby="dda2")
+												li(role="presentation"): a(href='/#{locals.path.offline}/#{val.apikey}' target='_blank') Open Share Page 			
+												li.copyme(style="cursor:pointer" role="presentation" data-clipboard-text="#{locals.host}/#{locals.path.offline}/#{val.apikey}") Copy to Clipboard
+									td #{val.account}
+									td #{val.address}
+									td #{val._.expires.format('llll')}
+									//td #{val._.expires.format('MMM Do YYYY h:mm a zz')}
+				.clearfix
+			.col-md-12.dccsetuphide#divkeys(style="display:none")
+				.snow-block-heading d3c/d2c Keys 
+					span.glyphicon.glyphicon-info-sign.bstooltip(data-toggle="tooltip"  data-html="true"  data-placement="top" title="D3C = Digital Coin Coordinator Command <br>D2C =  Digital Coin Client")
+				.snow-block-body
+					button.btn-xs.btn.btn-info.adddccclientbutton: span Add Client
+					!='&nbsp;' 
+					button.btn-xs.btn.btn-info.adddccmasterbutton: span Add Master 
+					!='&nbsp;'
+					button.btn-xs.btn.btn-text.helppopover(rel='popover' data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="A client key gives access to the Digital Coin Client. The D2C helps people send digital coins to you to settle transactions. The D2C is a simple client suitable for sender interaction. The amount of information it can send to the D3C is very limited. <br /><br />A master key gives access to the D3C and can send and receive commands.  The master controls the transaction process and clients.") help
+					.accresults.table-responsive(style="overflow:auto")
+						table.table.table-hover
+							thead
+								tr
+									th: span.glyphicon.glyphicon-remove
+									th: span.glyphicon.glyphicon-sort name
+									th: span.glyphicon.glyphicon-sort type
+									th: span.glyphicon.glyphicon-sort key
+									th: span.glyphicon ip/range
+									th: span.glyphicon manages
+							tbody
+							each val in locals.data.cc	
+								tr(id='#{val._id}')
+									td: span.removedcccc(data-dcccid='#{val._id}' style="cursor:pointer" ).text-danger.glyphicon.glyphicon-remove &nbsp;
+									td #{val.name}
+									td #{val.type}
+									td
+										.dropdown
+											a.dropdown-toggle(data-toggle="dropdown") #{val.apikey}
+											ul.dropdown-menu(role="menu" aria-labelledby="dda2")
+												li(role="presentation"): a(href='/#{locals.path[val.type]}/#{val.apikey}' target='_blank') Open #{locals.path[val.type].toUpperCase()} 			
+												li.copyme(style="cursor:pointer" role="presentation" data-clipboard-text="#{locals.host}/#{locals.path[val.type]}/#{val.apikey}") Copy to Clipboard
+									td #{val.ip}
+									td 
+										if val.clients && val.clients.length>0
+											each client in val.clients
+												span  #{client.name} &nbsp; 
+										else if val.type=='master'
+											span all clients
+										else
+											span --
+			.clearfix
+			.col-md-12.dccsetuphide#divtrackers(style="display:none")
+				.snow-block-heading Tracked Receivers
+				.snow-block-body
+					button.btn.btn-xs.btn-info.addtrackerbutton: span Track Wallet Address
+					.trackerresults.table-responsive(style="overflow:auto")
+						table.table.table-hover
+							thead
+								tr
+									th: span.glyphicon.glyphicon-remove
+									th: span.glyphicon.glyphicon-sort name
+									th: span.glyphicon.glyphicon-sort type
+									th: span.glyphicon.glyphicon-sort wallet
+									th: span.glyphicon.glyphicon-sort account
+									th: span.glyphicon.glyphicon-sort address
+							tbody
+							each val in locals.data.trackers	
+								tr(id='#{val._id}')
+									td
+										if(!val.auto)
+											span.removetracker(data-dcctid='#{val._id}' style="cursor:pointer" ).text-danger.glyphicon.glyphicon-remove &nbsp;
+										if(val.auto)
+											span.bstooltip( style="cursor:question" data-toggle="tooltip"  data-html="true"  data-placement="right" title="You can not delete trackers added by the D3C.").text-muted.glyphicon.glyphicon-remove &nbsp;
+									td #{val.name}
+									td #{val.type}
+									td 	#{(val.wallet)?val.wallet.name:''}
+									td #{val.account}
+									td #{val.address}
+			.col-md-12.col-lg-6
+				
+		.clearfix

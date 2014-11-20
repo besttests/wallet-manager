@@ -1,0 +1,14 @@
+div
+	h1 snowcoins
+	include ../mixins/prettymessages.jade
+	p DCC Command    
+	#joind4html
+		
+		.row(role="form")
+			p Enter the key that you generated on the home app.
+		.row(role="form")
+			.form-group.input-group
+				span.input-group-addon.input-group-md.coinstamp D3C Key
+				input#d3ckey.form-control.coinstamp(value=d3ckey name="d3ckey" placeholder="D3C Key")
+		.row(role="form")
+			button.btn.btn-primary Login

@@ -1,0 +1,54 @@
+doctype html
+html
+	head
+		
+		meta(charset="utf-8")
+		meta(name="viewport", content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width")
+		
+		title= title || 'inquisive Client Connect'
+		link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
+		link(href="/js/lib/jquery-ui/css/inquisive/jquery-ui-1.10.4.custom.css" rel="stylesheet")
+		link(href="/styles/site.min.css", rel="stylesheet")
+		block css
+		block head
+	body.default(class=user.defaultTheme || 'themeable-'+user.theme.replace(' ',''))
+		#confirm-modal.modal.fade( z-index="1031" tabindex="-1" role="dialog" aria-labelledby="Confirm" aria-hidden="true")
+			.modal-dialog
+				.modal-content
+					.modal-header
+						button.close(data-dismiss="modal" aria-hidden="true") &times;
+						h4.modal-title 
+					.modal-body
+					.modal-footer
+		#snowpi-wrapper
+			.fademessage(style='display:none;')
+			.fadesuccess
+			.fadeerror(style='display:none;')
+			
+			//- HEADER
+			
+			//- BODY
+			#snowpi-body
+				
+				block intro
+				
+				block content
+		
+	//- scripts
+	script(src='/js/lib/jquery/jquery-1.10.2.min.js')
+	script(src='/js/jquery.selectbox-0.2.min.js')
+	script(src='/js/lib/jquery-ui/js/jquery-ui-1.10.4.custom.min.js')
+	script(src='/js/lib/bootstrap/bootstrap.min.js')
+	script(src='/js/lib/moment/moment.min.js')
+	
+	script(src='/js/jquery.qrcode-0.7.0.min.js')
+	script(src='/socket.io/socket.io.js')
+	script(src='/js/lib/bone.io/bone.io.min.js')
+	
+	
+	block js
+	script.
+		var socketio = {host:'#{locals.socketio.host}',port:'#{locals.socketio.port}',ssl:'#{locals.socketio.ssl}'};
+	script(src='/api/snowcoins/simple/language')
+	script(src='/bonetemplates')
+	

@@ -1,0 +1,81 @@
+doctype html
+html
+	head
+		
+		meta(charset="utf-8")
+		meta(name="viewport", content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width")
+		
+		title= title || 'inquisive Client Connect'
+		link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
+		link(href="/styles/site.min.css", rel="stylesheet")
+		style.
+			body{background:#fff;color:#444!important;}
+	body.default()
+		
+		.container
+			.form#testbedform
+				.adderror
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp url
+					input.form-control.coinstamp( type="text"  id="url" name="url" value="https://snow7:8883/api/d3c/commander")
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp nonce
+					.col-md-4
+						input.form-control.coinstamp( type="text" value="#{locals.token}" id="nonce" name="nonce" )
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp command
+					.col-md-4
+						select#command.form-control
+							option ledger
+							option transaction
+							option status
+							option find
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp action
+					.col-md-4
+						select#action.form-control
+							optgroup(label="LEDGER")
+								option create
+								option modify
+								option cancel
+								option find
+								option additem
+								option deleteitem
+							optgroup(label="TRANSACTION")
+								option create
+								option modify
+								option cancel
+								option find
+								option additem
+								option addaddress
+								option deleteitem
+							optgroup(label="FIND")
+								option ledger
+								option transaction
+								option log
+								option status
+								option clients
+								option wallets
+								option ui
+								option sink
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp query
+					.col-md-12
+						input.form-control.coinstamp( type="text"  id="query" name="query" )
+				.form-group.input-group
+					button.btn.btn-info#runtest Send API Request
+			div
+				pre#results
+		
+			
+			
+	script(src='/js/lib/jquery/jquery-1.10.2.min.js')
+	script(src='/js/lib/bootstrap/bootstrap.min.js')
+	
+	script(src='/js/jquery.selectbox-0.2.min.js')
+	script(src='/js/jquery.ba-hashchange.min.js')
+	script(src='/js/views/testbed.js')
+	script.
+		var _csrf = '#{locals.token}';
+		
+		

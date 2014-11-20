@@ -1,0 +1,271 @@
+
+
+body {
+	-webkit-font-smoothing:antialiased;
+}
+
+
+#easter-egg {
+	background:@background-step3;
+	border-bottom: 0px solid @background-step1;
+	#old-logo {
+		position: relative;
+		width: 512px;
+		height: 342px;
+		left: 50%;
+		margin-left: -305px;
+		
+	}
+	overflow:auto;
+	max-height:450px;
+}
+#easter-egg {
+	a {
+		text-decoration:none;
+		color: @themeA-bg-step10;
+		&:hover {
+			color: @themeA-bg-step8;
+		}
+	}
+}
+#easter-egg .blocks {
+	color:@themeA-text;
+	h4 { color:@themeA-bg-step6;}
+	margin-top:10px;
+	min-height:150px;
+	
+}
+#easter-egg .donate {
+	font-size:11px;	
+	line-height:2;
+}
+#easter-egg ul {
+	list-style-type:none;
+	-webkit-padding-start:10px;
+}
+
+#easter-egg li {
+	margin-left:0px;
+}
+
+// NAVBAR
+// ------------------------------
+
+@navbar-border-top-width: 4px;
+.navbar {
+	border-top: @navbar-border-top-width solid @navbar-default-link-hover-bg;
+	font-size: @font-size-base;
+	font-weight: 600;
+	margin: 0;
+	
+	padding-top:8px;
+	font-family: 'Josefin Sans', sans-serif;
+	.container {
+		position: relative;
+	}
+}
+.navbar-nav > li {
+	margin-top: -@navbar-border-top-width;
+	
+	&.active a {
+		border-top-color: @orange;
+	}
+}
+.navbar-nav > li > a {
+	border-top: @navbar-border-top-width solid transparent;
+	padding-bottom: @navbar-padding-vertical + floor(@navbar-border-top-width / 2);
+	padding-left: 20px;
+	padding-right: 20px;
+	text-transform: uppercase;
+	
+	@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	@media (min-width: @screen-lg-min) {
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+}
+.navbar-default .navbar-toggle {
+	background-color: @navbar-default-toggle-bg;
+}
+.logolarge {
+	font-family: 'Josefin Sans', sans-serif;
+	color:#fff;
+	font-size:56px;
+	font-weight:500;
+}
+.logo {
+		font-family: 'Josefin Sans', sans-serif;
+
+}
+	
+.navbar-logo {
+	.transition( top 0.1s ease-in-out );
+	border-top: 0px solid @brand-primary;
+	display: block;
+	left: 50%;
+	margin-left: -32px;
+	position: absolute;
+	top: 0;
+	z-index: 1;
+	
+	img {
+		width: 100%;
+	}
+	
+	@media (max-width: @screen-sm-max) {
+		img {
+			.size(128px,128px);
+		}
+		left: 50%;
+		margin-left: -64px;
+	}
+	@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+		
+		left: 50%;
+		margin-left: -64px;
+	}
+	@media (min-width: @screen-md-min) {
+		.size(128px,128px);
+		left: 50%;
+		margin-left: -64px;
+		top: 5;
+	
+	}
+	&:hover, &.clicked {
+		top: -@navbar-border-top-width;
+	}
+}
+.navbar-collapse {
+	.box-shadow( none );
+	// why max-height, bootstrap, why???
+	max-height: 1000px;
+	// not sure what the padding is doing on this element...
+	padding-left: 0;
+	padding-right: 0;
+}
+.navbar-nav {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+// hide the home link so it doesn't intersect the logo
+@media (max-width: @screen-xs-max) {
+	.nav-item-home {
+		
+	}
+	.navbar-nav .divider {
+		background-color: @navbar-default-toggle-border-color;
+	}
+}
+
+
+
+// FOOTER
+// ------------------------------
+#snowpi-body {
+	
+}
+#snowpi-footer {
+	// border-top: 8px solid white;
+	background-color: @brown;
+	color: mix(@brown, white, 50%);
+	font-size: @font-size-small;
+	padding: 20px 0;
+	margin-top: 60px;
+	position: relative;
+	text-align: center;
+	// text-transform: uppercase;
+	
+	p {
+		margin-bottom: 5px;
+	}
+	a {
+		color: white;
+	}
+	
+}
+
+// FORMS
+// ------------------------------
+
+// twbs right aligned labels looks weird
+.form-horizontal .control-label {
+	text-align: left;
+}
+
+// labels for checkboxes should look like content
+.checkbox { font-weight: inherit; }
+
+// allow gap between collapsed fields on small devices
+@media (max-width: @screen-xs-max) {
+	.form-group .row > [class^='col-'] {
+		margin-bottom: 10px;
+	}
+}
+
+// assume textarea's have adequate width
+// allow vertical resizing
+textarea {
+	.resizable(vertical);
+}
+
+
+
+// PAGE INTROS
+// ------------------------------
+.back-bar,
+.page-intro {
+	background-color: white;
+	border-bottom: 1px solid darken(desaturate(@body-bg, 30%), 8%);
+}
+.page-intro {
+	padding-bottom: 35px;
+	margin-bottom: 40px;
+	
+	p {
+		
+		font-size: floor(@font-size-base * 1.15);
+		font-weight: 200;
+		line-height: 1.4;
+		margin-bottom: 8px;
+
+		@media (min-width: @screen-sm-min) {
+			font-size: (@font-size-base * 1.5);
+		}
+		
+	}
+	
+	.buttons {
+		min-height: 30px;
+		margin-top: 14px;
+		
+		.btn {
+			margin-right: 10px;
+		}
+	
+		.twitter-follow-button {
+			position: absolute;
+			margin-top: 2px;
+		}
+	}
+}
+
+
+
+// MISC
+// ------------------------------
+.back-bar {
+	padding-bottom: 10px;
+	padding-top: 10px;
+	
+	p {
+		margin-bottom: 8px;
+	}
+}
+.thumbnail {
+	background-color: white;
+}
+

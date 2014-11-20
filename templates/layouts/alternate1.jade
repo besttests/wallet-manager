@@ -1,0 +1,106 @@
+include ../mixins/flash-messages
+doctype html
+html
+	head
+		meta(charset="utf-8")
+		meta(name="viewport", content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width")
+		
+		title= title || 'snowcoins'
+		link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
+		link(href="/snowhub/js/lib/jquery-ui/css/inquisive/jquery-ui-1.10.4.custom.css" rel="stylesheet")
+		link(href="/snowhub/styles/site.min.css", rel="stylesheet")
+			
+		block css	
+		block head
+	body.default(class=user.defaultTheme || 'themeable-'+user.theme.replace(' ',''))
+		#snowpi-wrapper
+			#confirm-modal.modal.fade( z-index="1031" tabindex="-1" role="dialog" aria-labelledby="Confirm" aria-hidden="true")
+				.modal-dialog(tabindex="1" )
+					.modal-content
+						.modal-header
+							button.close(data-dismiss="modal" aria-hidden="true") &times;
+							h4.modal-title 
+						.modal-body
+						.modal-footer
+			if user
+				#snowdogeback.container-fluid
+					.dogemenu.col-xs-1.col-md-2
+					.col-xs-11.col-md-10
+			.fademessage(style='display:none;')
+			.fadesuccess
+			.fadeerror(style='display:none;')
+			
+			//- BODY
+			#snowpi-body.clearfix
+				
+				block intro
+				
+				+flash-messages(messages)
+				
+				block content
+				.clearfix
+				
+			
+			//- FOOTER - no footer
+			.clearfix
+			#snowbackupwallet(style='display:none;')
+				.adderror(style='display:none;')
+				.row(role="form")
+					p Enter the directory path and optional filename to save the file.  This is not a local backup.  The wallet will backup to the location on the same machine it resides. Relative paths are relative to wallet owner's home directory.  
+				.row(role="form")
+					.form-group.input-group
+						span.input-group-addon.input-group-md.coinstamp File Location
+						input.form-control.coinstamp(id="snowbackuplocation" name="snowbackuplocation" placeholder="/remote/path/backup.dat.bak")
+					.col-xs-12
+						- var home=process.cwd();
+						p(style='text-align:right;font-size:14px;font-weight:bold') <span id='backupwalletpath'></span>  &nbsp;</br>  
+			#confirmpassphrase(style="display:none")
+				form#unlockwalletform
+					.adderror(style='display:none;')
+					p Please unlock your wallet to continue.
+					.form-group.input-group 
+						span.input-group-addon.input-group-sm.coinstamp Pass Phrase
+						input.form-control.coinstamp( type="password" required id="unlockphrase" name="upl" placeholder="enter pass phrase") 
+					.form-group.input-group 
+						span.input-group-addon.input-group-sm.coinstamp Timeout (sec)
+						select.form-control.coinstamp.col-md-4(id="unlocktime" )
+							option(value='5') 5
+							option(value='15') 15
+							option(value='30') 30
+							option(value='45') 45
+							option(value='60') 60
+							option(value='120') 120
+							option(value='180') 180
+							option(value='300') 300
+			#changepassphrase(style="display:none")
+				form#changewalletpassform
+					.adderror(style='display:none;')
+					p Enter your current passphrase first
+					.form-group.input-group 
+						span.input-group-addon.input-group-sm.coinstamp Passphrase
+						input.form-control.coinstamp( type="password" required id="currentphrase" name="currentphrase" placeholder="current  passphrase") 
+					p Enter your new passphrase and confirm
+					.form-group.input-group 
+						span.input-group-addon.input-group-sm.coinstamp Passphrase
+						input.form-control.coinstamp( type="password" required id="changephrase" name="changephrase" placeholder="new passphrase")
+					.form-group.input-group 
+						span.input-group-addon.input-group-sm.coinstamp Confirm
+						input.form-control.coinstamp( type="password" required id="confirmphrase" name="confirmphrase" placeholder="confirm passphrase") 
+		.clearfix
+	//- scripts
+	script(src='/snowhub/js/lib/jquery/jquery-1.10.2.min.js')
+	script(src='/snowhub/js/lib/jquery-ui/js/jquery-ui-1.10.4.custom.min.js')
+	script(src='/snowhub/js/lib/bootstrap/bootstrap.min.js')
+	
+
+	
+	script(src='/snowhub/js/jquery.selectbox-0.2.min.js')
+	script(src='/snowhub/js/jquery.ba-hashchange.min.js')
+	script(src='/snowhub/js/jquery.qrcode-0.7.0.min.js')
+	script(src='/snowhub/js/views/snowcoins.js')
+	script(src='/snowhub/js/lib/zeroclipboard/ZeroClipboard.min.js')
+	
+	script(src='/snowhub/js/site.js')
+	block js
+			
+	

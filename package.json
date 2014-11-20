@@ -1,0 +1,84 @@
+{
+  "name": "snowcoins",
+  "version": "0.0.9",
+  "uri": "https://code.snowpi.org/snowcoins",
+  "private": false,
+  "repository": { 
+    "type": "git",
+    "url": "https://github.com/snowkeeper/snowcoins.git"
+  },
+  "dependencies": {
+    "async": "~0.9.x",
+    "aws-sdk": "^2.0.21",
+    "bone.io": "~0.8.9",
+    "connect-mongo": "0.4.x",
+    "dotenv": "~0.0.3",
+    "express": "~3.3.8",
+    "hat": "~0.0.3",
+    "jade": "~1.5.x",
+    "keystone": "0.2.x",
+    "keystone-utils": "~0.1.8",
+    "less-middleware": "~1.0.4",
+    "lodash": "2.4.x",
+    "moment": "~2.4.0",
+    "mongoose": "3.8.x",
+    "node-dogecoin": "",
+    "numeral": "~1.5.3",
+    "range_check": "~0.0.4",
+    "react": "0.11.x",
+    "request": "~2.33.0",
+    "sanitizer": "~0.1.1",
+    "snowcoins-link": "~0.0.x",
+    "snowcoins-link-server": "~0.0.x",
+    "snowcoins-tracker": "0.0.x",
+    "snowpi-greeter": "",
+    "snowpi-notcron": "",
+    "socket.io": "0.9.16"
+  },
+   "directories": {
+    "lib": "./lib"
+  },
+  "main": "./lib/index.js",
+  "engines": {
+    "node": "~0.10.x",
+    "npm": "~1.4.x"
+  },
+  "scripts": {
+    "build": "grunt react",
+    "dev": "grunt watch & nodemon --watch routes --watch models --watch lib snowcoins-dev.js"
+  },
+  "author": {
+    "name": "snowkeeper"
+  },
+  "license": "MIT",
+  "keywords": [
+    "digital coin",
+    "wallet",
+    "bitcoin",
+    "dogecoin",
+    "litecoin",
+    "coordinator"
+  ],
+  "readmeFilename": "README.md",
+  "gitHead": "",
+  "bugs": {
+    "url": "https://github.com/snowkeeper/snowcoins/issues"
+  },
+  "_id": "snowcoins@0.0.9",
+  "_from": "snowcoins@0.0.8",
+  "devDependencies": {
+    "expose-loader": "^0.5.3",
+    "grunt": "^0.4.5",
+    "grunt-browserify": "^3.0.1",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-express-server": "^0.4.19",
+    "grunt-react": "^0.9.0",
+    "grunt-shell": "^1.1.1",
+    "grunt-webpack": "^1.0.8",
+    "load-grunt-tasks": "^0.6.0",
+    "nodemon": "^1.2.1",
+    "webpack": "^1.4.0-beta4",
+    "webpack-dev-server": "^1.6.4"
+  }
+}

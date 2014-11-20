@@ -1,0 +1,53 @@
+.bs-example(id='snow-transactions')
+	include mixins/prettymessages.jade
+	form#txoptionsform
+		.txoptions( style='margin-left:10px;')
+			.pull-left.accountlabel account: 
+			.pull-left.txaccounts 
+				select(id="txaccounts" name="account")
+					option(value='all') all
+					each val,ii in accounts
+						- var vv = (val.name==qs.account)?' selected':''
+						| <option value='#{val.name}' #{vv}>#{val.name}</option> 
+			.pull-left.txrowslabel rows:
+			.pull-left.txrows
+				select(id="txrows" name="num")
+					option(value=5 selected=qs.num == 5) 5
+					option(value=10  selected=qs.num == 10) 10
+					option(value=20 selected=qs.num == 20) 20
+					option(value=30 selected=qs.num == 30) 30
+					option(value=40 selected=qs.num == 40) 40
+					option(value=50 selected=qs.num == 50) 50
+					option(value=75 selected=qs.num == 75) 75
+					option(value=100 selected=qs.num == 100) 100
+			.pull-left: button.btn.btn-xs.btn-info.txgobutton(type="submit") 
+				| GO 
+				input(type="hidden" value="0" id="txstart")
+		.clearfix
+	.table-responsive(style='margin:0 10px;')
+		table.table.table-hover
+			thead
+				tr
+					th: span.glyphicon.glyphicon-sort account
+					th: span.glyphicon.glyphicon-sort amount
+					th: span.glyphicon.glyphicon-sort address
+					th: span.glyphicon.glyphicon-sort type
+					th.snowsortdate: span.glyphicon.glyphicon-sort time
+					
+			tbody
+				tr.skipme.txrowsmore(style='display:none')
+					td(colspan='5')
+				each val,ii in tx
+					tr.txclickrow(style='cursor:pointer;' data-open=JSON.stringify(val))
+						td #{val.account}
+						td #{val.amount}
+						td #{val.address}
+						td 
+							| #{val.category}
+							if val.generated==true
+								span.glyphicon.glyphicon-record
+								p #{val.confirmations}
+						- var date = new Date(val.time*1000);
+						- var formattedTime = date.toLocaleString();				
+						td #{formattedTime} 
+				

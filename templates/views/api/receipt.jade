@@ -1,0 +1,21 @@
+p Your coin was sent successfully.  View details below.
+.table-responsive(style='max-width:580px;overflow:auto;')
+	table.table.table-hover
+		tbody
+			tr: td account
+				td #{val.account}
+			tr: td address
+				td #{val.address}
+			tr: td category
+				td #{val.category}
+			tr: td amount
+				td #{val.amount}
+			tr: td confirmations
+				td #{val.confirmations}
+			tr: td transaction id
+				td #{val.txid}
+			- var date = new Date(val.time*1000);
+			- var Time = date.toLocaleString();
+			tr: td time
+				td #{Time}
+			

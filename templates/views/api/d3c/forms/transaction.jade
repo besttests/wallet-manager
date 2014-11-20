@@ -1,0 +1,46 @@
+form#txForm
+	.col-xs-12
+		.form-group.input-group
+			span.input-group-addon.input-group-sm.coinstamp #{snowtext.d3c.txform.inputs.ledgerid.label} 
+			input.form-control.coinstamp( id="ledgerid", readonly, name="ledgerid" ,placeholder="#{snowtext.d3c.txform.inputs.ledgerid.placeholder}" )
+			input(type='hidden', id='action'  name='action' value='create')
+			input(type='hidden', id='command'  name='command' value='transaction')
+		#hidetxform
+			#txinfo
+			.form-group.input-group
+				span.input-group-addon.input-group-sm.coinstamp #{snowtext.d3c.txform.inputs.amount.label}	
+				.col-xs-7
+					input.form-control.coinstamp(type='text', id="txtotal", name="amount", placeholder="#{snowtext.d3c.txform.inputs.amount.placeholder}" )
+				.col-xs-5
+					select.form-control(id="txcurrency" name="attended" )
+					input(type='hidden', id='txwallet'  name='wallet' value='')
+			.form-group.input-group.manual
+				span.input-group-addon.input-group-sm.coinstamp #{snowtext.d3c.txform.inputs.address.label}
+				input.form-control.coinstamp( type="text"  id="txmanualaddress" name="manualaddress" placeholder="#{snowtext.d3c.txform.inputs.address.placeholder}").input.input-faded
+			.form-group.input-group.manual(style='display:none;')
+				span.input-group-addon.input-group-sm.coinstamp #{snowtext.d3c.txform.inputs.account.label}
+				input.form-control.coinstamp( type="text"  id="txaccount" name="account" placeholder="#{snowtext.d3c.txform.inputs.account.placeholder}").input.input-faded.attendedaccounts
+			.form-group.input-group.manual(style='display:none;')
+				span.input-group-addon.input-group-sm.coinstamp #{snowtext.d3c.txform.inputs.address.label}
+				select#txaddress.form-control(name='address').input.input-faded
+			.form-group.input-group
+				span.input-group-addon.input-group-sm.coinstamp #{snowtext.d3c.txform.inputs.status.label}
+				select#txstatus.form-control(name='address').input.input-faded
+					- var slist = snowtext.d3c.txform.inputs.status.list.split(',')
+					each val in slist
+						option #{val.trim()}
+			.col-xs-6
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp #{snowtext.d3c.txform.inputs.track.label}
+					select#txtrack.form-control(name='address').input.input-faded
+						- var tlist = snowtext.d3c.txform.inputs.track.list.split(',')
+						each val in tlist
+							option #{val.trim()}
+			.col-xs-6
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp #{snowtext.d3c.txform.inputs.confirmations.label}
+					input.form-control.coinstamp(type="number" id="txconfirmations",  name="confirmations" ,placeholder="#{snowtext.d3c.txform.inputs.confirmations.placeholder}" )
+		.form-group
+			button.btn.btn-primary.btn-sm(type='submit' id='buttonsend' data-loading-text='#{snowtext.d3c.txform.buttons.submit.loading}') #{snowtext.d3c.txform.buttons.submit.label}
+					
+		.clearfix

@@ -1,0 +1,288 @@
+if locals.data.qq && locals.data.qq.tab=='settings'
+	include mixins/dccsettings.jade
+if !locals.data.qq || locals.data.qq.tab!='settings'
+	include mixins/dccsetup.jade
+.clearfix
+		
+#dccaddclientdiv(style='display:none')
+	form#dccaddclientform
+		.adderror
+		.form-group.input-group
+			span.input-group-addon.input-group-sm.coinstamp Name
+			input.form-control.coinstamp.input.input-faded( type="text"  id="name" name="name" placeholder="name of client") 
+			
+		.form-group.input-group
+			span.input-group-addon.input-group-sm.coinstamp API Key
+			input.form-control.coinstamp.input.input-faded( type="text"  id="apikey" name="apikey" placeholder="leave blank to generate a key") 
+			input(type='hidden', name='action', value='add-client')
+		.form-group.input-group
+			span.input-group-addon.input-group-sm.coinstamp Auth Level
+			select(name='authlevel').form-control.input.input-faded
+				option 6
+				option 7
+				option(selected='selected') 8
+				option 9
+				option 10
+		.form-group.input-group
+			span.input-group-addon.input-group-sm.coinstamp IP Range 
+				span.glyphicon.glyphicon-info-sign.bstooltip(style="margin-left:3px;" data-toggle="tooltip"  data-placement="right"  title="Restrict client access to an IP or range of IP addresses. <br /> ex: 10.0.0.1/32 <br />ex: 10.0.0.0/8 <br /> Leave blank or select anywhere for an open key without ip checks.")
+			.col-md-8(style="padding:0")
+				input.form-control.coinstamp.input.input-faded( type="text"  id="ip" name="ip" placeholder="0.0.0.0/0")
+			.col-md-4(style="padding:0")
+				select#pickip.form-control.input.input-faded
+					option(value=1) anywhere
+					option(value=2) my ip
+					option(value=3 selected) custom
+					option(value=4) my local block
+#dccaddmasterdiv(style='display:none')
+	form#dccaddclientform
+		.adderror
+		.form-group.input-group
+			span.input-group-addon.input-group-sm.coinstamp Name
+			input.form-control.coinstamp.input.input-faded( type="text"  id="name" name="name" placeholder="name of master")
+		.form-group.input-group
+			span.input-group-addon.input-group-sm.coinstamp Manage
+				span.glyphicon.glyphicon-info-sign.bstooltip(style="margin-left:3px;" data-toggle="tooltip"  data-placement="right" title="Hold Ctrl and click to add multiple clients.")
+			select.form-control(name='masterclients' multiple).input.input-faded
+				option All Clients
+				each val in locals.data.cc
+					-if (val.type=='client') 
+						option(value="#{val._id}") #{val.name}
+			
+		.form-group.input-group
+			span.input-group-addon.input-group-sm.coinstamp API Key
+			input.form-control.coinstamp.input.input-faded( type="text"  id="apikey" name="apikey" placeholder="leave blank to generate a key") 
+			input(type='hidden', name='action', value='add-master')
+		.form-group.input-group
+			span.input-group-addon.input-group-sm.coinstamp Auth Level
+			select(name='authlevel').form-control.input.input-faded
+				option 1
+				option 2
+				option(selected='selected') 3
+				option 4
+				option 5
+			
+		.form-group.input-group
+			span.input-group-addon.input-group-sm.coinstamp IP Range 
+				span.glyphicon.glyphicon-info-sign.bstooltip(style="margin-left:3px;" data-toggle="tooltip"  data-placement="right" data-container='body' title="Restrict client access to an IP or range of IP addresses. <br /> ex: 10.0.0.1/32 <br />ex: 10.0.0.0/8 <br /> Leave blank or select anywhere for an open key without ip checks.")
+			.col-sm-8
+				input.form-control.coinstamp.input.input-faded( type="text"  id="ip" name="ip" placeholder="0.0.0.0/0")
+			.col-sm-4
+				select#pickip.form-control.input.input-faded
+					option(value=1) anywhere
+					option(value=2) my ip
+					option(value=3 selected) custom
+					option(value=4) my local block
+			
+#dccaddwalletdiv(style='display:none')
+	form#dccaddwalletform.easytab.reversetab
+		.adderror
+		nav.navbar.navbar-inverse(role="navigation")
+			ul#receivertabs.nav.navbar-nav
+				li.active: a(data-target="TABwallet"  data-toggle="tab") Wallet
+				li: a(data-target="TABaddress" data-toggle="tab") Address
+		.tab-content
+			.form-group.input-group
+				span.input-group-addon.input-group-sm.coinstamp Name
+				input.form-control.coinstamp.input.input-faded( type="text"  id="name" name="name" placeholder="name of unattended receiver")
+			#TABwallet.tab-pane.active
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp Wallet
+					select#dccaddwallet.form-control(name='dccaddwallet').input.input-faded
+						option Select A Wallet
+						each w in locals.data.wally
+							option(value="#{w._id}") #{w.name}
+					
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp Send to Format
+					select#addreceiverformat(name='format').form-control.input.input-faded
+						option(value=1) New Account & Address per transaction
+						option(value=2) One Account + New Address per transaction
+						option(value=3) One Account & Address for a single transaction
+					
+				#addreceiveraccount.form-group.input-group(style="display:none;")
+					span.input-group-addon.input-group-sm.coinstamp Account
+					input.form-control.coinstamp.input.input-faded( type="text"  id="account" name="account" placeholder="new or current account").input.input-faded
+			#TABaddress.tab-pane
+				p.text-warning *Blockchain monitoring support not functional yet and these receivers can not be tracked.
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp Coin Address
+					input.form-control.coinstamp.input.input-faded( type="text"  id="address" name="address" placeholder="address")
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp Coin Type
+					input.form-control.coinstamp.input.input-faded( type="text"  id="receivertype" name="receivertype").input.input-faded
+			.form-group.input-group
+				span.input-group-addon.input-group-sm.coinstamp Total Offset
+					span.glyphicon.glyphicon-info-sign.bstooltip(style="margin-left:3px;" data-toggle="tooltip"  data-placement="right" data-container='body' title="If you plan on accepting multiple coins for payment you should set an offset.  If you charge 55000 Ð and accept Ð, BTC and LTC for payment the conversion may leave a payment at 49990 Ð.  If you set the offset to 10 Ð the order would be considered complete.")
+				input.form-control.coinstamp.input.input-faded( type="text"  id="totaloffset" name="totaloffset" )
+			.form-group.input-group
+				span.input-group-addon.input-group-sm.coinstamp Confirmations
+					span.glyphicon.glyphicon-info-sign.bstooltip(style="margin-left:3px;" data-toggle="tooltip"  data-placement="right" data-container='body' title="The number of confirmations needed to consider a transaction payment complete.")
+				input.form-control.coinstamp.input.input-faded( type="text"  id="confirmations" name="confirmations" )
+			
+		input(type='hidden', name='action', value='add-wallet')
+		input.fw-useme(type='hidden', name='useme', id="fw-useme" value='TABwallet')
+
+#dccaddofflinediv(style='display:none')
+	form#dccaddofflineform.easytab.reversetab
+		.adderror
+		nav.navbar.navbar-inverse(role="navigation")
+			ul#offlinetabs.nav.navbar-nav
+				li.active: a(data-target="TABmanual" data-toggle="tab") Manual
+				li: a(data-target="TABfromwallet"  data-toggle="tab") From Wallet
+		.tab-content
+			.form-group.input-group
+				span.input-group-addon.input-group-sm.coinstamp Name
+				input.form-control.coinstamp( type="text"  id="name" name="name" placeholder="name of unattended receiver").input.input-faded
+				
+			#TABmanual.tab-pane.active
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp Coin Address
+					input.form-control.coinstamp( type="text"  id="address" name="address" placeholder="address").input.input-faded
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp Coin Type
+					input.form-control.coinstamp( type="text"  id="type" name="type").input.input-faded
+			#TABfromwallet.tab-pane
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp From
+					select#fw-pickwallet(name='coinwallet').form-control.input.input-faded
+						option Select A Wallet
+						each w in locals.data.wally
+							option(value="#{w._id}") #{w.name}
+					
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp Send to Format
+					select#offlineformat(name='format').form-control.input.input-faded
+						option(value=1) New Account & Address per transaction
+						option(value=2) One Account / New Address per transaction
+						option(value=3) One Account & Address for all transactions
+					
+				#offlineaccount.form-group.input-group(style="display:none")
+					span.input-group-addon.input-group-sm.coinstamp Account
+					input.form-control.coinstamp.input.input-faded( type="text"  id="account" name="account" placeholder="new or current account").input.input-faded
+				
+			.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp Find Me Key
+					input.form-control.coinstamp.input.input-faded( type="text"  id="apikey" name="apikey" placeholder="must be unique - leave blank to generate a key") 
+					input(type='hidden', name='action', value='add-offline')
+					input.fw-useme(type='hidden', name='useme', id="fw-useme" value='TABmanual')
+
+			.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp Expires
+					select(name='expires').form-control.input.input-faded
+						option(value='laina') Never
+						option(value='burnonimpact') One Use Only
+						option(value="1") 1 day
+						option(value="7") 1 week
+						option(value="30") 30 days
+						option(value="180") 6 months
+						option(value="365") 1 year
+					
+			.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp Display
+					textarea.form-control.coinstamp.input.input-faded(type="textarea" rows='3' id="display" name="display" placeholder="Comments to the sender.") 
+
+#dccaddtrackerdiv(style='display:none')
+	form#dccaddtrackerform.easytab.reversetab
+		.adderror
+		nav.navbar.navbar-inverse(role="navigation")
+			ul#receivertabs.nav.navbar-nav
+				li.active: a(data-target="TABwallet"  data-toggle="tab") Wallet Account
+				li: a(data-target="TABaddress" data-toggle="tab") Address
+		.tab-content
+			.form-group.input-group
+				span.input-group-addon.input-group-sm.coinstamp Name
+				input.form-control.coinstamp( type="text"  id="name" name="name" placeholder="name of tracker").input.input-faded
+			#TABwallet.tab-pane.active
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp Wallet
+					select#trackerwallet.form-control(name='trackerwallet').input.input-faded
+						option Select A Wallet
+						each w in locals.data.wally
+							option(value="#{w._id}") #{w.name}
+					
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp Account
+					input.form-control.coinstamp( type="text"  id="account" name="account" placeholder="new or current account - blank for main account").input.input-faded
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp Address
+					select#dccpickaddress.form-control(name='dccpickaddress').input.input-faded
+						option#cna(value='new') Create New Address
+					
+			#TABaddress.tab-pane
+				p.text-warning *Blockchain monitoring support not functional yet and this address will not be tracked.
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp Coin Address
+					input.form-control.coinstamp( type="text"  id="address" name="address" placeholder="address").input.input-faded
+				.form-group.input-group
+					span.input-group-addon.input-group-sm.coinstamp Coin Type
+					input.form-control.coinstamp( type="text"  id="receivertype" name="receivertype").input.input-faded
+			
+		input(type='hidden', name='action', value='add-tracker')
+		input.fw-useme(type='hidden', name='useme', id="fw-useme" value='TABwallet')
+					
+#dccawdiv(style='display:none')
+	form#awform
+		.adderror
+		.form-group
+			label(for="awpickwallet") Select Wallet
+			.clearfix
+			.col-md-6.col-xs-12
+				select#awpickwallet.form-control
+					option Select A Wallet
+					each w in locals.data.wally
+						option(value="#{w._id}") #{w.name}
+				
+		.clear(style="height:15px")
+		.form-group
+			label(for="awaddress") Withdraw To
+			.clearfix
+			.col-xs-12
+				input#awaddress.form-control(type="text" placeholder="withdraw to address")
+		.clear(style="height:15px")
+		.form-group
+			label(for="awamount") When Balance Exceeds
+			.clearfix
+			.col-md-5.col-xs-9
+				input#awamount.form-control(type="text" placeholder="whole number amount")
+		.clearfix
+
+#dcccrdiv(style='display:none')
+	form#crform
+		.adderror
+		p Last Run: #{locals.data.lastrun}
+		p Next Run: #{locals.data.nextrun}
+		.form-group
+			label(for="crupdatetime") Update my conversion rates every...
+			.clearfix
+			.col-md-6.col-xs-12
+				select#crupdatetime.form-control
+					- var sel = {}
+					- sel[locals.data.repeattime]=' selected'
+					option(value='15000' selected=sel['15000']) 15 secs
+					option(value='60000' selected=sel['60000']) 1 minutes
+					option(value='900000' selected=sel['900000']) 15 minutes
+					option(value='1800000' selected=sel['1800000']) 30 minutes
+					option(value='2700000' selected=sel['2700000']) 45 minutes
+					option(value='3600000' selected=sel['3600000']) 60 minutes
+					option(value='5400000' selected=sel['5400000']) 90 minutes
+					option(value='7200000' selected=sel['7200000']) 2 hours
+					option(value='14400000' selected=sel['14400000']) 4 hours
+					option(value='21600000' selected=sel['21600000']) 6 hours
+					option(value='28800000' selected=sel['28800000']) 8 hours
+					option(value='36000000' selected=sel['36000000']) 10 hours
+					option(value='43200000' selected=sel['43200000']) 12 hours
+					option(value='64800000' selected=sel['64800000']) 18 hours
+					option(value='86400000' selected=sel['86400000']) 24 hours
+				
+		.clearfix
+		.form-group(style="margin-top:15px")
+			label(for="crapi") Conversion Api
+			.clearfix
+			.col-md-6.col-xs-12.clearfix
+				select#crapi.form-control
+					option cryptocoincharts
+					option(disabled) prelude.io
+				
+		.clearfix
+	.clear(style="height:15px")

@@ -1,0 +1,27 @@
+form#ledgerForm
+	.col-xs-12
+		.form-group.input-group
+			span.input-group-addon.input-group-sm.coinstamp #{snowtext.d3c.ledgerform.inputs.ledgerid.label} 
+			input.form-control.coinstamp( id="ledgerid", name="ledgerid" ,placeholder="#{snowtext.d3c.ledgerform.inputs.ledgerid.placeholder}"  )
+			input(type='hidden', id='ledgerkey' name='key')
+			input(type='hidden', id='action'  name='action' value='create')
+			input(type='hidden', id='command'  name='command' value='ledger')
+		.form-group.input-group
+			span.input-group-addon.input-group-sm.coinstamp #{snowtext.d3c.ledgerform.inputs.total.label}
+			
+			.col-xs-7
+				input.form-control.coinstamp(type='text', id="ledgertotal", name="total", placeholder="#{snowtext.d3c.ledgerform.inputs.total.placeholder}" value="#{ledgertotal || ''}")
+			.col-xs-5
+				select.form-control.currencyselect(id="ledgercurrency" name="currency" )
+					option usd
+					option eur
+		.form-group.input-group
+			span.input-group-addon.input-group-sm.coinstamp #{snowtext.d3c.ledgerform.inputs.totaloffset.label}
+				span.glyphicon.glyphicon-info-sign.bstooltip(style="margin-left:3px;" data-toggle="tooltip"  data-placement="right" data-container='body' title="#{snowtext.d3c.ledgerform.inputs.totaloffset.help}")
+			input.form-control.coinstamp(type='text', id="ledgertotaloffset", name="totaloffset", placeholder="#{snowtext.d3c.ledgerform.inputs.totaloffset.placeholder}" value="#{ledgertotaloffset || ''}")
+		.form-group.input-group
+			span.input-group-addon.input-group-sm.coinstamp #{snowtext.d3c.ledgerform.inputs.clients.label}
+			select.form-control(id="ledgerclients" name="clients" multiple)
+		.form-group
+			button.btn.btn-primary.btn-sm.snowsendcoin(type='submit' id='buttonsend' data-loading-text='#{snowtext.d3c.ledgerform.buttons.submit.loading}') #{snowtext.d3c.ledgerform.buttons.submit.label}
+		.clearfix

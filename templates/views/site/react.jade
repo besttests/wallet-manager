@@ -1,0 +1,68 @@
+extends ../../layouts/react
+block head
+	script #{locals.data.defaultcoins}
+block content
+	.fademessage(style='display:none;')
+		.html
+		.killfademessage(onClick="snowUI.killFlash('message')" )
+			button.close(type="button")
+				span(aria-hidden="true") &times;
+				span.sr-only Close
+	.fadeloadingmessage(style='display:none;')
+		.html
+		.killfademessage(onClick="snowUI.killFlash('loadingmessage')" )
+			button.close(type="button")
+				span(aria-hidden="true") &times;
+				span.sr-only Close
+	.fadesuccess
+		.html
+		.killfademessage(onClick="snowUI.killFlash('success')" )
+			button(type="button").close
+				span(aria-hidden="true") &times;
+				span.sr-only Close
+	.fadeerror(style='display:none;')
+		.html
+		.killfademessage(onClick="snowUI.killFlash('error')" )
+			button.close(type="button")
+				span(aria-hidden="true") &times;
+				span.sr-only Close
+	#snowcoins-react
+	#snowcoins-loader
+		.loader(style='display:none;')
+			|  <br />
+			div#loadgif(style="")
+block js
+	script.
+		var _csrf = '#{locals.token}';
+	script(src='/snowhub/js/lib/react/react-with-addons.js')
+	
+	script(src='/api/snowcoins/simple/language')
+	script(src='/bonetemplates')
+	
+	script(src='/snowhub/js/lib/jquery/jquery.min.js')
+	script(src='/snowhub/js/lib/jquery-ui/js/jquery-ui-1.10.4.custom.min.js')
+	script(src='/snowhub/js/lib/moment/moment.min.js')
+	
+	script(src='/snowhub/js/lib/bootstrap/bootstrap.min.js')
+	script(src='/snowhub/js/lib/react-bootstrap/react-bootstrap.min.js')
+
+	script(src='/snowhub/js/lib/bone.io/bone.io.min.js')
+	
+	script(src='/snowhub/js/jquery.selectbox-0.2.min.js')
+	script(src='/snowhub/js/jquery.qrcode-0.7.0.min.js')
+	script(src='/snowhub/js/lib/zeroclipboard/ZeroClipboard.min.js')
+	
+	script(src='/snowhub/js/snowbug.js')
+	script(src='/snowhub/js/site.js')
+	script(src='/snowhub/js/ui/ui.js')
+	script(src='/snowhub/js/ui/ui/modals.js')
+	
+	script(src='/snowhub/js/ui/ui/receive.js')
+	script(src='/snowhub/js/ui/ui/wallet.js')
+	script(src='/snowhub/js/ui/ui/settings.js')
+	
+	script(src='/snowhub/js/ui/router.js')
+	script(src='/snowhub/js/comms.js')
+
+		
+		

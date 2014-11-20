@@ -1,0 +1,16 @@
+#snow-contacts
+	include mixins/prettymessages.jade
+	.table-responsive
+		table.table.table-hover
+			thead
+				tr
+					th Name
+					th Address	
+					th del	
+			tbody
+			each val,ii in peeps	
+				tr(id='#{val._id}' )
+					td(onclick="$('#sendcointoaddress').val('#{val.address}');" style="cursor:pointer;"  data-dismiss="modal") #{val.name}
+					td(onclick="$('#sendcointoaddress').val('#{val.address}');" style="cursor:pointer;"  data-dismiss="modal") #{val.address}
+					td: span.glyphicon.glyphicon-remove-sign.text-danger.delcontact(data-address='#{val._id}' style="cursor:pointer;")
+					

@@ -1,0 +1,8 @@
+#prettysuccess(style=message?'':'display:none')
+	.alert.alert-success.alert-dismissable
+		button.close(data-dismiss='alert' aria-hidden="true") &times;
+		p!=message
+#prettyerror(style=error?'':'display:none')
+	.alert.alert-danger.alert-dismissable
+		button.close(data-dismiss='alert' aria-hidden="true") &times;
+		p!=error

@@ -1,0 +1,29 @@
+extends ../../layouts/dcc
+block css
+	style.
+		body{background:#fff;}
+block intro
+	if !a
+		.page-intro: .container
+			h1 snowcoins
+			p Share Coins... Enter your key for the share address.    
+			.row
+				.col-xs-10.col-xs-offset-2.col-mb-11.col-md-offset-1(style='margin-top:20px;')
+					button.btn.btn-info.joind4button Get Share Address
+			
+block content
+	#joind4html(style='display:none')
+		.adderror(style='display:none;')
+		.row(role="form")
+			p Enter the key that you generated on the home app.
+		.row(role="form")
+			.form-group.input-group
+				span.input-group-addon.input-group-md.coinstamp clientConnect Key
+				input.form-control.coinstamp(value=cck id="clientConnectkey" name="clientConnectkey" placeholder="clientConnect key")
+			.col-xs-12
+	if user
+			
+block js
+	script.
+		
+		

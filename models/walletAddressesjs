@@ -1,0 +1,32 @@
+var keystone = require('keystone'),
+	Types = keystone.Field.Types;
+
+/**
+ * Post Categories Model
+ * =====================
+ */
+
+var WalletAddresses = new keystone.List('WalletAddresses', {
+	autokey: { from: '_id', path: 'key', unique: true }
+});
+
+WalletAddresses.add({
+	wallet: { type: Types.Relationship, ref: 'Wallets', index: true,initial:true },
+	name: { type: String, required: true, initial: true, index:true },
+	address: { type: String, required: true, initial: true, index:true },
+	account:  { type: Types.Relationship, ref: 'WalletAccounts' },
+	password: { type: Types.Password, initial: true },
+	date: { type: Types.Date, default: Date.now, index: true },
+	owner: { type: Types.Relationship, ref: 'User', index: true, initial: true },
+	comments: { type: Types.Markdown, initial: true }
+});
+
+
+
+/**
+ * Registration
+ * ============
+ */
+WalletAddresses.defaultColumns = 'address, wallet, account, date|20%, owner';
+WalletAddresses.addPattern('standard meta');
+WalletAddresses.register();
