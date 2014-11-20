@@ -15,9 +15,6 @@ exports = module.exports = function(req, res) {
 		wallets: [],
 		accounts: []
 	};
-<<<<<<< HEAD
-	console.log('init view',req.params.apikey);
-=======
 	view.on('init', function(next) {
 		
 		//console.log('d3c route',req.params.apikey);
@@ -38,7 +35,6 @@ exports = module.exports = function(req, res) {
 		}
 		
 	});
->>>>>>> modulate
 	view.render('site/d3c',{d3ckey:req.params.apikey});
 	
 }

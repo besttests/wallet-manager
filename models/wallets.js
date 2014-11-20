@@ -22,35 +22,15 @@ var WalletAccounts = new mongoose.Schema({
 	comments: { type: String }
 });
 
-var AddressTransactions = new mongoose.Schema({
-	category: { type: String, index:true },
-	address: { type: String },
-	account: { type: mongoose.Schema.Types.ObjectId },
-	dateAdded: { type: Types.Date, default: Date.now },
-	time: { type: Types.Date },
-	txid: { type: String },
-	confirmations: { type:Number, default:0 },
-	blockhash: {type: String },
-	blockindex: {type:Number, default:0 },
-	blocktime: {type:Types.Date },
-	amount: { type:String }
-});
-
 var WalletAddresses = new mongoose.Schema({
 	name: { type: String},
 	address: { type: String, index:true },
 	account: { type: mongoose.Schema.Types.ObjectId },
 	password: { type: String },
 	date: { type: Types.Date, default: Date.now },
-<<<<<<< HEAD
-	owner: { type: mongoose.Schema.Types.ObjectId, index: true },
-	comments: { type: String },
-	transactions: [AddressTransactions]
-=======
 	balance: { type: Number, index: true },
 	received: { type: Number, index: true },
 	comments: { type: String }
->>>>>>> modulate
 });
 
 
@@ -71,7 +51,7 @@ Wallet.add({
 	apikey: { type: String,  initial: true, select : false },
 	content: { type: String },
 	coin: { type: String,  initial: true,required: true,default:'dogecoin' },
-	coinstamp: { type: String,  initial: true ,default:'Ð'},
+	coinstamp: { type: String,  initial: true ,default:'Ã'},
 	cointicker: { type: String,  initial: true ,default:'doge'},
 	coinapi: { type: String, default:'rpc',initial:true },
 	currency: { type: String, default:'usd',initial:true },

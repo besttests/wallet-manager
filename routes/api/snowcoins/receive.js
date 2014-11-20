@@ -7,9 +7,6 @@ var keystone = require('keystone'),
 	getrates = require('../../../lib/snowcoins/coinrates.js'),
 	_ = require('lodash'),
 	numeral = require('numeral'),
-<<<<<<< HEAD
-	notcron = require('snowpi-notcron');
-=======
 	notcron = require('snowpi-notcron'),
 	snowcoins = require('snowcoins'),
 	snowlist = snowcoins.get('lists'),
@@ -17,7 +14,6 @@ var keystone = require('keystone'),
 
 
 	
->>>>>>> modulate
 exports = module.exports = function(req, res) {
 		
 	//we shouldnt be here if not a user but check again
@@ -154,10 +150,10 @@ exports = module.exports = function(req, res) {
 					burner: recur
 				};
 				//if(awallet!='Select A Wallet')newrec12.wallet=awallet;
-				//console.log(newrec12)
+				console.log(newrec12)
 				Static.model.findOne()
 					.where('owner', req.user._id)
-					.where('address', address)
+					.where('apikey', myapikey)
 					.exec(function(err, data) {
 						
 						if(data && data.address !== address) {
@@ -377,35 +373,6 @@ exports = module.exports = function(req, res) {
 					});
 				
 				
-<<<<<<< HEAD
-			}
-			else if(req.body.action=='setcurrencyrates' || req.body.action=='setcurrencyratesnow')
-			{
-				var useApi=req.body.api,
-					jobname='currencyrates';
-				
-				locals.data.qq.tab='settings';
-				
-				var fn = {
-					module: '/lib/snowcoins/coinrates.js',
-					fn : 'updaterates',
-					args: [useApi],
-					callback: '',
-				}				
-				notcron.persist.set(req.body.when,fn,jobname).start(function() { 
-					//console.log('callback from intervals.set.start()');
-					getrates.updaterates(useApi,function(){
-						//console.log('callback from updaterates');
-						return next();
-					});	
-					
-				});
-				
-				
-			
-				
-=======
->>>>>>> modulate
 			} else {
 				next();
 			}
@@ -523,5 +490,4 @@ exports = module.exports = function(req, res) {
 		return res.apiResponse({ success: false, err:'Error' });
 	}
 }
-
 
