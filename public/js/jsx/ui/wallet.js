@@ -761,7 +761,7 @@ WalletUI.add = React.createClass({
 						<span className="input-group-addon input-group-md coinstamp">
 							<div style={{width:55,marginLeft:-5}}>Api</div>
 						</span>
-						<select name="coinapi" value={this.props.config.wally.coinapi} ref="aw-coinapi" className="form-control coinstamp">
+						<select name="coinapi" defaultValue={this.props.config.wally.coinapi} ref="aw-coinapi" className="form-control coinstamp">
 						<option value="rpc" >rpc</option>
 						</select>
 					</div>
@@ -778,7 +778,7 @@ WalletUI.add = React.createClass({
 						<span className="input-group-addon input-group-md coinstamp">
 							<div style={{width:55,marginLeft:-5}}>SSL</div>
 						</span>
-						<select name="isSSL" value={this.props.config.wally.isSSL} ref="aw-ssl" className="form-control coinstamp">
+						<select name="isSSL" defaultValue={this.props.config.wally.isSSL ? "1":"0"} ref="aw-ssl" className="form-control coinstamp">
 						<option value="0">No</option>
 						<option value="1">Yes</option>
 						</select>

@@ -156,7 +156,7 @@ exports = module.exports = function(req, res) {
 					tracker.create(newrec11,function(err,doc) {console.log('returned from tracker')})
 				} else {
 					/*delete the tracker just in case */
-					tracker.removeByName('wally-'+wally.key,req.user,function(err){if(err)consoloe.log('error removing tracker on wallet save',err);}); 
+					tracker.removeByName('wally-'+wally.key,req.user,function(err){if(err)console.log('error removing tracker on wallet save',err);}); 
 				}
 				
 				/* update the accounts and addresses */

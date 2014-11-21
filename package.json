@@ -1,6 +1,6 @@
 {
   "name": "snowcoins",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "uri": "https://code.snowpi.org/snowcoins",
   "private": false,
   "repository": { 
@@ -64,8 +64,8 @@
   "bugs": {
     "url": "https://github.com/snowkeeper/snowcoins/issues"
   },
-  "_id": "snowcoins@0.0.9",
-  "_from": "snowcoins@0.0.8",
+  "_id": "snowcoins@0.0.11",
+  "_from": "snowcoins@0.0.10",
   "devDependencies": {
     "expose-loader": "^0.5.3",
     "grunt": "^0.4.5",

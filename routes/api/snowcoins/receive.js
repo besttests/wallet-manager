@@ -153,7 +153,7 @@ exports = module.exports = function(req, res) {
 				console.log(newrec12)
 				Static.model.findOne()
 					.where('owner', req.user._id)
-					.where('apikey', myapikey)
+					.where('address', address)
 					.exec(function(err, data) {
 						
 						if(data && data.address !== address) {
@@ -167,7 +167,7 @@ exports = module.exports = function(req, res) {
 							data.sign.pinop = newrec12.sign.pinop;
 							data.sign.lock = newrec12.sign.lock;
 							data.expires = newrec12.expires;
-							console.log(data)
+							//console.log(data)
 							data.save(function(err) {
 								if(err)console.log(err);
 								//console.log('save wallet now continue')

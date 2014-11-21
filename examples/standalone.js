@@ -23,7 +23,7 @@ var snowcoins = require('snowcoins');
 	snowcoins.set('route d3c',true);
 	snowcoins.set('route d2c',true);
 	snowcoins.set('route snowcoins',true);
-	snowcoins.set('api socket',false);
+	snowcoins.set('api socket',true);
 	
 	
 	snowcoins.set('ssl',true);

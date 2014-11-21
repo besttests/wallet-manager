@@ -933,7 +933,7 @@ snowUI.link.UI = React.createClass({displayName: 'UI',
 					React.DOM.input({ref: "oldhostname", type: "hidden", value: hostname}), 
 					
 					React.DOM.table({className: "table snowtablesort"}, 
-						
+						 
 						React.DOM.thead(null, 
 							React.DOM.th(null, "machine "), 
 							React.DOM.th(null, "DDNS "), 
