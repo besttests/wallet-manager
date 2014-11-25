@@ -58,14 +58,14 @@ ReceiveUI.UI = React.createClass({
 		})
 	},
 	componentWillReceiveProps: function(nextProps) {
-		snowlog.log('receive willgetprops')
+		if(snowUI.debug) snowlog.log('receive willgetprops')
 		var _state = this.getFalseState();
 		var page = nextProps.config.page || this.state.component
 			
 		_state[page] = 'in active'
 		_state.component = page
 		this.setState(_state)
-		snowlog.log('receive willgetprops','false state:',_state,nextProps)
+		if(snowUI.debug) snowlog.log('receive willgetprops','false state:',_state,nextProps)
 		/* now get our data */
 		this.getPage(page)
 		
@@ -81,11 +81,11 @@ ReceiveUI.UI = React.createClass({
 		
 		snowUI.ajax.GET(url,data,function(resp) {
 			if(resp.success === true) {
-				snowlog.info('got data for ' + po,resp.data,po)
+				if(snowUI.debug) snowlog.info('got data for ' + po,resp.data,po)
 				if(resp.ip && resp.ip!='')snowUI.myip=resp.ip;
 				_this.setState({data:resp.data,connecting:false})
 			} else {
-				snowlog.error(resp)
+				if(snowUI.debug) snowlog.error(resp)
 				_this.setState({error:true,message:'Error retrieving data',connecting:false})
 			}
 		})
@@ -94,7 +94,7 @@ ReceiveUI.UI = React.createClass({
 		
 	},
 	componentDidUpdate: function() {
-		snowlog.info('receive did update')
+		if(snowUI.debug) snowlog.info('receive did update')
 	},
 	componentWillMount: function() {
 		//$('body').find('[rel=popover]').popover('destroy');
@@ -106,7 +106,7 @@ ReceiveUI.UI = React.createClass({
 				
 	},
 	componentDidMount: function() {
-		snowlog.info('receive did mount')
+		if(snowUI.debug) snowlog.info('receive did mount')
 		var me = $('a[data-target="'+this.props.config.page+'"]')
 		me.tab('show')	
 	},
@@ -117,7 +117,7 @@ ReceiveUI.UI = React.createClass({
 			skipload:false,
 			trigger:true
 		}
-		snowlog.info(me,them)
+		if(snowUI.debug) snowlog.info(me,them)
 		me.tab('show')
 		snowUI.methods.valueRoute(snowPath.receive + '/' + me[0].dataset.target,options)
 	},
@@ -129,7 +129,7 @@ ReceiveUI.UI = React.createClass({
 		var renderMe,
 			showcomp = this.props.config.page || this.state.component
 		
-		snowlog.log('receive component',this.state)
+		if(snowUI.debug) snowlog.log('receive component',this.state)
 		
 		if(this.state.error ) {
 			
@@ -137,7 +137,7 @@ ReceiveUI.UI = React.createClass({
 			
 			
 		} else if(!this.state.data) {
-			snowlog.warn('empty render for receive')
+			if(snowUI.debug) snowlog.warn('empty render for receive')
 			
 		
 		} else if(ReceiveUI[showcomp]) {
@@ -211,7 +211,7 @@ ReceiveUI.dynamic = React.createClass({
 		}
 	},
 	componentWillReceiveProps: function(nextProps) {
-		snowlog.info('receive props' ,nextProps)
+		if(snowUI.debug) snowlog.info('receive props' ,nextProps)
 		
 	},
 	shouldComponentUpdate: function() {
@@ -222,7 +222,7 @@ ReceiveUI.dynamic = React.createClass({
 		
 	},
 	componentDidUpdate: function() {
-		snowlog.info('dynamic did update')
+		if(snowUI.debug) snowlog.info('dynamic did update')
 		this.listen()
 		snowUI.watchLoader();
 		
@@ -268,7 +268,7 @@ ReceiveUI.dynamic = React.createClass({
 		
 	},
 	submitForm: function(e) {
-		snowlog.info('submit dynamic add form',e)
+		if(snowUI.debug) snowlog.info('submit dynamic add form',e)
 		e.preventDefault();
 		var _this = this
 		this.setState({requesting:true});
@@ -317,7 +317,7 @@ ReceiveUI.dynamic = React.createClass({
 					this.setState({requesting:false});
 				
 				} else {
-					snowlog.error(resp)
+					if(snowUI.debug) snowlog.error(resp)
 					_this.setState({requesting:false});
 					snowUI.flash('error',resp.err,3500)
 					//_this.setState({error:true,message:'Error retrieving data',connecting:false})
@@ -328,7 +328,7 @@ ReceiveUI.dynamic = React.createClass({
 	},
 	removeAsk: function(e) {
 		
-		snowlog.log('opem remove modal',e.target,e.target.dataset.dccwid)
+		if(snowUI.debug) snowlog.log('opem remove modal',e.target,e.target.dataset.dccwid)
 		
 		var target = e.target.dataset.dccwid,
 			iden = e.target.dataset.dcciden;
@@ -338,7 +338,7 @@ ReceiveUI.dynamic = React.createClass({
 		
 	},
 	removeNow: function(e) {
-		snowlog.log('removeNow',this.state._candidate)
+		if(snowUI.debug) snowlog.log('removeNow',this.state._candidate)
 		var url = "/api/snowcoins/local/receive/setup",
 			data = {'action':'delete',wally:this.state._candidate}
 		this.setState({canUpdate:false,removeItem:false});
@@ -353,7 +353,7 @@ ReceiveUI.dynamic = React.createClass({
 					snowUI.flash('success','Dynamic receiver removed',2500)
 				
 				} else {
-					snowlog.error(resp)
+					if(snowUI.debug) snowlog.error(resp)
 					this.setState({_candidate:false,canUpdate:true});
 					snowUI.flash('error',resp.err,3500)
 					//_this.setState({error:true,message:'Error retrieving data',connecting:false})
@@ -366,7 +366,7 @@ ReceiveUI.dynamic = React.createClass({
 		}
 	}, 
 	render: function() {
-		snowlog.log('dynamic component', this.props)
+		if(snowUI.debug) snowlog.log('dynamic component', this.props)
 		
 		var text = snowtext.receive.dynamic,
 			results;
@@ -528,7 +528,7 @@ ReceiveUI.shortcuts = React.createClass({
 		}
 	},
 	componentWillReceiveProps: function(nextProps) {
-		snowlog.info('receive props' ,nextProps)
+		if(snowUI.debug) snowlog.info('receive props' ,nextProps)
 		
 	},
 	shouldComponentUpdate: function() {
@@ -539,7 +539,7 @@ ReceiveUI.shortcuts = React.createClass({
 		
 	},
 	componentDidUpdate: function() {
-		snowlog.info('static did update')
+		if(snowUI.debug) snowlog.info('static did update')
 		this.listen()
 		snowUI.watchLoader();
 		
@@ -607,7 +607,7 @@ ReceiveUI.shortcuts = React.createClass({
 		$('#dccaddofflineform').find('[rel=popover]').popover();
 	},
 	submitForm: function(e) {
-		snowlog.info('submit shortcut add form',e)
+		if(snowUI.debug) snowlog.info('submit shortcut add form',e)
 		e.preventDefault();
 		var _this = this
 		this.setState({requesting:true});
@@ -653,7 +653,7 @@ ReceiveUI.shortcuts = React.createClass({
 					this.setState({requesting:false});
 					
 				} else {
-					snowlog.error(resp)
+					if(snowUI.debug) snowlog.error(resp)
 					_this.setState({requesting:false});
 					snowUI.flash('error',resp.err,3500)
 					//_this.setState({error:true,message:'Error retrieving data',connecting:false})
@@ -664,7 +664,7 @@ ReceiveUI.shortcuts = React.createClass({
 	},
 	removeAsk: function(e) {
 		
-		snowlog.log('open remove modal',e.target,e.target.dataset.dccwid)
+		if(snowUI.debug) snowlog.log('open remove modal',e.target,e.target.dataset.dccwid)
 		
 		var target = e.target.dataset.dccwid,
 			iden = e.target.dataset.dcciden;
@@ -673,7 +673,7 @@ ReceiveUI.shortcuts = React.createClass({
 		
 	},
 	removeNow: function(e) {
-		snowlog.log('removeNow',this.state._candidate)
+		if(snowUI.debug) snowlog.log('removeNow',this.state._candidate)
 		var url = "/api/snowcoins/local/receive/setup",
 			data = {'action':'delete-unattended',wid:this.state._candidate}
 		this.setState({canUpdate:false,removeItem:false});
@@ -687,7 +687,7 @@ ReceiveUI.shortcuts = React.createClass({
 					snowUI.flash('success','Shortcut removing now.',2500)
 				
 				} else {
-					snowlog.warn(resp.error)
+					if(snowUI.debug) snowlog.warn(resp.error)
 					this.setState({_candidate:false,canUpdate:true});
 					snowUI.flash('error',resp.error,3500)
 					//_this.setState({error:true,message:'Error retrieving data',connecting:false})
@@ -706,7 +706,7 @@ ReceiveUI.shortcuts = React.createClass({
 			results,
 			_this = this;
 		var list = this.props.state.data[this.props.state.component]
-		snowlog.log('static receiver component', list)
+		if(snowUI.debug) snowlog.log('static receiver component', list)
 		if(list instanceof Array) {
 			var results = list.map(function (val) {
 				
@@ -896,7 +896,7 @@ ReceiveUI.keys = React.createClass({
 		}
 	},
 	componentWillReceiveProps: function(nextProps) {
-		snowlog.info('receive props keyspage' ,nextProps)
+		if(snowUI.debug) snowlog.info('receive props keyspage' ,nextProps)
 		return false;
 	},
 	shouldComponentUpdate: function() {
@@ -907,7 +907,7 @@ ReceiveUI.keys = React.createClass({
 		
 	},
 	componentDidUpdate: function() {
-		snowlog.info('keyspage did update')
+		if(snowUI.debug) snowlog.info('keyspage did update')
 		this.listen()
 		snowUI.watchLoader();
 		$('#keyspageform').find('[rel=popover]').popover();
@@ -955,7 +955,7 @@ ReceiveUI.keys = React.createClass({
 		return false;
 	},
 	submitForm: function(e) {
-		snowlog.info('submit keyspageform add form',e)
+		if(snowUI.debug) snowlog.info('submit keyspageform add form',e)
 		e.preventDefault();
 		var _this = this
 		this.setState({requesting:true});
@@ -1001,7 +1001,7 @@ ReceiveUI.keys = React.createClass({
 					this.setState({requesting:false});
 					
 				} else {
-					snowlog.error(resp)
+					if(snowUI.debug) snowlog.error(resp)
 					_this.setState({requesting:false});
 					snowUI.flash('error',resp.err,3500)
 					//_this.setState({error:true,message:'Error retrieving data',connecting:false})
@@ -1013,7 +1013,7 @@ ReceiveUI.keys = React.createClass({
 	},
 	removeAsk: function(e) {
 		
-		snowlog.log('open remove modal',e.target,e.target.dataset.dccwid)
+		if(snowUI.debug) snowlog.log('open remove modal',e.target,e.target.dataset.dccwid)
 		
 		var target = e.target.dataset.dccwid,
 			iden = e.target.dataset.dcciden;
@@ -1023,7 +1023,7 @@ ReceiveUI.keys = React.createClass({
 		
 	},
 	removeNow: function(e) {
-		snowlog.log('removeNow',this.state._candidate)
+		if(snowUI.debug) snowlog.log('removeNow',this.state._candidate)
 		var url = "/api/snowcoins/local/receive/setup",
 			data = {'action':'delete-client',ccid:this.state._candidate}
 		this.setState({canUpdate:false,removeItem:false});
@@ -1037,7 +1037,7 @@ ReceiveUI.keys = React.createClass({
 					snowUI.flash('success','API access removed',2500)
 				
 				} else {
-					snowlog.warn(resp.error)
+					if(snowUI.debug) snowlog.warn(resp.error)
 					this.setState({_candidate:false,canUpdate:true});
 					snowUI.flash('error',resp.error,3500)
 					//_this.setState({error:true,message:'Error retrieving data',connecting:false})
@@ -1066,7 +1066,7 @@ ReceiveUI.keys = React.createClass({
 			
 	},
 	render: function() {
-		snowlog.log('client keys component')
+		if(snowUI.debug) snowlog.log('client keys component')
 		snowUI.loaderRender();
 		var text = snowtext.receive.keys,
 			results;
@@ -1237,7 +1237,7 @@ ReceiveUI.trackers = React.createClass({
 		}
 	},
 	componentWillReceiveProps: function(nextProps) {
-		snowlog.info('tracker receive props' ,nextProps)
+		if(snowUI.debug) snowlog.info('tracker receive props' ,nextProps)
 		
 	},
 	shouldComponentUpdate: function() {
@@ -1248,7 +1248,7 @@ ReceiveUI.trackers = React.createClass({
 		
 	},
 	componentDidUpdate: function() {
-		snowlog.info('trackers did update')
+		if(snowUI.debug) snowlog.info('trackers did update')
 		if(!this.state.listen)this.listen()
 		
 		snowUI.watchLoader();
@@ -1262,7 +1262,7 @@ ReceiveUI.trackers = React.createClass({
 			
 	},
 	componentDidMount: function() {
-		snowlog.info('trackers did mount')
+		if(snowUI.debug) snowlog.info('trackers did mount')
 		snowUI.watchLoader();
 		if(!this.state.listen)this.listen()
 	},
@@ -1311,7 +1311,7 @@ ReceiveUI.trackers = React.createClass({
 		
 	},
 	submitForm: function(e) {
-		snowlog.info('submit trackers add form',e)
+		if(snowUI.debug) snowlog.info('submit trackers add form',e)
 		e.preventDefault();
 		var _this = this
 		this.setState({requesting:true});
@@ -1342,7 +1342,7 @@ ReceiveUI.trackers = React.createClass({
 					this.setState({requesting:false});
 					
 				} else {
-					snowlog.error(resp)
+					if(snowUI.debug) snowlog.error(resp)
 					_this.setState({requesting:false});
 					snowUI.flash('error',resp.error,3500)
 					//_this.setState({error:true,message:'Error retrieving data',connecting:false})
@@ -1353,7 +1353,7 @@ ReceiveUI.trackers = React.createClass({
 	},
 	removeAsk: function(e) {
 		
-		snowlog.log('open tracker modal',e.target,e.target.dataset.dccwid)
+		if(snowUI.debug) snowlog.log('open tracker modal',e.target,e.target.dataset.dccwid)
 		
 		var target = e.target.dataset.dccwid,
 			iden = e.target.dataset.dcciden;
@@ -1363,7 +1363,7 @@ ReceiveUI.trackers = React.createClass({
 		
 	},
 	removeNow: function(e) {
-		snowlog.log('removeNow',this.state)
+		if(snowUI.debug) snowlog.log('removeNow',this.state)
 		var url = "/api/snowcoins/local/receive/setup",
 			data = {'action':'delete-tracker',tracker:this.state._candidate}
 		
@@ -1377,7 +1377,7 @@ ReceiveUI.trackers = React.createClass({
 					snowUI.flash('success','Tracker removed',2500)
 				
 				} else {
-					snowlog.error(resp)
+					if(snowUI.debug) snowlog.error(resp)
 					this.setState({_candidate:false,canUpdate:true});
 					snowUI.flash('error',resp.error,3500)
 					//_this.setState({error:true,message:'Error retrieving data',connecting:false})
@@ -1390,7 +1390,7 @@ ReceiveUI.trackers = React.createClass({
 		}
 	}, 
 	render: function() {
-		snowlog.log('trackers component', this.props)
+		if(snowUI.debug) snowlog.log('trackers component', this.props)
 		
 		var text = snowtext.receive.trackers,
 			results;

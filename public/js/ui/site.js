@@ -39,6 +39,7 @@ var snowPath = {
 	share: '/share',
 } 
 var snowUI = {
+	debug: true,
 	snowcat: 'snowcat',
 	userSettings: {},
 	wallet: {},
@@ -86,7 +87,7 @@ var snowUI = {
 		.fadeTo("slow",0.00)
 		.promise()
 		.done(function() {
-			snowlog.log('fadeout')
+			if(snowUI.debug) snowlog.log('fadeout')
 			if(cb)cb()
 		});
 		//$('#maindiv').css('opacity',0.01);
@@ -98,7 +99,7 @@ var snowUI = {
 		.fadeTo("slow",1.0)
 		.promise()
 		.done(function() {
-			snowlog.log('fadein') 
+			if(snowUI.debug) snowlog.log('fadein') 
 			if(cb)cb()
 		});
 	}, 
@@ -109,7 +110,7 @@ var snowUI = {
 			.fadeTo(100,0.0)
 			.promise()
 			.done(function() {
-				snowlog.log('fade out') 
+				if(snowUI.debug) snowlog.log('fade out') 
 				if(callback)callback()
 			});
 		}
@@ -133,14 +134,14 @@ var snowUI = {
 		.promise()
 		.done(function() {
 			if($('.loader').css('display') === 'none') {
-				snowlog.log('fade in - loader already hidden') 
+				if(snowUI.debug) snowlog.log('fade in - loader already hidden') 
 				if(callback)callback()
 			} else {
 				$('.loader')
 				.toggle(150)
 				.promise()
 				.done(function() {
-					snowlog.log('fade in') 
+					if(snowUI.debug) snowlog.log('fade in') 
 					if(callback)callback()
 					//make sure that load is gone
 					snowUI.killLoader()
@@ -156,7 +157,7 @@ var snowUI = {
 		.delay(250)
 		.promise()
 		.done(function() {
-			snowlog.log('show load gif') 
+			if(snowUI.debug) snowlog.log('show load gif') 
 			if(cb)cb()
 		});
 		return false
@@ -167,7 +168,7 @@ var snowUI = {
 		.toggle(false)
 		.promise()
 		.done(function() {
-			snowlog.log('hide load gif') 
+			if(snowUI.debug) snowlog.log('hide load gif') 
 			if(cb)cb()
 		});
 		return false
@@ -190,7 +191,7 @@ var snowUI = {
 		var wallet = e.target.dataset.snowmoon
 		if(!wallet) wallet = e.target.parentElement.dataset.snowmoon;
 		
-		snowlog.info(wallet,e.target)
+		if(snowUI.debug) snowlog.info(wallet,e.target)
 		
 		if(!wallet) {
 			snowUI.flash('error','Can not find a link for the wallet requested',2500)
@@ -263,7 +264,7 @@ var snowUI = {
 				
 				_csrf = xhr.getResponseHeader("x-snow-token");
 				snowUI.ajax.running = false
-				snowlog.log(type + 'call return')
+				if(snowUI.debug) snowlog.log(type + 'call return')
 				callback(resp)	
 			});					
 				
@@ -277,7 +278,7 @@ var snowUI = {
 	sortCol: function(who)
 	{
 		return false
-		snowlog.info('sort col',who,this._sorted)
+		if(snowUI.debug) snowlog.info('sort col',who,this._sorted)
 		
 		if(this._sorted.indexOf(who))
 			return false;
@@ -292,20 +293,20 @@ var snowUI = {
 			
 				var valA = $(index).attr('data-snowaccount');
 				var valB = $(who).attr('data-snowaccount');
-				snowlog.info(valA,valB)
+				if(snowUI.debug) snowlog.info(valA,valB)
 				return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB)
 						
 		} else if($(who).hasClass("sortbalance")) {
 				
 				var valA = $(index).attr('data-snowbalance');
 				var valB = $(who).attr('data-snowbalance');
-				snowlog.info(valA,valB)
+				if(snowUI.debug) snowlog.info(valA,valB)
 				return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB)
 						
 		} else if($(who).hasClass("sortaddresses")) {
 				var valA = $(index).find('.addresses .eachaddress').children().length-1;
 				var valB = $(who).find('.addresses .eachaddress').children().length-1;
-				snowlog.info(valA,valB)
+				if(snowUI.debug) snowlog.info(valA,valB)
 				return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB)
 						
 		} else if($(who).is(".snowsortcountitems"))

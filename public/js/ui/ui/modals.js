@@ -20,28 +20,17 @@ var addModal = React.createClass({displayName: 'addModal',
 		};
 	},
 	componentDidMount: function() {
-		this.updateSelect();
+		
 	},
 	componentDidUpdate: function() {
-		//this.updateSelect();
+		
 		
 	},
 	componentWillUpdate: function() {
-		//$("select").selectbox("detach");
+		
 	},
 	componentWillUnmount: function() {
 		
-	},
-	
-	updateSelect: function() {
-		var _this = this
-		$("select1").selectbox({
-			onChange: function (val, inst) {
-				_this.props.methods.clickSelect(val)	
-			},
-			effect: "fade"
-		});
-		//snowlog.log('wallet select updated')
 	},
 	componentWillReceiveProps: function(np) {
 		this.setState({isModalOpen:np.open})
@@ -52,8 +41,8 @@ var addModal = React.createClass({displayName: 'addModal',
 			isModalOpen: !this.state.isModalOpen
 		});
 		
-		if(this.props.methods.close) {
-			this.props.methods.close()
+		if(this.props.close) {
+			this.props.close()
 		} else {
 			snowUI.methods.modals.close(this.props.me)
 		}
@@ -100,7 +89,7 @@ var addModal = React.createClass({displayName: 'addModal',
 
 
 /**
- * Our controllers are always functions and must be included as a method to function
+ * Our controllers are always functions and must be included as a method 
  * 
  * you must apply SCOPE (apply/call) to any method generated from a controller
  * 
@@ -173,7 +162,7 @@ snowUI.controllers.ui.modals = function() {
 				e.preventDefault();
 				
 				_this.setState({requesting:true});
-				snowlog.log('unlock wallet',snowUI.methods)
+				if(snowUI.debug) snowlog.log('unlock wallet',snowUI.methods)
 				if(_this.state.unlockphrase)
 				{
 					var nowtime=new Date().getTime()
@@ -234,11 +223,17 @@ snowUI.controllers.ui.modals = function() {
 		}
 	}
 }
+
+/* end controllers */
+
+/**
+ * all of our modals are defined here.  call them with the function() 
+ * */
 var snowModals = {}
 
 var unlockWallet = function() {
 	var uButtons = React.DOM.button({onClick: snowUI.methods.modals.unlockWallet.request, disabled: !this.state.unlockphrase || this.state.requesting ? 'disabled' : '', id: "confirmunlock", className: "btn btn-warning", rel: "modal"}, this.state.requesting ? 'Unlocking...' : 'Unlock Wallet')
-	snowlog.log('unlock wallet',this.state)
+	if(snowUI.debug) snowlog.log('unlock wallet',this.state)
 	var toggle = this.state.showPasswords ? snowtext.ui.hidepassphrase : snowtext.ui.showpassphrase;
 	return (addModal({me: "unlockWallet", methods: {}, open: this.state.modals.unlockWallet, title: "Unlock " + this.state.wally.name, buttons: uButtons}, 
 			React.DOM.div(null, 
@@ -275,7 +270,7 @@ var encryptWallet = function() {
 	var _this = this
 	
 	var config = _this.config()
-	snowlog.log('config in encrypt wallet',config)
+	if(snowUI.debug) snowlog.log('config in encrypt wallet',config)
 	if(!config.locked) {
 		var eButtons = (
 				ButtonToolbar(null, 

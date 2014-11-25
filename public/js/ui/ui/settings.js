@@ -51,7 +51,7 @@ SettingsUI.UI = React.createClass({displayName: 'UI',
 		_state.component = page
 		_this.setState({data:false})
 		
-		snowlog.log('settings willgetprops','false state:',_state,nextProps)
+		if(snowUI.debug) snowlog.log('settings willgetprops','false state:',_state,nextProps)
 		
 		/* now get our data */
 		this.getPage(page,function(data) {
@@ -70,10 +70,10 @@ SettingsUI.UI = React.createClass({displayName: 'UI',
 		
 		snowUI.ajax.GET(url,data,function(resp) {
 			if(resp.success === true) {
-				snowlog.info('got data for ' + po,resp.data,po)
+				if(snowUI.debug) snowlog.info('got data for ' + po,resp.data,po)
 				cb(resp.data)
 			} else {
-				snowlog.error(resp)
+				if(snowUI.debug) snowlog.error(resp)
 				_this.setState({error:true,message:'Error retrieving data',connecting:false})
 			}
 		})
@@ -83,7 +83,7 @@ SettingsUI.UI = React.createClass({displayName: 'UI',
 		
 	},
 	componentDidUpdate: function() {
-		snowlog.info('settings did update')
+		if(snowUI.debug) snowlog.info('settings did update')
 		this.componentDidMount()
 	},
 	componentWillMount: function() {
@@ -95,7 +95,7 @@ SettingsUI.UI = React.createClass({displayName: 'UI',
 				
 	},
 	componentDidMount: function() {
-		snowlog.info('settings did mount',this.state.component,this.props.config.page)
+		if(snowUI.debug) snowlog.info('settings did mount',this.state.component,this.props.config.page)
 		var me = $('a[data-target="'+this.state.component+'"]')
 		me.tab('show')	
 	},
@@ -106,7 +106,7 @@ SettingsUI.UI = React.createClass({displayName: 'UI',
 			skipload:false,
 			trigger:true
 		}
-		snowlog.info(me)
+		if(snowUI.debug) snowlog.info(me)
 		//me.tab('show')
 		snowUI.methods.valueRoute(snowPath.settings + '/' + me[0].dataset.target,options)
 	},
@@ -115,10 +115,10 @@ SettingsUI.UI = React.createClass({displayName: 'UI',
 		var renderMe,
 			showcomp = this.props.config.page || this.state.component
 		
-		snowlog.log('settings component',this.state,this.props)
+		if(snowUI.debug) snowlog.log('settings component',this.state,this.props)
 		
 		if(!this.state.data) {
-			snowlog.warn('empty render for receive')
+			if(snowUI.debug) snowlog.warn('empty render for receive')
 			renderMe=(React.DOM.div(null))
 		
 		} else if(SettingsUI[showcomp]) {
@@ -184,7 +184,7 @@ SettingsUI.rates = React.createClass({displayName: 'rates',
 		}
 	},
 	componentWillReceiveProps: function(nextProps) {
-		snowlog.info('rates receive props' ,nextProps)
+		if(snowUI.debug) snowlog.info('rates receive props' ,nextProps)
 		
 	},
 	shouldComponentUpdate: function() {
@@ -195,7 +195,7 @@ SettingsUI.rates = React.createClass({displayName: 'rates',
 		
 	},
 	componentDidUpdate: function() {
-		snowlog.info('rates did update')
+		if(snowUI.debug) snowlog.info('rates did update')
 		this.listen()
 		snowUI.watchLoader();
 		
@@ -217,7 +217,7 @@ SettingsUI.rates = React.createClass({displayName: 'rates',
 		
 	},
 	submitForm: function(e) {
-		snowlog.info('submit rate parameter form',e)
+		if(snowUI.debug) snowlog.info('submit rate parameter form',e)
 		e.preventDefault();
 		var _this = this
 		this.setState({requesting:true});
@@ -232,7 +232,7 @@ SettingsUI.rates = React.createClass({displayName: 'rates',
 				snowUI.flash('success','Rate parameters updated',2500)
 			
 			} else {
-				snowlog.error(resp)
+				if(snowUI.debug) snowlog.error(resp)
 				this.setState({requesting:false});
 				snowUI.flash('error',resp.err,3500)
 				
@@ -242,7 +242,7 @@ SettingsUI.rates = React.createClass({displayName: 'rates',
 		
 	},
 	render: function() {
-		snowlog.log('rates component', this.props)
+		if(snowUI.debug) snowlog.log('rates component', this.props)
 		
 		var text = snowtext.settings.rates,
 			results,
@@ -506,7 +506,7 @@ SettingsUI.language = React.createClass({displayName: 'language',
 			snowUI.ajax.GET(url,data,function(resp) {
 				if(resp.success === true && resp.data.language) {
 					
-					snowlog.info('set user language')
+					if(snowUI.debug) snowlog.info('set user language')
 					
 					snowtext = resp.data.language;
 					
@@ -519,7 +519,7 @@ SettingsUI.language = React.createClass({displayName: 'language',
 						
 					
 				} else {
-					snowlog.error(resp)
+					if(snowUI.debug) snowlog.error(resp)
 					snowUI.flash('error','Error changing language. ' + resp.err) 
 				}
 				return false
@@ -531,7 +531,7 @@ SettingsUI.language = React.createClass({displayName: 'language',
 		
 	},
 	render: function() {
-		snowlog.log('language component')
+		if(snowUI.debug) snowlog.log('language component')
 		var _this = this;
 		var l = snowlanguages.list;
 		var listlanguages = l.map(function(v){
@@ -581,7 +581,7 @@ snowUI.link.UI = React.createClass({displayName: 'UI',
 		
 		_this.setState({data:false,ready:false})
 		
-		snowlog.log('link willgetprops','false state:',_state,nextProps)
+		if(snowUI.debug) snowlog.log('link willgetprops','false state:',_state,nextProps)
 		
 		/* now get our data */
 		this.getPage(this.props.config.page,function(data) {
@@ -601,10 +601,10 @@ snowUI.link.UI = React.createClass({displayName: 'UI',
 		
 		snowUI.ajax.GET(url,data,function(resp) {
 			if(resp.success === true) {
-				snowlog.info('got data for ' + po,resp.data,po)
+				if(snowUI.debug) snowlog.info('got data for ' + po,resp.data,po)
 				cb(resp.data)
 			} else {
-				snowlog.error(resp)
+				if(snowUI.debug) snowlog.error(resp)
 				_this.setState({error:true,message:'Error retrieving data',connecting:false})
 			}
 		})
@@ -614,7 +614,7 @@ snowUI.link.UI = React.createClass({displayName: 'UI',
 		
 	},
 	componentDidUpdate: function() {
-		snowlog.info('link did update')
+		if(snowUI.debug) snowlog.info('link did update')
 		this.componentDidMount()
 	},
 	componentWillMount: function() {
@@ -626,7 +626,7 @@ snowUI.link.UI = React.createClass({displayName: 'UI',
 				
 	},
 	componentDidMount: function() {
-		snowlog.info('link did mount',this.props.config.wallet)
+		if(snowUI.debug) snowlog.info('link did mount',this.props.config.wallet)
 		snowUI.watchLoader();
 	},
 	setDDNS: function(e) {
@@ -639,7 +639,7 @@ snowUI.link.UI = React.createClass({displayName: 'UI',
 			snowUI.ajax.GET(url,data,function(resp) {
 				if(!resp.data.link.error) {
 					_this.getPage('ddns',function(data) {
-						snowlog.info('update DDNS',resp);
+						if(snowUI.debug) snowlog.info('update DDNS',resp);
 						var msg = typeof resp.data.linkserver === 'object' ? resp.data.linkserver.message + '  -- --  ' : '';
 						snowUI.flash('success',msg + resp.data.link.data.message,10000);
 						var _state={}
@@ -652,7 +652,7 @@ snowUI.link.UI = React.createClass({displayName: 'UI',
 					});
 					
 				} else {
-					snowlog.error(resp);
+					if(snowUI.debug) snowlog.error(resp);
 					snowUI.flash('error','' + resp.data.link.error) ;
 					_this.setState({connecting:false});
 				}
@@ -672,7 +672,7 @@ snowUI.link.UI = React.createClass({displayName: 'UI',
 			snowUI.ajax.GET(url,data,function(resp) {
 				if(!resp.data.link.error) {
 					_this.getPage('remove-ddns',function(data) {
-						snowlog.info('remove DDNS',resp);
+						if(snowUI.debug) snowlog.info('remove DDNS',resp);
 						snowUI.flash('success',resp.data.link.data.message,10000);
 						var _state={}
 						_state.data = data;
@@ -684,7 +684,7 @@ snowUI.link.UI = React.createClass({displayName: 'UI',
 					});
 					
 				} else {
-					snowlog.error(resp);
+					if(snowUI.debug) snowlog.error(resp);
 					snowUI.flash('error','' + resp.data.link.error) ;
 					_this.setState({connecting:false});
 				}
@@ -710,7 +710,7 @@ snowUI.link.UI = React.createClass({displayName: 'UI',
 				snowUI.killFlash('error');
 				snowUI.killFlash('success');
 				if(resp.success === true) {
-					snowlog.info('set share key',resp);
+					if(snowUI.debug) snowlog.info('set share key',resp);
 					if(!resp.data.userSettings.linkName) {
 						snowUI.flash('error',snowtext.link.messages.success.setsharekey + ' :: Share key is not valid! ',15000);
 					} else {
@@ -720,7 +720,7 @@ snowUI.link.UI = React.createClass({displayName: 'UI',
 					//fake out the UI and refresh
 					snowUI.methods.updateState({showErrorPage:false,connecting:false});
 				} else {
-					snowlog.error(resp);
+					if(snowUI.debug) snowlog.error(resp);
 					var _state = {connecting:false}
 					if(resp.data)_state.data=resp.data;
 					_this.setState(_state);
@@ -746,13 +746,13 @@ snowUI.link.UI = React.createClass({displayName: 'UI',
 		if(newl) {
 			snowUI.ajax.GET(url,data,function(resp) {
 				if(resp.success === true) {
-					snowlog.info('set send key');
+					if(snowUI.debug) snowlog.info('set send key');
 					snowUI.flash('success',snowtext.link.messages.success.setsendkey,15000);
 					//fake out the UI and refresh
 					_this.setState({showsendkey:false,connecting:false});
 					snowUI.methods.updateState({showErrorPage:false});
 				} else {
-					snowlog.error(resp);
+					if(snowUI.debug) snowlog.error(resp);
 					var _state = {connecting:false}
 					if(resp.data)_state.data=resp.data;
 					_this.setState(_state);
@@ -789,16 +789,16 @@ snowUI.link.UI = React.createClass({displayName: 'UI',
 		
 		
 		snowUI.ajax.GET(url,data,function(resp) {
-			snowlog.info('ping',resp)
+			if(snowUI.debug) snowlog.info('ping',resp)
 			if(resp.success === true) {
 				snowUI.killFlash('message');
-				snowlog.info('pinged .link remote server');
+				if(snowUI.debug) snowlog.info('pinged .link remote server');
 				snowUI.flash('success','Ping Sent and Received successfully.',6000);
 				//fake out the UI and refresh
 				_this.setState({connecting:false});
 				
 			} else {
-				snowlog.error(resp);
+				if(snowUI.debug) snowlog.error(resp);
 				snowUI.killFlash('message');
 				var _state = {connecting:false}
 				_this.setState(_state);
@@ -809,7 +809,7 @@ snowUI.link.UI = React.createClass({displayName: 'UI',
 			
 	},
 	render: function() {
-		snowlog.log('link component',this.state)
+		if(snowUI.debug) snowlog.log('link component',this.state)
 		var _this = this;
 		if(this.state.ready) {
 			var shareKey = this.state.data.userSettings.shareKey,

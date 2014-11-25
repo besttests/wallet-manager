@@ -49,7 +49,7 @@ snowUI.SnowpiFlash = React.createClass({
 		return ({showclass:'info'});
 	},
 	render: function() {
-		snowlog.log(this.props);
+		if(snowUI.debug) snowlog.log(this.props);
 		if(!this.state.isVisible)
 		    return null;
 
@@ -121,7 +121,7 @@ snowUI.leftMenu = React.createClass({
 			showmenu = snowUI.defaultMenu
 		}	
 		
-		snowlog.log('main menu component',this.state.config)
+		if(snowUI.debug) snowlog.log('main menu component',this.state.config)
 		
 		return (
 			<div className="menufade"><showmenu config={this.state.config} /> </div>			
@@ -181,7 +181,7 @@ snowUI.walletMenu = React.createClass({
 		var data = {'action':'request',wally:_this.props.config.wally.key}
 		
 		snowUI.ajax.GET(url,data,function(resp) {
-			console.info('remove wallet request from wallet menu',resp)
+			if(snowUI.debug) snowlog.info('remove wallet request from wallet menu',resp)
 			if(resp.success === true) {			
 				
 				snowUI._wallets[_this.props.config.wally.key] = {removeKey: resp.key};
@@ -201,7 +201,7 @@ snowUI.walletMenu = React.createClass({
 		var testnet = this.state.config.testnet ? (<div id="testnet-flash" title="" data-toggle="tooltip" data-placement="right" data-container="body" className="dogemenulink" data-original-title="This wallet is on the TESTNET!" style={{display:'block'}}><span className="glyphicon glyphicon-text-width"></span> TESTNET </div>) : ''
 		
 		var _this = this;
-	    snowlog.log('wallet menu component')
+	    if(snowUI.debug) snowlog.log('wallet menu component')
 	    return (
 		
 			<div id="menuwallet " >
@@ -241,7 +241,7 @@ snowUI.receiveMenu = React.createClass({
 	},
 	render: function() {
 	   
-	    snowlog.log('receive menu component')
+	    if(snowUI.debug) snowlog.log('receive menu component')
 	    return (
 		
 			<div id="menudcc" >
@@ -286,7 +286,7 @@ snowUI.walletSelect = React.createClass({
 			},
 			effect: "fade"
 		});
-		//snowlog.log('wallet select updated')
+		//if(snowUI.debug) snowlog.log('wallet select updated')
 	},
 	render: function() {
 		var wallets;
@@ -302,7 +302,7 @@ snowUI.walletSelect = React.createClass({
 		} else {
 			var _df = '/' + this.props.section;
 		} 
-		//snowlog.log(_df)
+		//if(snowUI.debug) snowlog.log(_df)
 		return this.transferPropsTo(
 			<div className="list">
 				<div className="walletmsg" style={{display:'none'}} />
@@ -374,7 +374,7 @@ var UI = React.createClass({
 				clearInterval(snowUI.intervals.locktimer)
 				snowUI.intervals.locktimer = false
 				$('#walletbar').removeClass('flash-to-success')
-				snowlog.log('reset lock status')
+				if(snowUI.debug) snowlog.log('reset lock status')
 				if(state)_this.setState({locked:true,unlocked:false,lockstatus:0,unlockeduntil:false,unlockedtimeformat:false})
 			},
 			changelock: function(lock){
@@ -415,7 +415,7 @@ var UI = React.createClass({
 								clearInterval(snowUI.intervals.locktimer)
 								snowUI.intervals.locktimer = false
 								walletbar(false)
-								snowlog.log('reset lock status')
+								if(snowUI.debug) snowlog.log('reset lock status')
 								_this.setState({locked:true,unlocked:false,lockstatus:0,unlockeduntil:false,unlockedtimeformat:false})
 							}
 							i++;
@@ -487,14 +487,14 @@ var UI = React.createClass({
 	},
 	componentWillMount: function() {
 		//this.loadToggle()
-		snowlog.log('ui will mount')
+		if(snowUI.debug) snowlog.log('ui will mount')
 		//snowUI.loadingStart();
 		return false
 	},
 	componentDidMount: function() {
 		
 		if(!this.state.mounted) {
-			snowlog.log('ui is mounted')
+			if(snowUI.debug) snowlog.log('ui is mounted')
 			var update = {}
 			if(this.props.section !== undefined)update.section = this.props.section;
 			if(this.props.moon !== undefined)update.moon = this.props.moon;
@@ -527,12 +527,12 @@ var UI = React.createClass({
 		
 		//grab array of available wallets
 			var _this = this
-			snowlog.log('update wallet list on new wallet')			
+			if(snowUI.debug) snowlog.log('update wallet list on new wallet')			
 			$.ajax({async:false,url: "/api/snowcoins/local/change-wallet"})
 				.done(function( resp,status,xhr ) {
 					
 					_csrf = xhr.getResponseHeader("x-snow-token");
-					snowlog.log('got wallies',resp.wally, props.wallet)
+					if(snowUI.debug) snowlog.log('got wallies',resp.wally, props.wallet)
 					
 					//locater
 					var a = []; 
@@ -574,7 +574,7 @@ var UI = React.createClass({
 					
 					}
 					newState.userSettings = resp.userSettings;
-					console.log('set ui state ',newState)
+					if(snowUI.debug) snowlog.log('set ui state ',newState)
 					_this.setState(newState);
 					
 					
@@ -631,7 +631,7 @@ var UI = React.createClass({
 				
 			} else if(nextProps.wallet !== this.state.wallet) {
 				
-				snowlog.log('should be a new wallet',nextProps.wallet ,this.state.wallet)
+				if(snowUI.debug) snowlog.log('should be a new wallet',nextProps.wallet ,this.state.wallet)
 				
 				React.unmountComponentAtNode(document.getElementById('snowcoins'));
 				
@@ -678,7 +678,7 @@ var UI = React.createClass({
 		
 		update.requesting = false;
 		
-		snowlog.log('ui get props update state',update)
+		if(snowUI.debug) snowlog.log('ui get props update state',update)
 		
 		/* this is a grabber for the wallets
 		 * I let it run on every page change in case changes are made outside of this session
@@ -697,7 +697,7 @@ var UI = React.createClass({
 	updateState: function(prop) {
 		if(typeof prop === 'object')
 			this.setState(prop);
-		snowlog.log('update state from outside/child component',prop)	
+		if(snowUI.debug) snowlog.log('update state from outside/child component',prop)	
 		return false
 	},
 	changeTheme: function() {
@@ -716,10 +716,10 @@ var UI = React.createClass({
 		
 		snowUI.ajax.GET(url,data,function(resp) {
 			if(resp.success === true) {
-				snowlog.info('set user theme')
+				if(snowUI.debug) snowlog.info('set user theme')
 				
 			} else {
-				snowlog.error(resp)
+				if(snowUI.debug) snowlog.error(resp)
 				
 			}
 			return false
@@ -742,7 +742,7 @@ var UI = React.createClass({
 				bone.router.navigate(route, {trigger:trigger});
 			});
 		}
-		snowlog.log('value route', 'skip loading: '+skipload+', trigger: '+trigger,snowPath.root + route)
+		if(snowUI.debug) snowlog.log('value route', 'skip loading: '+skipload+', trigger: '+trigger,snowPath.root + route)
 		return false
 	},
 	hrefRoute: function(route) {
@@ -750,11 +750,11 @@ var UI = React.createClass({
 		var _this = this
 		var newroute = $(route.target)	
 		snowUI.loaderFetch(function(){
-			snowlog.log('href loader route',snowPath.root,newroute)
+			if(snowUI.debug) snowlog.log('href loader route',snowPath.root,newroute)
 			var moon =  newroute[0] ? newroute.closest('a')[0].pathname : false
 			if(moon) {
 				moon = moon.replace(("/" + snowPath.router.root + "/"),'')
-				snowlog.log('moon owner',moon)
+				if(snowUI.debug) snowlog.log('moon owner',moon)
 				bone.router.navigate(moon, {trigger:true});
 			} else {
 				snowUI.flash('error','Link error',2000)
@@ -770,7 +770,7 @@ var UI = React.createClass({
 		route.preventDefault();
 		snowUI.loaderFetch(function(){
 			bone.router.navigate(snowPath.root + $(route.target)[0].dataset.snowmoon, {trigger:true});
-			snowlog.log('button route',$(route.target)[0].dataset.snowmoon)
+			if(snowUI.debug) snowlog.log('button route',$(route.target)[0].dataset.snowmoon)
 
 		});
 		return false
@@ -808,13 +808,13 @@ var UI = React.createClass({
 		
 		var mycomp = comp[this.props.section]
 		if(!mycomp){
-			snowlog.error(' mycomp failed, probably a 404:',mycomp,comp[this.props.section])
+			if(snowUI.debug) snowlog.error(' mycomp failed, probably a 404:',mycomp,comp[this.props.section])
 			mycomp=snowUI.wallet.UI
 			gates.showWarning = '404 Not Found';
 			gates.showWarningPage = true;
 		}
 		
-		snowlog.log('check state UI',this.state.mounted,mycomp,this.props.section,gates);
+		if(snowUI.debug) snowlog.log('check state UI',this.state.mounted,mycomp,this.props.section,gates);
 		
 		if(this.state.mounted) {
 			var mountwallet = function() {
@@ -837,7 +837,7 @@ var UI = React.createClass({
 		
 		var testnet = this.state.testnet ? 'testnet':''
 		
-		snowlog.log('testnet',this.state.testnet)
+		if(snowUI.debug) snowlog.log('testnet',this.state.testnet)
 		  	
 		//mount
 		return (

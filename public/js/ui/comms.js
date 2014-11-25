@@ -127,7 +127,7 @@
 			}
 			
 			if(resp.path.snowcat)snowUI.snowcat = resp.path.snowcat;
-			console.log(snowUI.snowcat,resp.path);
+			if(snowUI.debug) snowlog.log(snowUI.snowcat,resp.path);
 		}
 	});
 	
@@ -145,16 +145,16 @@ $(function() {
 	 * and SHOULD BE INTERCEPTED by the checkprivatenonce middleware
 	 * 
 	 * */
-	 snowlog.info(snowlanguages)
+	 if(snowUI.debug) snowlog.info(snowlanguages)
 	$.ajax({async:false,url: "/api/snowcoins/local/contacts/?setnonce=true"})
 		.done(function( resp,status,xhr ) {
 			_csrf = xhr.getResponseHeader("x-snow-token");
-			snowlog.info(resp)
+			if(snowUI.debug) snowlog.info(resp)
 			
 			//start our app
 			bone.router.start({root:resp.path.snowcoins,pushState: true});
 			
-			snowlog.info('token, send window name',_csrf,window.name);
+			if(snowUI.debug) snowlog.info('token, send window name',_csrf,window.name);
 			
 	});
 	
@@ -163,7 +163,7 @@ $(function() {
 	$(document).on('show.bs.tab','#dynamicaddtabs a[data-toggle="tab"],#dynamicaddtabs a[data-toggle="pill"]', function (e) {
 		//e.target // activated tab
 		//e.relatedTarget // previous tab
-		snowlog.log('switch tab divs')
+		if(snowUI.debug) snowlog.log('switch tab divs')
 			
 		var target = e.target.dataset.target;
 		$('#fw-useme').val(target)
@@ -171,7 +171,7 @@ $(function() {
 			
 	})
 	$(document).on('click','.snowtablesort th',function(){
-			snowlog.info('sort col')
+			if(snowUI.debug) snowlog.info('sort col')
 			if(this.asc === undefined) this.asc = true;
 			var table = $(this).parents('table').eq(0)
 			
@@ -180,7 +180,7 @@ $(function() {
 			
 			var rows = table.find('tbody tr').not( ".skipme" ).toArray().sort(snowUI.comparer($(this).index(),this))
 			
-			//console.log(table.find('tr:gt(0)').toArray());
+			//if(snowUI.debug) snowlog.log(table.find('tr:gt(0)').toArray());
 			this.asc = !this.asc
 			if (!this.asc){
 				rows = rows.reverse()
