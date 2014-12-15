@@ -2,27 +2,13 @@
  * @jsx React.DOM
  */
 
-/* not used but thats how you can use touch events
+/* you can use touch events
  * */
 //React.initializeTouchEvents(true);
 
-/* not used but thats how you can use animation and other transition goodies
+/* you can use animation and other transition goodies
  * */
 var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
-
-/**
- * we will use yes for true
- * we will use no for false
- * 
- * React has some built ins that rely on state being true/false like classSet()
- * and these will not work with yes/no but can easily be modified / reproduced
- * 
- * this single app uses the yes/no var so if you want you can switch back to true/false
- * 
- * */
-var yes = 'yes', no = 'no';
-//var yes = true, no = false;
-
 
 
 /* bootstrap components
@@ -382,7 +368,7 @@ var UI = React.createClass({
 				var _this = this;
 				$('#walletbar').removeClass('flash-to-success')
 				if(lock==='off') {
-					this.setState({locked:false,unlocked:true}) //fake the lock out and turn it off
+					this.setState({locked:false,unlocked:true,lockstatus:3}) //fake the lock out and turn it off
 				} else if(!this.state.wally || this.state.wally.coinapi!='rpc') {
 					this.setState({locked:false,unlocked:false,lockstatus:2})
 				} else if(lock===0 || lock==='Locked') {
@@ -448,7 +434,7 @@ var UI = React.createClass({
 				unlockWallet: false,
 				encryptWallet: false,
 				removeItem: false,
-				
+				addressBook: false,
 			},
 			showPasswords: false,
 			gates: {

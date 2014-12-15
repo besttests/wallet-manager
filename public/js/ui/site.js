@@ -9,36 +9,36 @@
  * 
  * the relaod is a json file
  * */
-var snowtext = snowlanguages.language;
 
-var snowPath = {
-	linkServer: {
-		host: 'http://snow8:12888/',
-	},
-	router: {
-		root: 'snowcoins',
-		wallet: 'wallet',
-		receive: 'receive',
-		settings: 'settings',
-		profile: 'profile',
-		inq: '.link',
-		link: '.link',
-		d2c: 'd2c',
-		d3c: 'd3c'
-	},
-	routeRoot: 'snowcoins',
-	root: '/snowcoins',
-	wallet: '/wallet',
-	receive: '/receive',
-	settings: '/settings',
-	profile: '/profile',
-	inq: '/.link',
-	link: '/.link',
-	d2c: '/d2c',
-	d3c: '/d3c',
-	share: '/share',
-} 
 var snowUI = {
+	snowtext: snowlanguages.language,
+	snowPath: {
+		linkServer: {
+			host: 'http://snow8:12888/',
+		},
+		router: {
+			root: 'snowcoins',
+			wallet: 'wallet',
+			receive: 'receive',
+			settings: 'settings',
+			profile: 'profile',
+			inq: '.link',
+			link: '.link',
+			d2c: 'd2c',
+			d3c: 'd3c'
+		},
+		routeRoot: 'snowcoins',
+		root: '/snowcoins',
+		wallet: '/wallet',
+		receive: '/receive',
+		settings: '/settings',
+		profile: '/profile',
+		inq: '/.link',
+		link: '/.link',
+		d2c: '/d2c',
+		d3c: '/d3c',
+		share: '/share',
+	}, 
 	debug: true,
 	snowcat: 'snowcat',
 	userSettings: {},
@@ -363,6 +363,11 @@ var snowUI = {
 	},
 	
 }
+
+var snowtext = snowUI.snowtext;
+
+var snowPath = snowUI.snowPath;
+
 /* messages */
 var snowmessage = snowUI.flash;
 
@@ -373,7 +378,7 @@ var snowmessage = snowUI.flash;
 	
 	var hasOpened = false;
 	
-	function eggy(e) {
+	var eggy = function(e) {
 		var $navbarLogo = $('.walletbar-logo'),
 		$easterEgg = $('#easter-egg')
 				

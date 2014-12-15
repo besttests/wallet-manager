@@ -20,6 +20,7 @@
     "keystone-utils": "~0.1.8",
     "less-middleware": "~1.0.4",
     "lodash": "2.4.x",
+    "maxmin": "^1.0.0",
     "moment": "~2.4.0",
     "mongoose": "3.8.x",
     "node-dogecoin": "",

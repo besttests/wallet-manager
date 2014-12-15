@@ -120,7 +120,7 @@ exports = module.exports = function(req, res) {
 					lock=sanitizer.sanitize(req.body.lock) === 'yes' ? true : false ,
 					pinop=sanitizer.sanitize(req.body.pin),
 					keyphrase=sanitizer.sanitize(req.body.keyphrase),
-					myformat=sanitizer.sanitize(req.body.type),
+					myformat=req.body.type ? Number(sanitizer.sanitize(req.body.type)) : 2,
 					public12=sanitizer.sanitize(req.body.display),
 					days = sanitizer.sanitize(req.body.expires),
 					adddays = (days=='laina' || days=='burnonimpact')?100000:parseFloat(days),

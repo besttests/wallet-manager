@@ -260,12 +260,12 @@ exports = module.exports = function(req, res) {
 					}
 					//console.log(opts) 
 					Link.getIp({iponly:1},function(err,ip) { 
-						//console.log('get ip',err)
+						
 						
 						if(err) return res.apiError(401,err,401,err); 
 						opts.ip=ip.ip;
 						opts.params.ip=ip.ip;						
-					
+						console.log('get ip',opts)
 						var hostname;
 						Link.sendRequest(opts,function(err,response) {
 							if(response) {

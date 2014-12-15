@@ -6,8 +6,6 @@
  * */
 React.initializeTouchEvents(true);
 
-var yes = 'yes', no = 'no';
-//var yes = true, no = false;
 
 var WalletUI = snowUI.wallet
 

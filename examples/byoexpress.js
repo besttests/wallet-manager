@@ -47,15 +47,60 @@ mongoose.connect('mongodb://localhost/snowcoins', function (error) {
 		name:'ralph',
 		brand: 'abby'
 	});
-
-	snowcoins.init({mongoose:mongoose,app:app}).start(function(returnapp) {
-			/*start app  and send the started server object back to snowcoins to start sockets if requested*/
-			var servers = {
-				httpServer : app.listen(3000),
-				httpsServer : false
-			};
+	snowcoins.on('init',function(config) {
+		/* we get the config object we pass to start */
+			console.log('init event');
+		})
+		.on('keystone',function(keystone) {
+			/* add your own keystone options before mount 
+			 * this event is not fired if you are mounting inside a current Keystone app
+			 * */
+			console.log('keystone event');
+		})
+		.on('models',function() {
+			/* add your own models and register them with keystone */
+			console.log('models event');
+		})
+		.on('routes',function() {
+			/* add your own routes */
+			console.log('routes event');
+		})
+		.on('ready',function() {
+			/* app is configured */
+			console.log('ready event');
+			
+		})
+		.on('tracker',function() {
+			/* app is configured */
+			console.log('tracker event');
+			
+		})
+		.on('link server',function() {
+			/* app is configured */
+			console.log('link server event');
+			
+		})
+		.on('server started',function() {
+			/* app is configured */
+			console.log('server started event');
+			var returnapp = function(returnapp) {
+				/*start app  and send the started server object back to snowcoins to start sockets if requested*/
+				var servers = {
+					httpServer : app.listen(3000),
+					httpsServer : false
+				};
+				
+			}
 			returnapp(servers)
-	});
+		})
+		.on('complete',function() {
+			/* app is configured */
+			console.log('complete event');
+			
+		});
+		
+		snowcoins.start({app:app,mongoose:mongoose});
+	
  
 
  

@@ -12,15 +12,31 @@ WalletUI.send = React.createClass({
 		
 		var _this = this
 		
-		return {requesting:false,mounted:false,ready:this.props.ready,modalAddressBook:false};
+		return {
+			requesting:false,
+			mounted:false,
+			ready:this.props.ready,
+			confirm:false,
+			unlock:false,
+			receipt: false,
+			transaction: false,
+			error: false,
+			persist: {}
+			
+		};
 		
 	},
 	componentWillReceiveProps: function (nextProps) {
 		var _this = this
-		if(snowUI.debug) snowlog.log('send will receive props',this.props,nextProps)
+		if(snowUI.debug) snowlog.log('send will receive props',this.state.unlock,nextProps.config.unlocked)
 		//this.setState({ready:nextProps.ready})
-		if(this.props.config.wallet !== nextProps.config.wallet)this.getData(nextProps,function(resp){_this.setState({accounts:resp.accounts,data:resp.data,snowmoney:resp.snowmoney,mounted:true,ready:nextProps.ready}) })
-		
+		if(this.state.unlock === true && nextProps.config.unlocked === true) {
+			if(snowUI.debug) snowlog.log('send set to confirm')
+			this.setState({unlock:false,confirm:true});
+			
+		} else {
+			if(this.props.config.wallet !== nextProps.config.wallet)this.getData(nextProps,function(resp){_this.setState({accounts:resp.accounts,data:resp.data,snowmoney:resp.snowmoney,mounted:true,ready:nextProps.ready}) })
+		}
 	},
 	componentDidUpdate: function () {
 		var _this = this
@@ -41,7 +57,6 @@ WalletUI.send = React.createClass({
 	componentWillMount: function() {
 		var _this = this
 		if(snowUI.debug) snowlog.log('send did mount',this.props)
-		//_this.setState({mounted:true})
 		this.getData(this.props,function(resp){ _this.setState({data:resp.data,snowmoney:resp.snowmoney,accounts:resp.accounts,mounted:true}) })
 		this.killTooltip();
 		$('.snow-send #convamount').html(' ')
@@ -82,7 +97,8 @@ WalletUI.send = React.createClass({
 		snowUI.ajax.GET(url,data,function(resp) {
 			if(snowUI.debug) snowlog.log(resp)
 			if(resp.success === true) {
-				_this.setState({adsressBookHtml:resp.html,modalAddressBook:true});
+				_this.setState({addressBookHtml:resp.html});
+				snowUI.methods.modals.addressBook.open();
 			} else {
 				snowUI.flash('error',resp.error,3500)
 				
@@ -189,7 +205,7 @@ WalletUI.send = React.createClass({
 	},
 	walletForm: function(e) {
 		e.preventDefault()
-		
+		var _this = this;
 		var currentwally = this.props.config.wally;
 		
 		var next = true;
@@ -211,22 +227,110 @@ WalletUI.send = React.createClass({
 		}
 		if(next===true)
 		{
-			snowvars.html='<div><div class="adderror" style="dispaly:none;"></div> <span class="send-modal-amount">'+parseFloat(amount).formatMoney(8)+'</span><span class="coinstamp">'+currentwally.coinstamp+'</span></div><div class="send-modal-text"> to address<p><strong>'+to+'</strong></p>from account<p class="send-modal-account1"><strong>'+from+'</strong></p><p><span class="snow-balance-span1" style="font-weight:bold">'+(bal).formatMoney(8)+'</span> <span class="coinstamp">'+currentwally.coinstamp+' wallet balance after send</span><div id="3456756" style="display:none;">to='+to+'<br />&account='+from+'<br />&amount='+amount+'<br />&checkauth={generate-on-submit}<br />&sendnow=yes</div></p></div>';
-			snowvars.buttons=$('#confirmbuttons').html();
-			snowvars.unlockme=$('#confirmpassphrase').html();
-			snowvars.unlockbuttons='<button type="submit" id="confirmunlock" class="btn btn-warning " rel="send">Unlock Wallet</button> &nbsp;<button style="float:right;" type="button" class="btn  btn-default  pull-right" data-dismiss="modal">Cancel</button>';
-			var nowtime=new Date().getTime();
-			var body=(lockstatus.locked===2 || lockstatus.time>nowtime) ? snowvars.html : snowvars.unlockme;
-			var footer=(lockstatus.locked===2 || lockstatus.time>nowtime) ? snowvars.buttons : snowvars.unlockbuttons;
 			
+			var saveAs = $(".snow-send  #sendcoinaddressname").val(),
+				saveAddress = $(".snow-send  #sendcoinsaveaddr").val();
+			if(snowUI.debug) snowlog.log("save address? ",saveAddress)
+			if(saveAddress === 'save' && saveAs) {
+				var url = "/api/snowcoins/local/contacts",
+					  data = { stop:1,wallet:currentwally.key,action:'add',name:saveAs,address:to};
+				snowUI.ajax.GET(url,data,function(resp) {
+					if(snowUI.debug) snowlog.log(resp)
+					if(resp.success === true) {
+						snowUI.flash('success','Address saved as ' + saveAs,3500)
+					} else {
+						snowUI.flash('error',"Address saved previously",3500)
+						
+					}
+				});
+			}
+			
+			var options = {
+				amount: amount,
+				ticker: ticker,
+				to: to,
+				balance: bal,
+				from: from,
+				saveAs: saveAs,
+				memo: $(".snow-send  #sendcoinmemo").val(),
+				message: $(".snow-send  #sendcointomessage").val()
+							
+			};
+			
+			if(_this.props.config.unlocked === false) {
+				
+				_this.setState({confirm:false,unlock:true,persist:options});
+				snowUI.methods.modals.unlockWallet.open();
+				
+			} else {
+				_this.setState({confirm:true,unlock:false,persist:options});
+			}
 		}
 		
 	},
+	sendConfirmed: function() {
+		var 	_this = this,
+			nowtime=new Date().getTime(),
+			command=(this.state.persist.from==='_default')?'send':'sendfromaccount',
+			url= "/api/snowcoins/local/gated",
+			data =  { checkauth:nowtime,account:this.state.persist.from,comment:this.state.persist.memo,commentto:this.state.persist.message,wallet: this.props.config.wally.key,command:command,amount:this.state.persist.amount,toaddress:this.state.persist.to};
+		
+		snowUI.ajax.GET(url,data,function(resp) {
+			if(snowUI.debug) snowlog.log(resp)
+			if(resp.success === true)
+			{
+				_this.setState({persist:{},confirm:false,receipt:true,transaction:resp.tx});
+			}
+			else
+			{
+				_this.setState({confirm:false,error:resp.error,});
+			}
+		});
+			  
+		return false;	
+	},
+	cancelConfirm: function() {
+		this.setState({persist:{},confirm:false,receipt:false,transaction:false,error:false});
+	},
 	render: function() {
-		if(snowUI.debug) snowlog.log('wallet send component')
 		var _this = this;
 		
-		if(this.state.mounted) {
+		if(this.state.receipt) {
+			/* confirm sending coins */
+			return (<div id="snow-send" className="snow-send bs-example">
+						<div  style={{padding:'5px 20px'}} >
+							<div className="col-xs-12 ">
+								<h4 className="profile-form__heading">Send Coin Transaction</h4>
+							</div>
+					
+							<div dangerouslySetInnerHTML={{__html: _this.state.transaction}} />
+							<p />
+							<button className="btn btn-default " onClick={_this.cancelConfirm} >Return</button>
+						</div>
+				</div>)
+		
+		} else if(this.state.confirm) {
+			if(snowUI.debug) snowlog.log('wallet confirm send')
+			var currentwally = this.props.config.wally;
+			var html='<div><div class="adderror" style="dispaly:none;"></div> <span class="send-modal-amount">'+parseFloat(this.state.persist.amount).formatMoney(8)+'</span><span class="coinstamp">'+currentwally.coinstamp+'</span></div><div class="send-modal-text"> to address<p><strong>'+this.state.persist.to+'</strong></p>from account<p class="send-modal-account1"><strong>'+this.state.persist.from+'</strong></p><p><span class="snow-balance-span1" style="font-weight:bold">'+(this.state.persist.balance).formatMoney(8)+'</span> <span class="coinstamp">'+currentwally.coinstamp+' wallet balance after send</span><div id="3456756" style="display:none;">to='+this.state.persist.to+'<br />&account='+this.state.persist.from+'<br />&amount='+this.state.persist.amount+'<br />&checkauth={generate-on-submit}<br />&sendnow=yes</div></p></div>';
+			
+			/* confirm sending coins */
+			return (<div id="snow-send" className="snow-send bs-example">
+						<div  style={{padding:'5px 20px'}} >
+							<div className="col-xs-12 ">
+								<h4 className="profile-form__heading">Confirm Send Coins</h4>
+							</div>
+					
+						
+							<div dangerouslySetInnerHTML={{__html: html}} />
+							
+							<button onClick={_this.sendConfirmed} className="btn btn-warning">Send Coins Now</button>
+							<span> &nbsp; </span>
+							<button className="btn btn-default " onClick={_this.cancelConfirm} >Cancel</button>
+						</div>
+				</div>)
+			
+		} else if(this.state.mounted) {
 			
 			var snowmoney = this.state.snowmoney;
 			var wally = this.props.config.wally;
@@ -275,10 +379,10 @@ WalletUI.send = React.createClass({
 								<p></p>
 							</div>
 						</div>
-					<div id="prettyerror" style={{display:'none'}}>
+					<div id="prettyerror" style={{display:_this.state.error ? 'block' : 'none'}}>
 						<div className="alert alert-danger alert-dismissable">
 							<button data-dismiss="alert" aria-hidden="true" className="close">×</button>
-							<p></p>
+							<p>{_this.state.error}</p>
 						</div>
 					</div>
 					<form  onSubmit={this.walletForm} id="snowsendcoin" className="snow-block-lg">
@@ -297,8 +401,8 @@ WalletUI.send = React.createClass({
 						<span id="convamountspan" data-toggle="tooltip"  data-placement="top" data-container="#snow-send" className="input-group-addon input-group-sm coinstamp bstooltip" > 
 							<span id="convamount" ></span>
 						</span>
-						<input required="required" type="text" pattern="[-+]?[0-9]*[.,]?[0-9]+" id="sendcoinamount" name="sendcoinamount" placeholder="Amount" data-toggle="tooltip" data-placement="top"  data-container="#snow-send" className="form-control coinstamp bstooltip watchme active" title="We will send this amount" onChange={_this.watchAmount} onKeyUp={_this.watchAmount} onFocus={_this.watchAmount} />
-						<input id="sendcointrueamount" type="hidden" value="0" />
+						<input required="required" type="text" pattern="[-+]?[0-9]*[.,]?[0-9]+" defaultValue={this.state.persist.amount} id="sendcoinamount" name="sendcoinamount" placeholder="Amount" data-toggle="tooltip" data-placement="top"  data-container="#snow-send" className="form-control coinstamp bstooltip watchme active" title="We will send this amount" onChange={_this.watchAmount} onKeyUp={_this.watchAmount} onFocus={_this.watchAmount} />
+						<input id="sendcointrueamount" type="hidden" defaultValue={this.state.persist.amount || "0"} />
 						
 						<span id="changeamountspan" data-toggle="tooltip" data-placement="top" data-container="#snow-send" className="input-group-addon input-group-sm coinstamp watchme" > 
 							
@@ -316,13 +420,13 @@ WalletUI.send = React.createClass({
 					</div>
 					<div className="form-group input-group">
 						<span className="input-group-addon input-group-sm coinstamp">From</span>
-						<select id="sendcoinfromaccount" name="sendcoinfromaccount" className="form-control coinstamp" defaultValue={param.from.account}>
+						<select id="sendcoinfromaccount" name="sendcoinfromaccount" className="form-control coinstamp" defaultValue={this.state.persist.from || param.from.account}>
 							{accs}
 						</select>
 					</div>
 					<div className="form-group input-group">
 						<span className="input-group-addon input-group-sm coinstamp">To</span>
-						<input required="required" id="sendcointoaddress" name="sendcointoaddress" placeholder="Coin Address" defaultValue={param.to.address} className="form-control coinstamp" />
+						<input required="required" id="sendcointoaddress" name="sendcointoaddress" placeholder="Coin Address" defaultValue={this.state.persist.to || param.to.address} className="form-control coinstamp" />
 						<span  style={{cursor:'pointer'}} onClick={_this.addressBook} className="input-group-addon input-group-sm glyphicon glyphicon-user"></span>
 					</div>
 					<div className="form-group input-group">
@@ -333,13 +437,13 @@ WalletUI.send = React.createClass({
 					</div>
 					<div id="sendcoinshowname" style={{display:'none'}} className="form-group input-group bg-info">
 						<span className="input-group-addon input-group-sm coinstamp">Name</span>
-						<input id="sendcoinaddressname" name="sendcoinaddressname" placeholder="name for address" value="" className="form-control coinstamp" />
+						<input id="sendcoinaddressname" name="sendcoinaddressname" placeholder="name for address"  className="form-control coinstamp" defaultValue={this.state.persist.saveAs}  />
 					</div>
 					<div className="form-group input-group"><span className="input-group-addon input-group-sm coinstamp">Message </span>
-					<input id="sendcointomessage" name="sendcointomessage" placeholder="message" value="" className="form-control coinstamp" />
+					<input id="sendcointomessage" name="sendcointomessage" placeholder="message"  className="form-control coinstamp" defaultValue={this.state.persist.message} />
 					</div>
 					<div className="form-group input-group"><span className="input-group-addon input-group-sm coinstamp">Memo</span>
-					<input id="sendcoinmemo" name="sendcoinmemo" placeholder="memo" value="" className="form-control coinstamp" />
+					<input id="sendcoinmemo" name="sendcoinmemo" placeholder="memo"  className="form-control coinstamp" defaultValue={this.state.persist.memo} />
 					</div>
 					<div className="form-group">
 						<button type="submit" id="buttonsend" className="btn btn-sm snowsendcoin">Send Coin</button>

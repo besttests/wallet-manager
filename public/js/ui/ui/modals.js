@@ -205,6 +205,7 @@ snowUI.controllers.ui.modals = function() {
 					encryptWallet: false,
 					removeItem: false,
 					genericModal: false,
+					addressBook: false,
 				}});
 			}
 		},
@@ -323,7 +324,7 @@ var removeItem = function(click,close) {
 	var _this = this
 	var eButtons = (
 			ButtonToolbar(null, 
-			React.DOM.button({onClick: click, 'data-snowdata': id, id: "removedynamicmodalbutton", className: "btn btn-danger", rel: "modal"}, "Permanently Remove Item Now ")
+			React.DOM.button({onClick: click, 'data-snowdata': this.state.id, id: "removedynamicmodalbutton", className: "btn btn-danger", rel: "modal"}, "Permanently Remove Item Now ")
 			)
 		)
 		return (addModal({me: "removeDynamic", methods: {close:close}, buttons: eButtons, open: this.state.removeItem, title: "Remove Item "}, 
@@ -344,10 +345,10 @@ snowModals.removeItem = removeItem
 
 
 snowModals.addressBook = function() {
-	var _this = this
-	
-	return (addModal({me: "addressBook", open: this.state.modalAddressBook, title: "Saved Addresses "}, 
-			this.state.addressBookHtml
+	var _this = this;
+	return (addModal({me: "addressBook", open: this.props.config.modals.addressBook, title: "Saved Addresses "}, 
+			React.DOM.div({dangerouslySetInnerHTML: {__html: this.state.addressBookHtml}})
+			
 		))
 		
 }

@@ -2,16 +2,12 @@
  * @jsx React.DOM
  */
 
-/* not used but thats how you can use touch events
- * */
-React.initializeTouchEvents(true);
 
 WalletUI.accounts = React.createClass({
 	_remember: {},
 	getInitialState: function() {
 		
-		var _this = this
-		
+		var _this = this;
 		snowUI.methods.wallet.accounts = {
 			newAddressCall: function (wallet,moon,account) {
 				var _this = this
@@ -24,7 +20,7 @@ WalletUI.accounts = React.createClass({
 				snowUI.ajax.GET(url,data,function(resp) {
 					console.log(resp)
 					if(resp.success === true) {
-						_this.setState({userSettings:resp.userSettings,data:resp.data},function() {
+			       			_this.setState({userSettings:resp.userSettings,data:resp.data},function() {
 							$('[data-snowaddress="'+resp.info.newaddress+'"]').addClass('bs-success')
 							snowUI.flash('success',resp.msg,3500)
 							
@@ -379,6 +375,37 @@ WalletUI.accounts = React.createClass({
 		
 		var def = this.state.shortcuts[address] ? this.state.shortcuts[address] : {sign:{}};
 		var deleteme = def.apikey ? <span> <a style={{marginBottom:0,marginRight:10}} className="btn btn-danger pull-right"  onClick={this.deleteShortcut}>remove</a>  </span> : '';
+		/*
+		{helptext.b}
+		<div className="form-group input-group">
+			<span className="input-group-addon  coinstamp">{snowtext.accounts.address.moreinfo.pin.text}</span>
+			<input type="text"  defaultValue={def.sign.pinop || ''} name="pin" id="pin" placeholder={snowtext.accounts.address.moreinfo.pin.placeholder} className="form-control coinstamp" />
+		</div>
+		*/
+		/*
+		{helptext.d} 	
+		<div className="form-group input-group">
+			<span  className="input-group-addon   coinstamp" style={{borderRight:'1px initial initial',paddingRight:25}}>
+				{snowtext.accounts.address.moreinfo.lock.lockinput}
+			</span>
+				<select  defaultValue={def.sign.lock ? 'yes':'no'}  id="lock" name="lock" className="form-control coinstamp">
+					<option value="no">{snowtext.accounts.address.moreinfo.lock.option.no}</option>
+					<option value="yes">{snowtext.accounts.address.moreinfo.lock.option.yes}</option>
+				</select>
+		</div>
+			
+		
+		{helptext.e}
+		<div className="form-group input-group">
+			<span className="input-group-addon input-group-sm coinstamp">{snowtext.accounts.address.moreinfo.type.text}</span>
+			<select  defaultValue={def.sign.type || '1'}  name="type" id="type"  className="form-control coinstamp">
+				<option value="1">{snowtext.accounts.address.moreinfo.type.option.one}</option>
+				<option value="2">{snowtext.accounts.address.moreinfo.type.option.two}</option>
+				<option value="3">{snowtext.accounts.address.moreinfo.type.option.three}</option>
+			</select>
+			
+		</div>
+		*/
 		var html = 	<div>
 					{html3}
 					{html2}
@@ -395,39 +422,13 @@ WalletUI.accounts = React.createClass({
 							{linkname}
 							<input type="text" name="shortcut" defaultValue={def.apikey || ''} id="shortcut" placeholder={snowtext.accounts.address.moreinfo.shortcut.placeholder} className="form-control coinstamp" />
 						</div>
-						{helptext.b}
-						<div className="form-group input-group">
-							<span className="input-group-addon  coinstamp">{snowtext.accounts.address.moreinfo.pin.text}</span>
-							<input type="text"  defaultValue={def.sign.pinop || ''} name="pin" id="pin" placeholder={snowtext.accounts.address.moreinfo.pin.placeholder} className="form-control coinstamp" />
-						</div>
+						
 						{helptext.c}
 						<div className="form-group input-group">
 							<span className="input-group-addon  coinstamp">{snowtext.accounts.address.moreinfo.pinphrase.text}</span>
 							<input type="text"  defaultValue={def.sign.keyphrase || ''}  name="keyphrase" id="keyphrase" placeholder={snowtext.accounts.address.moreinfo.pinphrase.placeholder} className="form-control coinstamp" />
 						</div>
 						
-						{helptext.d} 	
-						<div className="form-group input-group">
-							<span  className="input-group-addon   coinstamp" style={{borderRight:'1px initial initial',paddingRight:25}}>
-								{snowtext.accounts.address.moreinfo.lock.lockinput}
-							</span>
-								<select  defaultValue={def.sign.lock ? 'yes':'no'}  id="lock" name="lock" className="form-control coinstamp">
-									<option value="no">{snowtext.accounts.address.moreinfo.lock.option.no}</option>
-									<option value="yes">{snowtext.accounts.address.moreinfo.lock.option.yes}</option>
-								</select>
-						</div>
-							
-						
-						{helptext.e}
-						<div className="form-group input-group">
-							<span className="input-group-addon input-group-sm coinstamp">{snowtext.accounts.address.moreinfo.type.text}</span>
-							<select  defaultValue={def.sign.type || '1'}  name="type" id="type"  className="form-control coinstamp">
-								<option value="1">{snowtext.accounts.address.moreinfo.type.option.one}</option>
-								<option value="2">{snowtext.accounts.address.moreinfo.type.option.two}</option>
-								<option value="3">{snowtext.accounts.address.moreinfo.type.option.three}</option>
-							</select>
-							
-						</div>
 						<div className="form-group input-group">
 							<span className="input-group-addon input-group-sm coinstamp">{snowtext.accounts.address.moreinfo.expires.text}</span>
 							<select  defaultValue={def.expires  || 'laina'}  name="expires" id="expires" className="form-control input input-faded" >
