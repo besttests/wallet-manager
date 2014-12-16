@@ -3,7 +3,7 @@
  */
 
 
-WalletUI.accounts = React.createClass({
+snowUI.wallet.accounts = React.createClass({
 	_remember: {},
 	getInitialState: function() {
 		
@@ -11,7 +11,7 @@ WalletUI.accounts = React.createClass({
 		snowUI.methods.wallet.accounts = {
 			newAddressCall: function (wallet,moon,account) {
 				var _this = this
-				if(snowUI.debug) snowlog.log('grab new address')
+				if(snowUI.debug) snowLog.log('grab new address')
 				var time=new Date()-2;
 				var url = "/api/snowcoins/local/wallet",
 					data = { wallet:wallet,moon:moon,account:account,createaddress:'now',checkauth:time},
@@ -36,7 +36,7 @@ WalletUI.accounts = React.createClass({
 				return false
 			}.bind(_this),
 			moveToAccountCall: function (form) {
-				if(snowUI.debug) snowlog.log('move coin to account')
+				if(snowUI.debug) snowLog.log('move coin to account')
 				var time=new Date()-2;
 				var mybtn = $('#'+form+' button')
 				var movefrom = $('#'+form+' #movefrom').val()
@@ -95,25 +95,25 @@ WalletUI.accounts = React.createClass({
 	},
 	componentWillReceiveProps: function (nextProps) {
 		var _this = this
-		if(snowUI.debug) snowlog.log('accounts will receive props',this.props,nextProps)
+		if(snowUI.debug) snowLog.log('accounts will receive props',this.props,nextProps)
 		//this.setState({ready:nextProps.ready})
 		if(this.props.config.wallet !== nextProps.config.wallet)this.getData(nextProps,function(resp){_this.setState({userSettings:resp.userSettings,data:resp.data,mounted:true,shortcuts:resp.shortcuts,ready:nextProps.ready}) })
 		
 	},
 	componentDidUpdate: function () {
 		var _this = this
-		if(snowUI.debug) snowlog.log('accounts did update',this.props)
+		if(snowUI.debug) snowLog.log('accounts did update',this.props)
 		snowUI.watchLoader();
 		$('[rel=qrpopover]').popover();
 	},
 	componentDidMount: function() {
 		var _this = this
-		if(snowUI.debug) snowlog.log('accounts did mount',this.props)
+		if(snowUI.debug) snowLog.log('accounts did mount',this.props)
 		//_this.setState({mounted:true})
 		this.getData(this.props,function(resp){ _this.setState({userSettings:resp.userSettings,data:resp.data,shortcuts:resp.shortcuts,mounted:true}) })
 		$(document).on('click','.dropzone',function(e) {
 			_this.dropZone(e)
-			if(snowUI.debug) snowlog.log('drop address')
+			if(snowUI.debug) snowLog.log('drop address')
 		})
 		$('[rel=qrpopover]').popover();
 	
@@ -125,7 +125,7 @@ WalletUI.accounts = React.createClass({
 		
 	},
 	getData: function (props,cb) {
-		if(snowUI.debug) snowlog.log('account data',props)
+		if(snowUI.debug) snowLog.log('account data',props)
 		var url = "/api/snowcoins/local/wallet",
 			data = { wallet:props.config.wallet,moon:props.config.moon},
 			_this = this; 
@@ -150,7 +150,7 @@ WalletUI.accounts = React.createClass({
 		
 		$('.dynamic').not(f).hide();
 	
-		f.html('<button class="btn btn-info btn-sm" onClick="snowUI.methods.wallet.accounts.newAddressCall(\''+this.props.config.wallet+'\',\''+this.props.config.moon+'\',\''+snowkey+'\')">'+snowtext.accounts.new.createAddressBtn+'</button> &nbsp; <a  type="button"  onClick="$(\'.eachaccount.'+snowkey.replace(' ','SC14')+'\').find(\'.dynamic\').toggle(\'slow\').html(\'\')"  class="btn btn-default btn-sm">Cancel</a>')
+		f.html('<button class="btn btn-info btn-sm" onClick="snowUI.methods.wallet.accounts.newAddressCall(\''+this.props.config.wallet+'\',\''+this.props.config.moon+'\',\''+snowkey+'\')">'+snowUI.snowText.accounts.new.createAddressBtn+'</button> &nbsp; <a  type="button"  onClick="$(\'.eachaccount.'+snowkey.replace(' ','SC14')+'\').find(\'.dynamic\').toggle(\'slow\').html(\'\')"  class="btn btn-default btn-sm">Cancel</a>')
 		f.toggle(400)
 	},
 	moveToAccount: function(e) {
@@ -193,14 +193,14 @@ WalletUI.accounts = React.createClass({
 		
 	},
 	newAccount: function(e) {
-		var newaccount = prompt(snowtext.accounts.new.promptAccount)
+		var newaccount = prompt(snowUI.snowText.accounts.new.promptAccount)
 		if(newaccount) {
 			this.newAccountCall(newaccount)
 		}
 	},
 	newAccountCall: function(account) {
 		var _this = this
-		if(snowUI.debug) snowlog.log('new account call')
+		if(snowUI.debug) snowLog.log('new account call')
 		
 		var fixed = account.replace(' ','SC14')
 		
@@ -308,7 +308,7 @@ WalletUI.accounts = React.createClass({
 		
 		var who = $(e.currentTarget).attr('data-snowwho')	
 		
-		var table = $('.eachaccount').removeClass('sortaccount sortbalance sortaddresses').addClass(who).toArray()
+		var table = $('.eachaccount').not('.skip').removeClass('sortaccount sortbalance sortaddresses').addClass(who).toArray()
 		
 		var rows = table.sort(snowUI.comparer)
 		
@@ -321,7 +321,7 @@ WalletUI.accounts = React.createClass({
 			this._sort[who].will='desc'
 		}
 		var fill = $('#listaccounts')
-		fill.remove('.eachaccount')
+		fill.not('.skip').remove('.eachaccount');
 		for (var i = 0; i < rows.length; i++){fill.append(rows[i])}
 	},
 	setHelp: function(e) {
@@ -331,77 +331,77 @@ WalletUI.accounts = React.createClass({
 	},
 	showShortcut: function(e,force,show) {
 		
-		if(snowUI.debug) snowlog.info('show shortcut e',e);
+		if(snowUI.debug) snowLog.info('show shortcut e',e);
 		
 		var parent = $(e.target).closest('.eachaddress');
 		var account = parent.closest('.eachaccount').attr('data-snowtrueaccount')
 		var address = parent.attr('data-snowaddress');
-		if(snowUI.debug) snowlog.info(show,'show help for shortcut');
+		if(snowUI.debug) snowLog.info(show,'show help for shortcut');
 		var showhelp = show !== undefined ? show : this.state.showHelp;
 		var helptext = (showhelp) ? {
-			a:(<div dangerouslySetInnerHTML={{__html: snowtext.accounts.address.moreinfo.shortcut.text}} />),
-			b:(<div dangerouslySetInnerHTML={{__html: snowtext.accounts.address.moreinfo.sign.text}} /> ),
-			c:(<div dangerouslySetInnerHTML={{__html: snowtext.accounts.address.moreinfo.signphrase.text}} /> ),
-			d:(<div className="" dangerouslySetInnerHTML={{__html: snowtext.accounts.address.moreinfo.lock.lock}} />),
-			e:(<div dangerouslySetInnerHTML={{__html: snowtext.accounts.address.moreinfo.type.info}} />),
+			a:(<div dangerouslySetInnerHTML={{__html: snowUI.snowText.accounts.address.moreinfo.shortcut.text}} />),
+			b:(<div dangerouslySetInnerHTML={{__html: snowUI.snowText.accounts.address.moreinfo.sign.text}} /> ),
+			c:(<div dangerouslySetInnerHTML={{__html: snowUI.snowText.accounts.address.moreinfo.signphrase.text}} /> ),
+			d:(<div className="" dangerouslySetInnerHTML={{__html: snowUI.snowText.accounts.address.moreinfo.lock.lock}} />),
+			e:(<div dangerouslySetInnerHTML={{__html: snowUI.snowText.accounts.address.moreinfo.type.info}} />),
 			text: 'Hide Help',
 		} : {text:'Show Help'};
 		
 		var html2;
 		if(!this.state.userSettings.linkName || !this.state.userSettings.shareKey || !this.state.userSettings.sendKey) {
-			html2 = (<div><p>You can <a onClick={snowUI.methods.hrefRoute} href={snowPath.root + snowPath.link} > create and add a .link account </a> to give out shortcuts that do not require you expose your wallet manager to the internet. .link will create a seperate server to communicate on and only accept requests from pre-defined source.</p></div>);
+			html2 = (<div><p>You can <a onClick={snowUI.methods.hrefRoute} href={snowUI.snowPath.root + snowUI.snowPath.link} > create and add a .link account </a> to give out shortcuts that do not require you expose your wallet manager to the internet. .link will create a seperate server to communicate on and only accept requests from pre-defined source.</p></div>);
 		}
 		
 		var html3,html4;
 		if(snowUI.link.state === 'off') {
 			if(!this.state.userSettings.linkName || !this.state.userSettings.shareKey || !this.state.userSettings.sendKey)
-				html4 = <span  className="pull-left" dangerouslySetInnerHTML={{__html: snowtext.accounts.address.moreinfo.nolink.localon.replace('{link}', snowPath.share).replace('{linktext}',snowPath.share)}} />
+				html4 = <span  className="pull-left" dangerouslySetInnerHTML={{__html: snowUI.snowText.accounts.address.moreinfo.nolink.localon.replace('{link}', snowUI.snowPath.share).replace('{linktext}',snowUI.snowPath.share)}} />
 					
 			html3 = (<div className="bg-danger">
 					{html4}
 					<span  className="pull-right"> 
-					 <span dangerouslySetInnerHTML={{__html: snowtext.accounts.address.moreinfo.nolink.linkoff}} /> 
-					 <a href={snowPath.link} onClick={snowUI.methods.hrefRoute} >
-						<span dangerouslySetInnerHTML={{__html: snowtext.accounts.address.moreinfo.nolink.turnon}} />
+					 <span dangerouslySetInnerHTML={{__html: snowUI.snowText.accounts.address.moreinfo.nolink.linkoff}} /> 
+					 <a href={snowUI.snowPath.link} onClick={snowUI.methods.hrefRoute} >
+						<span dangerouslySetInnerHTML={{__html: snowUI.snowText.accounts.address.moreinfo.nolink.turnon}} />
 					 </a> 
 					</span>
 					<div className="clearfix" />
 				</div>);
 		}
 		
-		var linkname = (this.state.userSettings.linkName) ? <span className="input-group-addon "><span style={{fontSize:'16px'}}> . </span>{this.state.userSettings.linkName}<span style={{fontSize:'16px'}}> .</span></span> : <span className="input-group-addon ">{snowPath.share}/</span>
+		var linkname = (this.state.userSettings.linkName) ? <span className="input-group-addon "><span style={{fontSize:'16px'}}> . </span>{this.state.userSettings.linkName}<span style={{fontSize:'16px'}}> .</span></span> : <span className="input-group-addon ">{snowUI.snowPath.share}/</span>
 		
-		if(snowUI.debug) snowlog.info('address, this shortcut, shortcuts',address,this.state.shortcuts[address],this.state.shortcuts);
+		if(snowUI.debug) snowLog.info('address, this shortcut, shortcuts',address,this.state.shortcuts[address],this.state.shortcuts);
 		
 		var def = this.state.shortcuts[address] ? this.state.shortcuts[address] : {sign:{}};
 		var deleteme = def.apikey ? <span> <a style={{marginBottom:0,marginRight:10}} className="btn btn-danger pull-right"  onClick={this.deleteShortcut}>remove</a>  </span> : '';
 		/*
 		{helptext.b}
 		<div className="form-group input-group">
-			<span className="input-group-addon  coinstamp">{snowtext.accounts.address.moreinfo.pin.text}</span>
-			<input type="text"  defaultValue={def.sign.pinop || ''} name="pin" id="pin" placeholder={snowtext.accounts.address.moreinfo.pin.placeholder} className="form-control coinstamp" />
+			<span className="input-group-addon  coinstamp">{snowUI.snowText.accounts.address.moreinfo.pin.text}</span>
+			<input type="text"  defaultValue={def.sign.pinop || ''} name="pin" id="pin" placeholder={snowUI.snowText.accounts.address.moreinfo.pin.placeholder} className="form-control coinstamp" />
 		</div>
 		*/
 		/*
 		{helptext.d} 	
 		<div className="form-group input-group">
 			<span  className="input-group-addon   coinstamp" style={{borderRight:'1px initial initial',paddingRight:25}}>
-				{snowtext.accounts.address.moreinfo.lock.lockinput}
+				{snowUI.snowText.accounts.address.moreinfo.lock.lockinput}
 			</span>
 				<select  defaultValue={def.sign.lock ? 'yes':'no'}  id="lock" name="lock" className="form-control coinstamp">
-					<option value="no">{snowtext.accounts.address.moreinfo.lock.option.no}</option>
-					<option value="yes">{snowtext.accounts.address.moreinfo.lock.option.yes}</option>
+					<option value="no">{snowUI.snowText.accounts.address.moreinfo.lock.option.no}</option>
+					<option value="yes">{snowUI.snowText.accounts.address.moreinfo.lock.option.yes}</option>
 				</select>
 		</div>
 			
 		
 		{helptext.e}
 		<div className="form-group input-group">
-			<span className="input-group-addon input-group-sm coinstamp">{snowtext.accounts.address.moreinfo.type.text}</span>
+			<span className="input-group-addon input-group-sm coinstamp">{snowUI.snowText.accounts.address.moreinfo.type.text}</span>
 			<select  defaultValue={def.sign.type || '1'}  name="type" id="type"  className="form-control coinstamp">
-				<option value="1">{snowtext.accounts.address.moreinfo.type.option.one}</option>
-				<option value="2">{snowtext.accounts.address.moreinfo.type.option.two}</option>
-				<option value="3">{snowtext.accounts.address.moreinfo.type.option.three}</option>
+				<option value="1">{snowUI.snowText.accounts.address.moreinfo.type.option.one}</option>
+				<option value="2">{snowUI.snowText.accounts.address.moreinfo.type.option.two}</option>
+				<option value="3">{snowUI.snowText.accounts.address.moreinfo.type.option.three}</option>
 			</select>
 			
 		</div>
@@ -411,7 +411,7 @@ WalletUI.accounts = React.createClass({
 					{html2}
 					<form onSubmit={this.submitShortcut} id="shortcutForm">
 						<div  className="form-group input-group">
-							<span className="input-group-addon coinstamp">{snowtext.accounts.address.moreinfo.head.text} </span>
+							<span className="input-group-addon coinstamp">{snowUI.snowText.accounts.address.moreinfo.head.text} </span>
 						
 							<input type="text" name="address" id="address" value={address} onChange={function(e) { this.value = address}} className="form-control coinstamp" />
 						</div>
@@ -420,17 +420,17 @@ WalletUI.accounts = React.createClass({
 						{helptext.a} 
 						<div className="form-group input-group">
 							{linkname}
-							<input type="text" name="shortcut" defaultValue={def.apikey || ''} id="shortcut" placeholder={snowtext.accounts.address.moreinfo.shortcut.placeholder} className="form-control coinstamp" />
+							<input type="text" name="shortcut" defaultValue={def.apikey || ''} id="shortcut" placeholder={snowUI.snowText.accounts.address.moreinfo.shortcut.placeholder} className="form-control coinstamp" />
 						</div>
 						
 						{helptext.c}
 						<div className="form-group input-group">
-							<span className="input-group-addon  coinstamp">{snowtext.accounts.address.moreinfo.pinphrase.text}</span>
-							<input type="text"  defaultValue={def.sign.keyphrase || ''}  name="keyphrase" id="keyphrase" placeholder={snowtext.accounts.address.moreinfo.pinphrase.placeholder} className="form-control coinstamp" />
+							<span className="input-group-addon  coinstamp">{snowUI.snowText.accounts.address.moreinfo.pinphrase.text}</span>
+							<input type="text"  defaultValue={def.sign.keyphrase || ''}  name="keyphrase" id="keyphrase" placeholder={snowUI.snowText.accounts.address.moreinfo.pinphrase.placeholder} className="form-control coinstamp" />
 						</div>
 						
 						<div className="form-group input-group">
-							<span className="input-group-addon input-group-sm coinstamp">{snowtext.accounts.address.moreinfo.expires.text}</span>
+							<span className="input-group-addon input-group-sm coinstamp">{snowUI.snowText.accounts.address.moreinfo.expires.text}</span>
 							<select  defaultValue={def.expires  || 'laina'}  name="expires" id="expires" className="form-control input input-faded" >
 								<option value="laina">Never</option>
 								<option value="burnonimpact">One Use Only</option>
@@ -447,7 +447,7 @@ WalletUI.accounts = React.createClass({
 							<input type="hidden" id="key" name="key" value={def.key}/>
 							<input type="hidden" id="coinwallet" name="coinwallet" value={this.props.config.wally.key}/>
 							<input type="hidden" id="action" name="action" value='add-offline'/>
-							<button className="btn btn-primary"  disabled={(this.state.connecting) ? 'disabled' : ''}  style={{marginBottom:0}}>{(this.state.connecting) ? def.apikey ? snowtext.accounts.address.moreinfo.button.updating:snowtext.accounts.address.moreinfo.button.submitting : def.apikey ? snowtext.accounts.address.moreinfo.button.update:snowtext.accounts.address.moreinfo.button.submit}</button> 
+							<button className="btn btn-primary"  disabled={(this.state.connecting) ? 'disabled' : ''}  style={{marginBottom:0}}>{(this.state.connecting) ? def.apikey ? snowUI.snowText.accounts.address.moreinfo.button.updating:snowUI.snowText.accounts.address.moreinfo.button.submitting : def.apikey ? snowUI.snowText.accounts.address.moreinfo.button.update:snowUI.snowText.accounts.address.moreinfo.button.submit}</button> 
 							
 							&nbsp;<a style={{marginBottom:0}} className="btn btn-default pull-right"  onClick={this.showShortcut}>cancel</a>
 							{deleteme}
@@ -470,7 +470,7 @@ WalletUI.accounts = React.createClass({
 			click: this.deleteShortcutNow,
 			
 		}
-		if(snowUI.debug) snowlog.info(conf)
+		if(snowUI.debug) snowLog.info(conf)
 		this.setState({genericModal:true,modal:conf});
 		snowUI.flash('message','Confirm First ',5000);
 		return;
@@ -482,7 +482,7 @@ WalletUI.accounts = React.createClass({
 			_this = this;
 			
 		
-		if(snowUI.debug) snowlog.log('removeNow',key)
+		if(snowUI.debug) snowLog.log('removeNow',key)
 		var url = "/api/snowcoins/local/receive/setup",
 			data = {'action':'delete-unattended',wid:key}
 		
@@ -491,7 +491,7 @@ WalletUI.accounts = React.createClass({
 		var confirm = window.confirm("Last button, I promise. \r\nPress OK to permanently remove " + $('#shortcut').val())
 		if(confirm) {
 			snowUI.ajax.POST(url,data,function(resp) {
-				if(snowUI.debug) snowlog.info('remove shortcut resp',resp);
+				if(snowUI.debug) snowLog.info('remove shortcut resp',resp);
 				if(resp.success === true) {
 					//var sc = this.state.shortcuts;
 					//if(addr) delete sc[addr];
@@ -501,11 +501,11 @@ WalletUI.accounts = React.createClass({
 						_this.setState({connecting:false,userSettings:resp.userSettings,data:resp.data,shortcuts:resp.shortcuts});
 						_this.showShortcut({target:'#shortcutForm'},true);
 						$('#shortcutForm')[0].reset();
-						if(snowUI.debug) snowlog.info('removed shortcut',resp); 
+						if(snowUI.debug) snowLog.info('removed shortcut',resp); 
 					})
 					
 				} else {
-					if(snowUI.debug) snowlog.warn(resp.error)
+					if(snowUI.debug) snowLog.warn(resp.error)
 					snowUI.flash('error',resp.error,3500)
 					
 				}
@@ -615,19 +615,19 @@ WalletUI.accounts = React.createClass({
 		snowUI.ajax.POST(url,data,function(resp) {
 			if(resp.success === true) {
 				
-				if(snowUI.debug) snowlog.info('shortcut saved',resp);
+				if(snowUI.debug) snowLog.info('shortcut saved',resp);
 				var msg = resp.msg ? resp.msg : 'shortcut ' + shortcut.val() + ' added successfully';
 				snowUI.flash('success',msg,3500)
 				
 				_this.getData(_this.props,function(resp){ 
 					_this.setState({connecting:false,userSettings:resp.userSettings,data:resp.data,shortcuts:resp.shortcuts});
 					_this.showShortcut({target:'#shortcutForm'},true);
-					if(snowUI.debug) snowlog.info('shortcut refreshed',resp); 
+					if(snowUI.debug) snowLog.info('shortcut refreshed',resp); 
 				});
 				
 				
 			} else {
-				if(snowUI.debug) snowlog.warn(resp)
+				if(snowUI.debug) snowLog.warn(resp)
 				_this.setState({connecting:false});
 				snowUI.flash('error',resp.error,3500)
 				//_this.setState({error:true,message:'Error retrieving data',connecting:false})
@@ -637,7 +637,7 @@ WalletUI.accounts = React.createClass({
 		return false;
 	},
 	render: function() {
-		if(snowUI.debug) snowlog.log('wallet accounts component',this.state)
+		if(snowUI.debug) snowLog.log('wallet accounts component',this.state)
 		var _this = this;
 										
 		var listaccountsli = function(account) { 
@@ -651,7 +651,7 @@ WalletUI.accounts = React.createClass({
 		    });
 		    return (
 			 <ul className="dropdown-menu " role="menu" >
-				<li role="presentation"><a className="snowsendfromaccountlink" onClick={snowUI.methods.hrefRoute} href={snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/send/from/' + account.name} role="menuitem" tabIndex="-1"> Send Coin </a></li>
+				<li role="presentation"><a className="snowsendfromaccountlink" onClick={snowUI.methods.hrefRoute} href={snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/send/from/' + account.name} role="menuitem" tabIndex="-1"> Send Coin </a></li>
 				<li className="divider" role="presentation" ></li>
 				<li role="presentation"><a onClick={_this.moveToAccount}  data-snowkey={account.name.replace(' ','SC14')} data-snowfromacc={account.name} data-snowtoacc='' data-snowamount={account.balance} role="menuitem" tabIndex="-1"> Move coin to a new account </a></li>
 				<li className="divider" role="presentation" ></li>
@@ -671,7 +671,7 @@ WalletUI.accounts = React.createClass({
 						
 						
 						<div className="send " data-placement="top" data-toggle="tooltip"   title="send coin from this address">
-							<a  onClick={snowUI.methods.hrefRoute} href={snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/send/from/'+ a.name + '/' + v.a} ><span className="glyphicon glyphicon-share" /></a>
+							<a  onClick={snowUI.methods.hrefRoute} href={snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/send/from/'+ a.name + '/' + v.a} ><span className="glyphicon glyphicon-share" /></a>
 						</div>
 						<div className="qrcode " title="Create a .link shortcut">
 							<a onClick={_this.showShortcut} className={"shortcutlink " + activelink} title="Create a .link shortcut" alt="Create a .link shortcut"> <span className="glyphicon glyphicon-globe" /></a>
@@ -699,23 +699,25 @@ WalletUI.accounts = React.createClass({
 					{p}
 					<div className="col-xs-12 col-md-6 eachaddress">
 						<div className="simplelink">
-							<a  onClick={_this.newAddress}>&nbsp; &nbsp; {snowtext.accounts.new.createAddress} </a>
+							<a  onClick={_this.newAddress}>&nbsp; &nbsp; {snowUI.snowText.accounts.new.createAddress} </a>
 						</div>
 					</div>
 				</div>
 				)
 		}
 		var list = '';
+		var total = 0;
 		if(this.state.data instanceof Array) {
 		    list = this.state.data.map(function(account) {
 			   if(typeof account.addresses === 'object') {
-				   var atext = account.addresses.length === 1 ? account.addresses.length + ' ' +snowtext.accounts.address.short.singular : account.addresses.length + ' ' + snowtext.accounts.address.short.plural
+				   var atext = account.addresses.length === 1 ? account.addresses.length + ' ' +snowUI.snowText.accounts.address.short.singular : account.addresses.length + ' ' + snowUI.snowText.accounts.address.short.plural
 				   var aclick = _this.toggleAddresses
 			   } else {
-				 var atext =    snowtext.accounts.new.short
+				 var atext =    snowUI.snowText.accounts.new.short
 				 var aclick=  _this.newAddress
 				   
 			   }
+			   total += Number(account.balance);
 			   return (<div className={"eachaccount  " + account.name.replace(' ','SC14')} key={account.name.replace(' ','SC14')} data-snowtrueaccount={account.truename}   data-snowaccount={account.name} data-snowbalance={account.balance} onDrop={_this.dragDrop}  onDragOver={_this.dragOver} >
 					<div className="dropdown">
 						<div className="details"  onClick={aclick}  onDragLeave={_this.dragLeave} >
@@ -724,13 +726,13 @@ WalletUI.accounts = React.createClass({
 								{account.truename!==account.name ? ' ('+account.truename+')' : ''}
 							</div>
 							<div className="linkline">
-								<a onClick={snowUI.methods.hrefRoute} href={snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/send/from/' + account.name}><span className="badge  snowbg4">send </span> </a>
+								<a onClick={snowUI.methods.hrefRoute} href={snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/send/from/' + account.name}><span className="badge  snowbg4">send </span> </a>
 								<a onClick={aclick} data-snowkey={account.name}><span className="badge">{atext} </span> </a> 
-								<a onClick={snowUI.methods.hrefRoute} href={snowPath.root + snowPath.wallet + '/' +  _this.props.config.wallet + '/transactions/' + account.name}><span className="badge bs-info2"  href={snowPath.root + snowPath.wallet + '/' +  _this.props.config.wallet + '/transactions/' + account.name}>{snowtext.accounts.tx.text} </span> </a> 
+								<a onClick={snowUI.methods.hrefRoute} href={snowUI.snowPath.root + snowUI.snowPath.wallet + '/' +  _this.props.config.wallet + '/transactions/' + account.name}><span className="badge bs-info2"  href={snowUI.snowPath.root + snowUI.snowPath.wallet + '/' +  _this.props.config.wallet + '/transactions/' + account.name}>{snowUI.snowText.accounts.tx.text} </span> </a> 
 							</div>
 						</div>
 						<div className="balance " onClick={_this.drop} >
-							 <a className="dropdown-toggle" data-toggle="dropdown" data-container=".dropdown">{parseFloat(account.balance).formatMoney()} <span className="caret"></span> </a>
+							 <a className="dropdown-toggle" data-toggle="dropdown" data-container=".dropdown">{parseFloat(account.balance).formatMoney(8)} <span className="caret"></span> </a>
 							{account.balance > 0 ? listaccountsli(account) : <ul  className="dropdown-menu " role="menu" ><li  role="presentation" style={{padding:10}}>Add some coin first</li></ul>}	 
 							 
 						</div>
@@ -753,7 +755,7 @@ WalletUI.accounts = React.createClass({
 		    });
 		}
 		var modal = function() {
-			return (snowModals.genericModal.call(_this,_this.state,function(){ $('button').prop('disabled','');_this.setState({connecting:false,genericModal:false}) }.bind(_this) ));
+			return (snowUI.snowModals.genericModal.call(_this,_this.state,function(){ $('button').prop('disabled','');_this.setState({connecting:false,genericModal:false}) }.bind(_this) ));
 		};
 		return (
 		<div style={{padding:'25px 20px'}} id="snowaccountlist" >
@@ -764,7 +766,7 @@ WalletUI.accounts = React.createClass({
 				
 				<ul  className="nav  pull-right" >
 					 <li className="dropdown">
-						  <a href="#" id="navmenuaccounts" style={{padding:'15px 20px 17px 20px',textTransform:'uppercase'}}className="dropdown-toggle" data-toggle="dropdown">{snowtext.menu.menu.name} <span className="caret"></span></a>
+						  <a href="#" id="navmenuaccounts" style={{padding:'15px 20px 17px 20px',textTransform:'uppercase'}}className="dropdown-toggle" data-toggle="dropdown">{snowUI.snowText.menu.menu.name} <span className="caret"></span></a>
 						  <ul className="dropdown-menu dropdown-menu-right" role="menu">
 							    <li ><a   onClick={_this.toggleAllAddresses} >Toggle Addresses</a></li>
 							    <li className="divider"></li>
@@ -776,13 +778,27 @@ WalletUI.accounts = React.createClass({
 					</li>				
 				</ul>
 				<ul  className="nav navbar-nav  pull-right" >
-					<li><a  onClick={_this.newAccount} >{snowtext.accounts.new.account}</a></li>
+					<li><a  onClick={_this.newAccount} >{snowUI.snowText.accounts.new.account}</a></li>
 				</ul>		
 				
 			</div>
 			<div id="listaccounts">
+				<div className="eachaccount skip">
+					
+					<div className="details"   >
+						<div className="account"  >
+							total balance
+						</div>
+					</div>
+					<div className="balance " >
+						{total}
+					</div>
+					<div className="clearfix" />
+				</div>	
+				<div className="clearfix" />
 				{list}
 			</div>
+			
 			{modal()}
 		</div>			
 
@@ -799,10 +815,10 @@ WalletUI.accounts = React.createClass({
 			var highlighted = this._dropCandidate
 			_this.dropEnd(e)
 			if($(e.currentTarget).closest('.eachaddress').attr('data-snowaddress') !== highlighted.attr('data-snowaddress'))_this.dropStart(e)
-			if(snowUI.debug) snowlog.log('end dropping')
+			if(snowUI.debug) snowLog.log('end dropping')
 		} else {
 			_this.dropStart(e)
-			if(snowUI.debug) snowlog.log('start dropping')
+			if(snowUI.debug) snowLog.log('start dropping')
 		}
 		
 	},
@@ -899,7 +915,7 @@ WalletUI.accounts = React.createClass({
 		
 		snowUI.loadingStart()
 		var _this = this
-		if(snowUI.debug) snowlog.log('move address call')
+		if(snowUI.debug) snowLog.log('move address call')
 		var time=new Date()-2;
 		var url = "/api/snowcoins/local/wallet",
 			data = { wallet:_this.props.config.wallet,moon:_this.props.config.moon,account:account ,address:address ,moveaddress:'now',checkauth:time},

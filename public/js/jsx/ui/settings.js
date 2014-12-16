@@ -2,23 +2,11 @@
  * @jsx React.DOM
  */
 
-/* not used but thats how you can use touch events
- * */
-//React.initializeTouchEvents(true);
-
-/* not used but thats how you can use animation and other transition goodies
- * */
-//var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
-
-var SettingsUI = snowUI.settings
-
-
-
 /**
  * settings components
  * */
 //main
-SettingsUI.UI = React.createClass({
+snowUI.settings.UI = React.createClass({
 	getInitialState: function() {
 		return ({
 			rates:'active in',
@@ -51,7 +39,7 @@ SettingsUI.UI = React.createClass({
 		_state.component = page
 		_this.setState({data:false})
 		
-		if(snowUI.debug) snowlog.log('settings willgetprops','false state:',_state,nextProps)
+		if(snowUI.debug) snowLog.log('settings willgetprops','false state:',_state,nextProps)
 		
 		/* now get our data */
 		this.getPage(page,function(data) {
@@ -70,10 +58,10 @@ SettingsUI.UI = React.createClass({
 		
 		snowUI.ajax.GET(url,data,function(resp) {
 			if(resp.success === true) {
-				if(snowUI.debug) snowlog.info('got data for ' + po,resp.data,po)
+				if(snowUI.debug) snowLog.info('got data for ' + po,resp.data,po)
 				cb(resp.data)
 			} else {
-				if(snowUI.debug) snowlog.error(resp)
+				if(snowUI.debug) snowLog.error(resp)
 				_this.setState({error:true,message:'Error retrieving data',connecting:false})
 			}
 		})
@@ -83,7 +71,7 @@ SettingsUI.UI = React.createClass({
 		
 	},
 	componentDidUpdate: function() {
-		if(snowUI.debug) snowlog.info('settings did update')
+		if(snowUI.debug) snowLog.info('settings did update')
 		this.componentDidMount()
 	},
 	componentWillMount: function() {
@@ -95,7 +83,7 @@ SettingsUI.UI = React.createClass({
 				
 	},
 	componentDidMount: function() {
-		if(snowUI.debug) snowlog.info('settings did mount',this.state.component,this.props.config.page)
+		if(snowUI.debug) snowLog.info('settings did mount',this.state.component,this.props.config.page)
 		var me = $('a[data-target="'+this.state.component+'"]')
 		me.tab('show')	
 	},
@@ -106,30 +94,30 @@ SettingsUI.UI = React.createClass({
 			skipload:false,
 			trigger:true
 		}
-		if(snowUI.debug) snowlog.info(me)
+		if(snowUI.debug) snowLog.info(me)
 		//me.tab('show')
-		snowUI.methods.valueRoute(snowPath.settings + '/' + me[0].dataset.target,options)
+		snowUI.methods.valueRoute(snowUI.snowPath.settings + '/' + me[0].dataset.target,options)
 	},
 	render: function() {
 		
 		var renderMe,
 			showcomp = this.props.config.page || this.state.component
 		
-		if(snowUI.debug) snowlog.log('settings component',this.state,this.props)
+		if(snowUI.debug) snowLog.log('settings component',this.state,this.props)
 		
 		if(!this.state.data) {
-			if(snowUI.debug) snowlog.warn('empty render for receive')
+			if(snowUI.debug) snowLog.warn('empty render for receive')
 			renderMe=(<div />)
 		
-		} else if(SettingsUI[showcomp]) {
+		} else if(snowUI.settings[showcomp]) {
 			
-			var po = SettingsUI[showcomp]
+			var po = snowUI.settings[showcomp]
 			renderMe = (<po config={this.props.config} state={this.state} UI={this} />)
 			var tp ='0px'
 		
 		} else {
 			
-			renderMe = (<WalletUI.displayMessage  title = '404 Not Found' message = 'I could not find the page you are looking for. ' type = 'requesterror' />)
+			renderMe = (<snowUI.wallet.displayMessage  title = '404 Not Found' message = 'I could not find the page you are looking for. ' type = 'requesterror' />)
 			var tp='20px'
 		}     
 		
@@ -152,9 +140,9 @@ SettingsUI.UI = React.createClass({
 				<div style={{padding:tp +' 10px 0 10px'}} className="tabbox clearfix" id="maindiv">
 					
 					<ul className="nav nav-pills dccnavlis"  role="tablist" data-tabs="pills" >
-						<li className="active" ><a onClick={this.changeTab}  data-target="rates" role="pill" data-toggle="pill" title={snowtext.settings.menu.rates.title} >{snowtext.settings.menu.rates.text}</a></li>
-						<li  ><a onClick={this.changeTab}  data-target="language" role="pill" data-toggle="pill" title={snowtext.settings.menu.language.title}>{snowtext.settings.menu.language.text}</a></li>
-						<li ><a  role="pill" data-toggle="pill"  onClick={snowUI.methods.hrefRoute} title={snowtext.settings.menu.autobot.title} href={snowPath.link}>{snowtext.settings.menu.autobot.text}</a></li>
+						<li className="active" ><a onClick={this.changeTab}  data-target="rates" role="pill" data-toggle="pill" title={snowUI.snowText.settings.menu.rates.title} >{snowUI.snowText.settings.menu.rates.text}</a></li>
+						<li  ><a onClick={this.changeTab}  data-target="language" role="pill" data-toggle="pill" title={snowUI.snowText.settings.menu.language.title}>{snowUI.snowText.settings.menu.language.text}</a></li>
+						<li ><a  role="pill" data-toggle="pill"  onClick={snowUI.methods.hrefRoute} title={snowUI.snowText.settings.menu.autobot.title} href={snowUI.snowPath.link}>{snowUI.snowText.settings.menu.autobot.text}</a></li>
 						<li><a onClick={this.reload}><span className="glyphicon glyphicon-refresh"></span></a></li>
 					</ul>
 					<div className="clearfix" style={{marginTop:10}}>
@@ -173,7 +161,7 @@ SettingsUI.UI = React.createClass({
 
 
 //rate component
-SettingsUI.rates = React.createClass({
+snowUI.settings.rates = React.createClass({
 	getInitialState: function() {
 		return {
 			requesting:false,
@@ -184,7 +172,7 @@ SettingsUI.rates = React.createClass({
 		}
 	},
 	componentWillReceiveProps: function(nextProps) {
-		if(snowUI.debug) snowlog.info('rates receive props' ,nextProps)
+		if(snowUI.debug) snowLog.info('rates receive props' ,nextProps)
 		
 	},
 	shouldComponentUpdate: function() {
@@ -195,7 +183,7 @@ SettingsUI.rates = React.createClass({
 		
 	},
 	componentDidUpdate: function() {
-		if(snowUI.debug) snowlog.info('rates did update')
+		if(snowUI.debug) snowLog.info('rates did update')
 		this.listen()
 		snowUI.watchLoader();
 		
@@ -217,7 +205,7 @@ SettingsUI.rates = React.createClass({
 		
 	},
 	submitForm: function(e) {
-		if(snowUI.debug) snowlog.info('submit rate parameter form',e)
+		if(snowUI.debug) snowLog.info('submit rate parameter form',e)
 		e.preventDefault();
 		var _this = this
 		this.setState({requesting:true});
@@ -232,7 +220,7 @@ SettingsUI.rates = React.createClass({
 				snowUI.flash('success','Rate parameters updated',2500)
 			
 			} else {
-				if(snowUI.debug) snowlog.error(resp)
+				if(snowUI.debug) snowLog.error(resp)
 				this.setState({requesting:false});
 				snowUI.flash('error',resp.err,3500)
 				
@@ -242,9 +230,9 @@ SettingsUI.rates = React.createClass({
 		
 	},
 	render: function() {
-		if(snowUI.debug) snowlog.log('rates component', this.props)
+		if(snowUI.debug) snowLog.log('rates component', this.props)
 		
-		var text = snowtext.settings.rates,
+		var text = snowUI.snowText.settings.rates,
 			results,
 			snowmoney = this.props.state.data.snowmoney,
 			rates = this.props.state.data.rates;
@@ -407,7 +395,7 @@ SettingsUI.rates = React.createClass({
 								<div className="form-group"   style={{marginTop:15}}>
 									<input type="hidden" name="action" value="setcurrencyrates" />
 									<button    disabled={(this.state.requesting) ? 'disabled' : ''}  id="updaterates" className="btn " >{this.state.requesting ? 'Updating...' : 'Update Parameters'}</button>
-									 &nbsp; &nbsp; <a type="button"  onClick={snowUI.methods.hrefRoute} href={snowPath.root + snowPath.settings + '/' + _this.props.config.page + ''}   className="btn btn-default" >Cancel</a>
+									 &nbsp; &nbsp; <a type="button"  onClick={snowUI.methods.hrefRoute} href={snowUI.snowPath.root + snowUI.snowPath.settings + '/' + _this.props.config.page + ''}   className="btn btn-default" >Cancel</a>
 								</div>
 							</form>
 						</div>
@@ -424,7 +412,7 @@ SettingsUI.rates = React.createClass({
 							
 							{shortlist()}				
 							 
-							 <a type="button"  onClick={snowUI.methods.hrefRoute}  href={snowPath.root + snowPath.settings + '/' + this.props.state.component + '/update'} className="btn btn-sm btn-default ">{text.button.add.text}</a>
+							 <a type="button"  onClick={snowUI.methods.hrefRoute}  href={snowUI.snowPath.root + snowUI.snowPath.settings + '/' + this.props.state.component + '/update'} className="btn btn-sm btn-default ">{text.button.add.text}</a>
 						 
 							<table className="table table-hover snowtablesort"  >
 								<thead>
@@ -470,7 +458,7 @@ SettingsUI.rates = React.createClass({
 	}
 });
 //language component
-SettingsUI.language = React.createClass({
+snowUI.settings.language = React.createClass({
 	componentWillReceiveProps: function(nextProps) {
 		
 		
@@ -502,24 +490,22 @@ SettingsUI.language = React.createClass({
 			url = "/api/snowcoins/local/settings",
 			data = {page:'setusersettings',language:newl,newsettings:JSON.stringify({'language':newl})};
 		
-		if(snowlanguages.list.indexOf(newl) > -1) {
+		if(snowUI.snowLanguages.list.indexOf(newl) > -1) {
 			snowUI.ajax.GET(url,data,function(resp) {
 				if(resp.success === true && resp.data.language) {
 					
-					if(snowUI.debug) snowlog.info('set user language')
+					if(snowUI.debug) snowLog.info('set user language')
 					
-					snowtext = resp.data.language;
+					snowUI.snowLanguages.mylanguage = newl
+					snowUI.snowLanguages.language = resp.data.language;
 					
-					snowlanguages.mylanguage = newl
-					snowlanguages.language = snowtext;
-					
-					snowUI.flash('success',snowtext.settings.messages.success.changeLanguage,15000);
+					snowUI.flash('success',snowUI.snowText.settings.messages.success.changeLanguage,15000);
 					//fake out the UI and refresh
 					snowUI.methods.updateState({showErrorPage:false})
 						
 					
 				} else {
-					if(snowUI.debug) snowlog.error(resp)
+					if(snowUI.debug) snowLog.error(resp)
 					snowUI.flash('error','Error changing language. ' + resp.err) 
 				}
 				return false
@@ -531,19 +517,19 @@ SettingsUI.language = React.createClass({
 		
 	},
 	render: function() {
-		if(snowUI.debug) snowlog.log('language component')
+		if(snowUI.debug) snowLog.log('language component')
 		var _this = this;
-		var l = snowlanguages.list;
+		var l = snowUI.snowLanguages.list;
 		var listlanguages = l.map(function(v){
-			var list = (v === snowlanguages.mylanguage) ? (<strong> {v.toUpperCase()}</strong>) : v;
-			if(v!=='default' && v !== 'mylanguage')return (<div key={v} style={{padding:'4px 0',fontSize:16}} title={snowtext.settings.language.switch.text + v.toUpperCase()}><a onClick={_this.changeLanguage} data-snowlanguage={v} className={v === snowlanguages.mylanguage ? 'active':''}>{list}</a></div>)
+			var list = (v === snowUI.snowLanguages.mylanguage) ? (<strong> {v.toUpperCase()}</strong>) : v;
+			if(v!=='default' && v !== 'mylanguage')return (<div key={v} style={{padding:'4px 0',fontSize:16}} title={snowUI.snowText.settings.language.switch.text + v.toUpperCase()}><a onClick={_this.changeLanguage} data-snowlanguage={v} className={v === snowUI.snowLanguages.mylanguage ? 'active':''}>{list}</a></div>)
 		})
 		return (<div  style={{padding:'5px 20px'}} >
 			
 				<div id="languagepage" className={"col-md-12  "}>
 					<div  style={{padding:'5px 20px'}} >
 						<div className="col-xs-12 ">
-							<h4 className="profile-form__heading">{snowtext.settings.language.choose.text}</h4>
+							<h4 className="profile-form__heading">{snowUI.snowText.settings.language.choose.text}</h4>
 						</div>	
 						<div>
 						{listlanguages}
@@ -581,7 +567,7 @@ snowUI.link.UI = React.createClass({
 		
 		_this.setState({data:false,ready:false})
 		
-		if(snowUI.debug) snowlog.log('link willgetprops','false state:',_state,nextProps)
+		if(snowUI.debug) snowLog.log('link willgetprops','false state:',_state,nextProps)
 		
 		/* now get our data */
 		this.getPage(this.props.config.page,function(data) {
@@ -601,10 +587,10 @@ snowUI.link.UI = React.createClass({
 		
 		snowUI.ajax.GET(url,data,function(resp) {
 			if(resp.success === true) {
-				if(snowUI.debug) snowlog.info('got data for ' + po,resp.data,po)
+				if(snowUI.debug) snowLog.info('got data for ' + po,resp.data,po)
 				cb(resp.data)
 			} else {
-				if(snowUI.debug) snowlog.error(resp)
+				if(snowUI.debug) snowLog.error(resp)
 				_this.setState({error:true,message:'Error retrieving data',connecting:false})
 			}
 		})
@@ -614,7 +600,7 @@ snowUI.link.UI = React.createClass({
 		
 	},
 	componentDidUpdate: function() {
-		if(snowUI.debug) snowlog.info('link did update')
+		if(snowUI.debug) snowLog.info('link did update')
 		this.componentDidMount()
 	},
 	componentWillMount: function() {
@@ -626,7 +612,7 @@ snowUI.link.UI = React.createClass({
 				
 	},
 	componentDidMount: function() {
-		if(snowUI.debug) snowlog.info('link did mount',this.props.config.wallet)
+		if(snowUI.debug) snowLog.info('link did mount',this.props.config.wallet)
 		snowUI.watchLoader();
 	},
 	setDDNS: function(e) {
@@ -639,7 +625,7 @@ snowUI.link.UI = React.createClass({
 			snowUI.ajax.GET(url,data,function(resp) {
 				if(!resp.data.link.error) {
 					_this.getPage('ddns',function(data) {
-						if(snowUI.debug) snowlog.info('update DDNS',resp);
+						if(snowUI.debug) snowLog.info('update DDNS',resp);
 						var msg = typeof resp.data.linkserver === 'object' ? resp.data.linkserver.message + '  -- --  ' : '';
 						snowUI.flash('success',msg + resp.data.link.data.message,10000);
 						var _state={}
@@ -652,7 +638,7 @@ snowUI.link.UI = React.createClass({
 					});
 					
 				} else {
-					if(snowUI.debug) snowlog.error(resp);
+					if(snowUI.debug) snowLog.error(resp);
 					snowUI.flash('error','' + resp.data.link.error) ;
 					_this.setState({connecting:false});
 				}
@@ -672,7 +658,7 @@ snowUI.link.UI = React.createClass({
 			snowUI.ajax.GET(url,data,function(resp) {
 				if(!resp.data.link.error) {
 					_this.getPage('remove-ddns',function(data) {
-						if(snowUI.debug) snowlog.info('remove DDNS',resp);
+						if(snowUI.debug) snowLog.info('remove DDNS',resp);
 						snowUI.flash('success',resp.data.link.data.message,10000);
 						var _state={}
 						_state.data = data;
@@ -684,7 +670,7 @@ snowUI.link.UI = React.createClass({
 					});
 					
 				} else {
-					if(snowUI.debug) snowlog.error(resp);
+					if(snowUI.debug) snowLog.error(resp);
 					snowUI.flash('error','' + resp.data.link.error) ;
 					_this.setState({connecting:false});
 				}
@@ -710,17 +696,17 @@ snowUI.link.UI = React.createClass({
 				snowUI.killFlash('error');
 				snowUI.killFlash('success');
 				if(resp.success === true) {
-					if(snowUI.debug) snowlog.info('set share key',resp);
+					if(snowUI.debug) snowLog.info('set share key',resp);
 					if(!resp.data.userSettings.linkName) {
-						snowUI.flash('error',snowtext.link.messages.success.setsharekey + ' :: Share key is not valid! ',15000);
+						snowUI.flash('error',snowUI.snowText.link.messages.success.setsharekey + ' :: Share key is not valid! ',15000);
 					} else {
-						snowUI.flash('success',snowtext.link.messages.success.setsharekey,15000);
+						snowUI.flash('success',snowUI.snowText.link.messages.success.setsharekey,15000);
 					}
 					_this.setState({showsharekey:false});
 					//fake out the UI and refresh
 					snowUI.methods.updateState({showErrorPage:false,connecting:false});
 				} else {
-					if(snowUI.debug) snowlog.error(resp);
+					if(snowUI.debug) snowLog.error(resp);
 					var _state = {connecting:false}
 					if(resp.data)_state.data=resp.data;
 					_this.setState(_state);
@@ -746,13 +732,13 @@ snowUI.link.UI = React.createClass({
 		if(newl) {
 			snowUI.ajax.GET(url,data,function(resp) {
 				if(resp.success === true) {
-					if(snowUI.debug) snowlog.info('set send key');
-					snowUI.flash('success',snowtext.link.messages.success.setsendkey,15000);
+					if(snowUI.debug) snowLog.info('set send key');
+					snowUI.flash('success',snowUI.snowText.link.messages.success.setsendkey,15000);
 					//fake out the UI and refresh
 					_this.setState({showsendkey:false,connecting:false});
 					snowUI.methods.updateState({showErrorPage:false});
 				} else {
-					if(snowUI.debug) snowlog.error(resp);
+					if(snowUI.debug) snowLog.error(resp);
 					var _state = {connecting:false}
 					if(resp.data)_state.data=resp.data;
 					_this.setState(_state);
@@ -789,16 +775,16 @@ snowUI.link.UI = React.createClass({
 		
 		
 		snowUI.ajax.GET(url,data,function(resp) {
-			if(snowUI.debug) snowlog.info('ping',resp)
+			if(snowUI.debug) snowLog.info('ping',resp)
 			if(resp.success === true) {
 				snowUI.killFlash('message');
-				if(snowUI.debug) snowlog.info('pinged .link remote server');
+				if(snowUI.debug) snowLog.info('pinged .link remote server');
 				snowUI.flash('success','Ping Sent and Received successfully.',6000);
 				//fake out the UI and refresh
 				_this.setState({connecting:false});
 				
 			} else {
-				if(snowUI.debug) snowlog.error(resp);
+				if(snowUI.debug) snowLog.error(resp);
 				snowUI.killFlash('message');
 				var _state = {connecting:false}
 				_this.setState(_state);
@@ -809,7 +795,7 @@ snowUI.link.UI = React.createClass({
 			
 	},
 	render: function() {
-		if(snowUI.debug) snowlog.log('link component',this.state)
+		if(snowUI.debug) snowLog.log('link component',this.state)
 		var _this = this;
 		if(this.state.ready) {
 			var shareKey = this.state.data.userSettings.shareKey,
@@ -822,19 +808,19 @@ snowUI.link.UI = React.createClass({
 			if(shareKey) {
 				 inputkeyshare.push (<div key="aa123"  className="clearfix"><p>shareKey: <strong>{shareKey}</strong></p><p>linkName:  <strong>{linkName}</strong></p></div>);
 			} else {
-				inputkeyshare.push(<div key="aaa1234"><p><span dangerouslySetInnerHTML={{__html: snowtext.link.access.nosharekey.text}} /> </p></div>);
+				inputkeyshare.push(<div key="aaa1234"><p><span dangerouslySetInnerHTML={{__html: snowUI.snowText.link.access.nosharekey.text}} /> </p></div>);
 				if(!this.state.showsharekey)inputkeyshare.push(<div key="bb12345"> <p> You do not have a share key on file. </p></div>)
 			}
 			if(this.state.showsharekey) {
 				 inputkeyshare.push (<div style={{clear:'both'}} />);
 				 inputkeyshare.push (<div key="aa12" className="clearfix"><form className="" role="form"  onSubmit={_this.setShare}>
 							 <div className="form-group">
-								<label  className="sr-only" htmlFor="sharekeyinput">{snowtext.link.access.addsharekey.text} </label>
-								<input type="text" className="form-control" ref="sharekeyinput" placeholder={snowtext.link.access.addsharekey.text} />
+								<label  className="sr-only" htmlFor="sharekeyinput">{snowUI.snowText.link.access.addsharekey.text} </label>
+								<input type="text" className="form-control" ref="sharekeyinput" placeholder={snowUI.snowText.link.access.addsharekey.text} />
 							
 							</div>
 							<div className="form-group">
-								<button className="btn "  disabled={(this.state.connecting) ? 'disabled' : ''}  style={{marginBottom:0}}>{(this.state.connecting) ? snowtext.link.access.addsharekey.loading:snowtext.link.access.addsharekey.text}</button> 
+								<button className="btn "  disabled={(this.state.connecting) ? 'disabled' : ''}  style={{marginBottom:0}}>{(this.state.connecting) ? snowUI.snowText.link.access.addsharekey.loading:snowUI.snowText.link.access.addsharekey.text}</button> 
 								&nbsp;<a style={{marginBottom:0}} className="btn btn-default pull-right"  onClick={_this.showShareInput}>cancel</a>
 							</div>
 							</form>
@@ -846,13 +832,13 @@ snowUI.link.UI = React.createClass({
 			if(this.state.showsendkey) {
 				inputkeysend = (<div>
 							<form className="" role="form" onSubmit={_this.setSend}>
-								<div dangerouslySetInnerHTML={{__html: snowtext.link.access.addsendkey.info}} /> 
+								<div dangerouslySetInnerHTML={{__html: snowUI.snowText.link.access.addsendkey.info}} /> 
 							 <div className="form-group">
-								<label className="sr-only" htmlFor="sendkeyinput">{snowtext.link.access.addsendkey.text} </label>
-								<input style={{width:'100%'}} type="text" className="form-control" ref="sendkeyinput" placeholder={snowtext.link.access.addsendkey.text} />						
+								<label className="sr-only" htmlFor="sendkeyinput">{snowUI.snowText.link.access.addsendkey.text} </label>
+								<input style={{width:'100%'}} type="text" className="form-control" ref="sendkeyinput" placeholder={snowUI.snowText.link.access.addsendkey.text} />						
 							</div>
 							<div className="form-group">
-								<button className="btn "  disabled={(this.state.connecting) ? 'disabled' : ''}  style={{marginBottom:0}}>{(this.state.connecting) ? snowtext.link.access.addsendkey.loading:snowtext.link.access.addsendkey.text}</button>
+								<button className="btn "  disabled={(this.state.connecting) ? 'disabled' : ''}  style={{marginBottom:0}}>{(this.state.connecting) ? snowUI.snowText.link.access.addsendkey.loading:snowUI.snowText.link.access.addsendkey.text}</button>
 								&nbsp;<a style={{marginBottom:0}} className="btn btn-default pull-right" onClick={_this.showSendInput}>cancel</a>
 							</div>
 							</form>
@@ -860,9 +846,9 @@ snowUI.link.UI = React.createClass({
 							</div>
 				);
 			} else if(sendKey) {
-				 inputkeysend =  (<div className="col-xs-12"><div dangerouslySetInnerHTML={{__html: snowtext.link.access.setsendkey.text}} /></div>);
+				 inputkeysend =  (<div className="col-xs-12"><div dangerouslySetInnerHTML={{__html: snowUI.snowText.link.access.setsendkey.text}} /></div>);
 			} else {
-				inputkeysend = (<div><p>{snowtext.link.access.setsendkey.absent}<br /> </p></div>);
+				inputkeysend = (<div><p>{snowUI.snowText.link.access.setsendkey.absent}<br /> </p></div>);
 			}
 			
 			var ddns;
@@ -871,18 +857,18 @@ snowUI.link.UI = React.createClass({
 						<form className="" role="form" onSubmit={_this.setDDNS}>
 							<div className="col-xs-12  col-md-6" style={{padding:'5px'}}>
 								<div className="link-head">
-									{snowtext.link.linkaccount.ddns}	
+									{snowUI.snowText.link.linkaccount.ddns}	
 								</div>
 								<div  style={{padding:'5px'}}>
-									<div dangerouslySetInnerHTML={{__html: snowtext.link.access.addddns.text}} /> 
+									<div dangerouslySetInnerHTML={{__html: snowUI.snowText.link.access.addddns.text}} /> 
 									<div className="form-group input-group col-xs-12">
 										<input ref="oldhostname" type="hidden" value={hostname} />
-										<input style={{textAlign:'right'}} type="text" className="form-control" ref="hostname" placeholder={snowtext.link.access.addddns.text} defaultValue={hostname} />
-										<span className="input-group-addon input-group ">.{snowtext.link.domain}</span>
+										<input style={{textAlign:'right'}} type="text" className="form-control" ref="hostname" placeholder={snowUI.snowText.link.access.addddns.text} defaultValue={hostname} />
+										<span className="input-group-addon input-group ">.{snowUI.snowText.link.domain}</span>
 															
 									</div>
-									<div dangerouslySetInnerHTML={{__html: snowtext.link.access.addddns.ddnsInfo}} /> 
-									<div dangerouslySetInnerHTML={{__html: snowtext.link.access.addddns.trackerInfo}} />
+									<div dangerouslySetInnerHTML={{__html: snowUI.snowText.link.access.addddns.ddnsInfo}} /> 
+									<div dangerouslySetInnerHTML={{__html: snowUI.snowText.link.access.addddns.trackerInfo}} />
 								</div>
 								<div className="clearfix" style={{marginBottom:'25px'}} />
 								
@@ -890,24 +876,24 @@ snowUI.link.UI = React.createClass({
 							
 							<div className="col-xs-12 col-md-6"  style={{padding:'5px'}}>
 								<div className="link-head">
-									{snowtext.link.linkaccount.link}	
+									{snowUI.snowText.link.linkaccount.link}	
 								</div>
 								<div  style={{padding:'5px'}}>
-									<div dangerouslySetInnerHTML={{__html: snowtext.link.access.addddns.linkAsk}} />
+									<div dangerouslySetInnerHTML={{__html: snowUI.snowText.link.access.addddns.linkAsk}} />
 									
 										
 										<div  className="col-xs-12 form-group input-group ">
 											<select style={{width:'100px',fontSize:'16px'}} ref="use"  className="form-control coinstamp"  defaultValue={this.state.data.userSettings.linkServer}>
-												<option value="off">{snowtext.accounts.address.moreinfo.lock.option.no}</option>
-												<option value="on">{snowtext.accounts.address.moreinfo.lock.option.yes}</option>
+												<option value="off">{snowUI.snowText.accounts.address.moreinfo.lock.option.no}</option>
+												<option value="on">{snowUI.snowText.accounts.address.moreinfo.lock.option.yes}</option>
 											</select>
-											<span style={{width:'60px'}} className="input-group-addon input-group ">{snowtext.link.access.addddns.port}</span>
+											<span style={{width:'60px'}} className="input-group-addon input-group ">{snowUI.snowText.link.access.addddns.port}</span>
 											<input style={{width:'auto'}}  type="text" className="form-control" ref="port" placeholder="port (12777)" defaultValue={snowUI.link.port} />
 											
 										</div>
-										<div  className="col-xs-12 " dangerouslySetInnerHTML={{__html: snowtext.link.access.addddns.allow.replace('{port}',snowUI.link.port)}} />
+										<div  className="col-xs-12 " dangerouslySetInnerHTML={{__html: snowUI.snowText.link.access.addddns.allow.replace('{port}',snowUI.link.port)}} />
 									
-									<div dangerouslySetInnerHTML={{__html: snowtext.link.access.addddns.linkInfo.replace('{port}',snowPath.link.port)}} />
+									<div dangerouslySetInnerHTML={{__html: snowUI.snowText.link.access.addddns.linkInfo.replace('{port}',snowUI.snowPath.link.port)}} />
 									
 								</div>
 							</div>
@@ -915,7 +901,7 @@ snowUI.link.UI = React.createClass({
 							
 							<div className="clearfix" />
 							<div className="form-group col-xs-12 " style={{padding:'0 10px'}}>
-								<button className="btn center-block"   disabled={(this.state.connecting) ? 'disabled' : ''}   style={{marginBottom:0}}>{this.state.connecting ? snowtext.link.access.addddns.buttonadding : snowtext.link.access.addddns.button}</button>
+								<button className="btn center-block"   disabled={(this.state.connecting) ? 'disabled' : ''}   style={{marginBottom:0}}>{this.state.connecting ? snowUI.snowText.link.access.addddns.buttonadding : snowUI.snowText.link.access.addddns.button}</button>
 								 &nbsp; &nbsp; <a style={{marginBottom:0}} className="btn btn-default center-block" onClick={_this.showDDNSInput}>cancel</a>
 							</div>
 						</form>
@@ -959,13 +945,13 @@ snowUI.link.UI = React.createClass({
 								<td data-snowddns={hostname} className="bg-danger" style={{cursor:'pointer',textAlign:'center'}} onClick={_this.removeDDNS} ><span className="text-not-white glyphicon glyphicon-remove-sign"></span></td>
 							</tr>
 							<tr>
-								<td colSpan="5"><a  className="btn btn-default btn-sm" onClick={_this.showDDNSInput}>{snowtext.link.access.addddns.addbutton}</a></td>
+								<td colSpan="5"><a  className="btn btn-default btn-sm" onClick={_this.showDDNSInput}>{snowUI.snowText.link.access.addddns.addbutton}</a></td>
 							</tr>
 						</tbody>
 					</table>
 				 </div>);
 			} else {
-				ddns = (<div className=" link-info"><p>{snowtext.link.access.addddns.absent}</p><a  className="btn btn-default btn-sm" onClick={_this.showDDNSInput}>{snowtext.link.access.addddns.addbutton}</a></div>);
+				ddns = (<div className=" link-info"><p>{snowUI.snowText.link.access.addddns.absent}</p><a  className="btn btn-default btn-sm" onClick={_this.showDDNSInput}>{snowUI.snowText.link.access.addddns.addbutton}</a></div>);
 			}
 				
 			
@@ -974,14 +960,14 @@ snowUI.link.UI = React.createClass({
 					<div id="linkpage" className={"col-md-12  "}>
 						<div  style={{padding:'5px 20px'}} >
 							<div className="col-xs-12 ">
-								<h4 className="profile-form__heading">{snowtext.link.title.text}</h4>
-								<div dangerouslySetInnerHTML={{__html: snowtext.link.title.info}} />
+								<h4 className="profile-form__heading">{snowUI.snowText.link.title.text}</h4>
+								<div dangerouslySetInnerHTML={{__html: snowUI.snowText.link.title.info}} />
 							</div>
 							<div className="clearfix" />
 							<div style={{height:'30px',position:'relative',width:'100%'}} />
 							<div className="col-xs-12 col-md-6 link-info">
 								<div className="link-head">
-									{snowtext.link.sharekey.text}
+									{snowUI.snowText.link.sharekey.text}
 									<a  className="btn btn-default btn-xs pull-right" onClick={_this.showShareInput}>Change</a>
 								</div>
 								<div className=" link-info">
@@ -990,7 +976,7 @@ snowUI.link.UI = React.createClass({
 							</div>
 							<div className="col-xs-12 col-md-6  link-info">
 								<div className="link-head">
-									{snowtext.link.sendkey.text}
+									{snowUI.snowText.link.sendkey.text}
 									<a  className="btn btn-default btn-xs pull-right" onClick={_this.showSendInput}>Change</a>
 								</div>
 								<div className=" link-info">
@@ -999,7 +985,7 @@ snowUI.link.UI = React.createClass({
 							</div>
 							<div className="col-xs-12 link-info">
 								<div className="link-head">
-									{snowtext.link.linkaccount.text}
+									{snowUI.snowText.link.linkaccount.text}
 									
 								</div>
 								<div >

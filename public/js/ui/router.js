@@ -1,44 +1,44 @@
 /**
  * @jsx React.DOM
  */
- 
-	var addroutes = {}
 
-	addroutes[snowPath.router.wallet] = "wallet";
-	addroutes[snowPath.router.wallet + '/'] = "wallet";
-	addroutes[snowPath.router.wallet + "/:wallet"] = "wallet";
-	addroutes[snowPath.router.wallet + "/:wallet/:moon"] = "wallet";
-	addroutes[snowPath.router.wallet + "/:wallet/:moon/:e1"] = "wallet";
-	addroutes[snowPath.router.wallet + "/:wallet/:moon/:e1/:e2"] = "wallet";
-	addroutes[snowPath.router.wallet + "/:wallet/:moon/:e1/:e2/:e3"] = "wallet";
-	addroutes[snowPath.router.wallet + "/:wallet/:moon/:e1/:e2/:e3/:e4"] = "wallet";
-	
-	addroutes[snowPath.router.receive + "/:section"] = "receive";
-	addroutes[snowPath.router.receive + "/:section/:moon"] = "receive";
-	addroutes[snowPath.router.receive + "/:section/:moon/:e1"] = "receive";
-	addroutes[snowPath.router.receive + "/:section/:moon/:e1/:e2"] = "receive";
-	addroutes[snowPath.router.receive + "/:section/:moon/:e1/:e2/:e3"] = "receive";
-	addroutes[snowPath.router.receive + "/:section/:moon/:e1/:e2/:e3/:e4"] = "receive";
-	addroutes[snowPath.router.receive + "/"] = "receive";
-	addroutes[snowPath.router.receive ] = "receive";
-	
-	addroutes[snowPath.router.settings + "/:section"] = "settings" ;
-	addroutes[snowPath.router.settings + "/:section/:moon"] = "settings" ;
-	addroutes[snowPath.router.settings + "/"] = "settings" ;
-	addroutes[snowPath.router.settings ] = "settings" ;
+	snowUI.addroutes = {}
 
-	addroutes[snowPath.router.inq + "/:moon"] = "inqueue";
-	addroutes[snowPath.router.inq + "/"] = "inqueue";
-	addroutes[snowPath.router.inq] = "inqueue";
+	snowUI.addroutes[snowUI.snowPath.router.wallet] = "wallet";
+	snowUI.addroutes[snowUI.snowPath.router.wallet + '/'] = "wallet";
+	snowUI.addroutes[snowUI.snowPath.router.wallet + "/:wallet"] = "wallet";
+	snowUI.addroutes[snowUI.snowPath.router.wallet + "/:wallet/:moon"] = "wallet";
+	snowUI.addroutes[snowUI.snowPath.router.wallet + "/:wallet/:moon/:e1"] = "wallet";
+	snowUI.addroutes[snowUI.snowPath.router.wallet + "/:wallet/:moon/:e1/:e2"] = "wallet";
+	snowUI.addroutes[snowUI.snowPath.router.wallet + "/:wallet/:moon/:e1/:e2/:e3"] = "wallet";
+	snowUI.addroutes[snowUI.snowPath.router.wallet + "/:wallet/:moon/:e1/:e2/:e3/:e4"] = "wallet";
 	
-	addroutes[snowPath.router.profile + "/:moon"] = "profile";
-	addroutes[snowPath.router.profile + "/"] = "profile";
-	addroutes[snowPath.router.profile] = "profile";
+	snowUI.addroutes[snowUI.snowPath.router.receive + "/:section"] = "receive";
+	snowUI.addroutes[snowUI.snowPath.router.receive + "/:section/:moon"] = "receive";
+	snowUI.addroutes[snowUI.snowPath.router.receive + "/:section/:moon/:e1"] = "receive";
+	snowUI.addroutes[snowUI.snowPath.router.receive + "/:section/:moon/:e1/:e2"] = "receive";
+	snowUI.addroutes[snowUI.snowPath.router.receive + "/:section/:moon/:e1/:e2/:e3"] = "receive";
+	snowUI.addroutes[snowUI.snowPath.router.receive + "/:section/:moon/:e1/:e2/:e3/:e4"] = "receive";
+	snowUI.addroutes[snowUI.snowPath.router.receive + "/"] = "receive";
+	snowUI.addroutes[snowUI.snowPath.router.receive ] = "receive";
 	
-	addroutes[''] = "redirect";
+	snowUI.addroutes[snowUI.snowPath.router.settings + "/:section"] = "settings" ;
+	snowUI.addroutes[snowUI.snowPath.router.settings + "/:section/:moon"] = "settings" ;
+	snowUI.addroutes[snowUI.snowPath.router.settings + "/"] = "settings" ;
+	snowUI.addroutes[snowUI.snowPath.router.settings ] = "settings" ;
+
+	snowUI.addroutes[snowUI.snowPath.router.inq + "/:moon"] = "inqueue";
+	snowUI.addroutes[snowUI.snowPath.router.inq + "/"] = "inqueue";
+	snowUI.addroutes[snowUI.snowPath.router.inq] = "inqueue";
 	
-	addroutes['*'] = "redirect";
-	var middleware = {
+	snowUI.addroutes[snowUI.snowPath.router.profile + "/:moon"] = "profile";
+	snowUI.addroutes[snowUI.snowPath.router.profile + "/"] = "profile";
+	snowUI.addroutes[snowUI.snowPath.router.profile] = "profile";
+	
+	snowUI.addroutes[''] = "redirect";
+	
+	snowUI.addroutes['*'] = "redirect";
+	snowUI.addroutes.middleware = {
 	    // Scroll back to the top of the page on route change
 	    scrollTop: function(route, next) {
 		$(window).scrollTop(0) 
@@ -55,13 +55,13 @@
 	}
 	
 	bone.router({
-	    routes: addroutes,
+	    routes: snowUI.addroutes,
 	    middleware: [
-		middleware.scrollTop
+		snowUI.addroutes.middleware.scrollTop
 	    ],
 	    overview: function() {
 		var args = Array.prototype.slice.call(arguments).map(function(v){return decodeURI(v)});
-		React.renderComponent(UI({section: snowPath.router.wallet, wallet: false, moon: false, params: args}), document.getElementById('snowcoins-react'));
+		React.renderComponent(snowUI.UI({section: snowUI.snowPath.router.wallet, wallet: false, moon: false, params: args}), document.getElementById('snowcoins-react'));
 	    },
 	    redirect: function() {
 		
@@ -69,32 +69,32 @@
 		var section = args[0],
 			wallet = args[1],
 			moon = args[2]	
-		snowlog.warn('REDIRECT',section,wallet,moon,args)
-		React.renderComponent(UI({section: section, wallet: wallet, moon: moon, params: args}), document.getElementById('snowcoins-react'));
+		snowLog.warn('REDIRECT',section,wallet,moon,args)
+		React.renderComponent(snowUI.UI({section: section, wallet: wallet, moon: moon, params: args}), document.getElementById('snowcoins-react'));
 	    
 	    },
 	    wallet: function(wallet,moon) {
-		snowlog.info('WALLET',wallet,moon)
+		snowLog.info('WALLET',wallet,moon)
 		if(!moon)moon = false
 		if(!wallet)wallet = false
 		var args = Array.prototype.slice.call(arguments).map(function(v){return decodeURI(v)});
-		React.renderComponent(UI({section: snowPath.router.wallet, wallet: wallet, moon: moon, params: args}), document.getElementById('snowcoins-react'));
+		React.renderComponent(snowUI.UI({section: snowUI.snowPath.router.wallet, wallet: wallet, moon: moon, params: args}), document.getElementById('snowcoins-react'));
 	    },
 	    settings: function(section,moon) {
 		var args = Array.prototype.slice.call(arguments).map(function(v){return decodeURI(v)});
-		React.renderComponent(UI({section: snowPath.router.settings, wallet: section, moon: moon, params: args}), document.getElementById('snowcoins-react'));
+		React.renderComponent(snowUI.UI({section: snowUI.snowPath.router.settings, wallet: section, moon: moon, params: args}), document.getElementById('snowcoins-react'));
 	    },
 	    receive: function(section,moon) {
 		var args = Array.prototype.slice.call(arguments).map(function(v){return decodeURI(v)});
-		React.renderComponent(UI({section: snowPath.router.receive, wallet: section, moon: moon, params: args}), document.getElementById('snowcoins-react'));
+		React.renderComponent(snowUI.UI({section: snowUI.snowPath.router.receive, wallet: section, moon: moon, params: args}), document.getElementById('snowcoins-react'));
 	    },
 	    inqueue: function(moon) {
 		var args = Array.prototype.slice.call(arguments).map(function(v){return decodeURI(v)});
-		React.renderComponent(UI({section: snowPath.router.inq, wallet: false, moon: moon, params: args}), document.getElementById('snowcoins-react'));
+		React.renderComponent(snowUI.UI({section: snowUI.snowPath.router.inq, wallet: false, moon: moon, params: args}), document.getElementById('snowcoins-react'));
 	    },
 	    profile: function(moon) {
 		var args = Array.prototype.slice.call(arguments).map(function(v){return decodeURI(v)});
-		React.renderComponent(UI({section: snowPath.router.profile, wallet: false, moon: moon, params: args}), document.getElementById('snowcoins-react'));
+		React.renderComponent(snowUI.UI({section: snowUI.snowPath.router.profile, wallet: false, moon: moon, params: args}), document.getElementById('snowcoins-react'));
 	    }
 	    
 	});

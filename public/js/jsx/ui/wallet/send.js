@@ -2,12 +2,10 @@
  * @jsx React.DOM
  */
 
-/* not used but thats how you can use touch events
- * */
-React.initializeTouchEvents(true);
+
 
 //send component
-WalletUI.send = React.createClass({
+snowUI.wallet.send = React.createClass({
 	getInitialState: function() {
 		
 		var _this = this
@@ -28,10 +26,10 @@ WalletUI.send = React.createClass({
 	},
 	componentWillReceiveProps: function (nextProps) {
 		var _this = this
-		if(snowUI.debug) snowlog.log('send will receive props',this.state.unlock,nextProps.config.unlocked)
+		if(snowUI.debug) snowLog.log('send will receive props',this.state.unlock,nextProps.config.unlocked)
 		//this.setState({ready:nextProps.ready})
 		if(this.state.unlock === true && nextProps.config.unlocked === true) {
-			if(snowUI.debug) snowlog.log('send set to confirm')
+			if(snowUI.debug) snowLog.log('send set to confirm')
 			this.setState({unlock:false,confirm:true});
 			
 		} else {
@@ -40,7 +38,7 @@ WalletUI.send = React.createClass({
 	},
 	componentDidUpdate: function () {
 		var _this = this
-		if(snowUI.debug) snowlog.log('send did update',this.props)
+		if(snowUI.debug) snowLog.log('send did update',this.props)
 		snowUI.watchLoader();
 		$('[rel=popover]').popover();
 		$('.bstooltip').tooltip()
@@ -56,7 +54,7 @@ WalletUI.send = React.createClass({
 	},
 	componentWillMount: function() {
 		var _this = this
-		if(snowUI.debug) snowlog.log('send did mount',this.props)
+		if(snowUI.debug) snowLog.log('send did mount',this.props)
 		this.getData(this.props,function(resp){ _this.setState({data:resp.data,snowmoney:resp.snowmoney,accounts:resp.accounts,mounted:true}) })
 		this.killTooltip();
 		$('.snow-send #convamount').html(' ')
@@ -72,13 +70,13 @@ WalletUI.send = React.createClass({
 		
 	},
 	getData: function (props,cb) {
-		if(snowUI.debug) snowlog.log('send data',props)
+		if(snowUI.debug) snowLog.log('send data',props)
 		var url = "/api/snowcoins/local/wallet",
 			data = { wallet:props.config.wallet,moon:props.config.moon},
 			_this = this;
 		
 		snowUI.ajax.GET(url,data,function(resp) {
-			if(snowUI.debug) snowlog.log(resp)
+			if(snowUI.debug) snowLog.log(resp)
 			if(resp.success === true) {
 				cb(resp)
 			} else {
@@ -95,7 +93,7 @@ WalletUI.send = React.createClass({
 			_this = this;
 		
 		snowUI.ajax.GET(url,data,function(resp) {
-			if(snowUI.debug) snowlog.log(resp)
+			if(snowUI.debug) snowLog.log(resp)
 			if(resp.success === true) {
 				_this.setState({addressBookHtml:resp.html});
 				snowUI.methods.modals.addressBook.open();
@@ -107,7 +105,7 @@ WalletUI.send = React.createClass({
 		return false
 	},
 	saveAddressForm: function(e) {
-		if(snowUI.debug) snowlog.log('change save address');
+		if(snowUI.debug) snowLog.log('change save address');
 		var fields = $('#sendcoinshowname');
 		if(fields.css('display') === 'none') {
 			fields.toggle(400);
@@ -135,7 +133,7 @@ WalletUI.send = React.createClass({
 			stamp=' '+currentwally.coinstamp;
 			var from=getfrom,to=currentwally.cointicker;
 		}
-		//if(snowUI.debug) snowlog.log('keyup',from,to,snowmoney[from][to]);
+		//if(snowUI.debug) snowLog.log('keyup',from,to,snowmoney[from][to]);
 		if(snowmoney[from][to] && snowmoney[from][to].price) {
 					
 			showvalue=snowmoney[from][to].price * enteredamount;
@@ -214,7 +212,7 @@ WalletUI.send = React.createClass({
 		var to = $('.snow-send #sendcointoaddress').val();
 		var bal = parseFloat($('.snow-send-body .snow-balance-body').text().replace(/,/g,''));
 		var from = $('.snow-send #sendcoinfromaccount').val();
-		if(snowUI.debug) snowlog.log('send',parseInt(amount));
+		if(snowUI.debug) snowLog.log('send',parseInt(amount));
 		if(amount<=0 || isNaN(amount) || amount===Infinity)
 		{
 			$(".snow-send #sendcoinamount").parent().addClass('has-error');
@@ -230,12 +228,12 @@ WalletUI.send = React.createClass({
 			
 			var saveAs = $(".snow-send  #sendcoinaddressname").val(),
 				saveAddress = $(".snow-send  #sendcoinsaveaddr").val();
-			if(snowUI.debug) snowlog.log("save address? ",saveAddress)
+			if(snowUI.debug) snowLog.log("save address? ",saveAddress)
 			if(saveAddress === 'save' && saveAs) {
 				var url = "/api/snowcoins/local/contacts",
 					  data = { stop:1,wallet:currentwally.key,action:'add',name:saveAs,address:to};
 				snowUI.ajax.GET(url,data,function(resp) {
-					if(snowUI.debug) snowlog.log(resp)
+					if(snowUI.debug) snowLog.log(resp)
 					if(resp.success === true) {
 						snowUI.flash('success','Address saved as ' + saveAs,3500)
 					} else {
@@ -276,7 +274,7 @@ WalletUI.send = React.createClass({
 			data =  { checkauth:nowtime,account:this.state.persist.from,comment:this.state.persist.memo,commentto:this.state.persist.message,wallet: this.props.config.wally.key,command:command,amount:this.state.persist.amount,toaddress:this.state.persist.to};
 		
 		snowUI.ajax.GET(url,data,function(resp) {
-			if(snowUI.debug) snowlog.log(resp)
+			if(snowUI.debug) snowLog.log(resp)
 			if(resp.success === true)
 			{
 				_this.setState({persist:{},confirm:false,receipt:true,transaction:resp.tx});
@@ -290,7 +288,20 @@ WalletUI.send = React.createClass({
 		return false;	
 	},
 	cancelConfirm: function() {
-		this.setState({persist:{},confirm:false,receipt:false,transaction:false,error:false});
+		var _this = this; 
+		this.getData(this.props,function(resp){
+			_this.setState({
+				data:resp.data,
+				snowmoney:resp.snowmoney,
+				accounts:resp.accounts,
+				mounted:true,
+				persist:{},
+				confirm:false,
+				receipt:false,
+				transaction:false,
+				error:false
+			});
+		});
 	},
 	render: function() {
 		var _this = this;
@@ -310,7 +321,7 @@ WalletUI.send = React.createClass({
 				</div>)
 		
 		} else if(this.state.confirm) {
-			if(snowUI.debug) snowlog.log('wallet confirm send')
+			if(snowUI.debug) snowLog.log('wallet confirm send')
 			var currentwally = this.props.config.wally;
 			var html='<div><div class="adderror" style="dispaly:none;"></div> <span class="send-modal-amount">'+parseFloat(this.state.persist.amount).formatMoney(8)+'</span><span class="coinstamp">'+currentwally.coinstamp+'</span></div><div class="send-modal-text"> to address<p><strong>'+this.state.persist.to+'</strong></p>from account<p class="send-modal-account1"><strong>'+this.state.persist.from+'</strong></p><p><span class="snow-balance-span1" style="font-weight:bold">'+(this.state.persist.balance).formatMoney(8)+'</span> <span class="coinstamp">'+currentwally.coinstamp+' wallet balance after send</span><div id="3456756" style="display:none;">to='+this.state.persist.to+'<br />&account='+this.state.persist.from+'<br />&amount='+this.state.persist.amount+'<br />&checkauth={generate-on-submit}<br />&sendnow=yes</div></p></div>';
 			
@@ -455,7 +466,7 @@ WalletUI.send = React.createClass({
 					
 					<div className="clearfix"></div>
 				</div>		
-				{snowModals.addressBook.call(this)}
+				{snowUI.snowModals.addressBook.call(this)}
 			</div>
 		    );
 		} else {

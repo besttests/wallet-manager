@@ -73,8 +73,8 @@ exports = module.exports = function(req, res) {
 		function(next) {
 			var ccc = getrates.get('coins');
 			locals.data.defaultcoins ='';
-			locals.data.defaultcoins = 'var defaultcoins = [';
-			var addon = ',defaultcointickers = [';
+			locals.data.defaultcoins = 'snowUI.defaultcoins = [';
+			var addon = ',snowUI.defaultcointickers = [';
 			_.keys(ccc).forEach(function(name) {
 				locals.data.defaultcoins+="'"+name+"',";
 				addon+="'"+ccc[name]+"',";

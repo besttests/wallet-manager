@@ -37,10 +37,10 @@ function addjade(file,varname) {
 		
 	}
 	//console.log(name);
-	return 'bonehtml.' + name + " = function(options) { return " + JSON.stringify(html) + "; }\n";		 
+	return 'snowUI.bonehtml.' + name + " = function(options) { return " + JSON.stringify(html) + "; }\n";		 
 	
 }
-var templates = 'bonehtml["404"] = function(){ return \'<div class="requesterror" style="margin:40px"><span> You did something I am not prepared for.  Please do something else next time.</span></div>\'}; ';
+var templates = 'snowUI.bonehtml["404"] = function(){ return \'<div class="requesterror" style="margin:40px"><span> You did something I am not prepared for.  Please do something else next time.</span></div>\'}; ';
 templates =  templates + addjade(snowcoins.get('moduleDir') + '/templates/views/api/d3c/login.jade');
 	//console.log(templates,'templates');
 templates = templates + addjade(snowcoins.get('moduleDir') + '/templates/views/api/d3c/chatbox.jade');
@@ -58,17 +58,15 @@ bone["static"] = module.exports = function(options) {
 		response.set('Content-Type', 'text/javascript');
 		var snowdone = function() {
 			
-			var contents = 'var bonehtml={};' + "\n"; 
+			var contents = 'snowUI.bonehtml = {};' + "\n"; 
 			
 			contents = contents + templates;
 	 
 			return response.send(contents);
 			
 		}	
-		snowdone()
-		
-		
-	  
+		snowdone();
+
 	} else {
 		return next();
 	}

@@ -2,21 +2,15 @@
  * @jsx React.DOM
  */
 
-/* not used but thats how you can use touch events
- * */
-React.initializeTouchEvents(true);
-
-
-var WalletUI = snowUI.wallet
 
 /**
  * wallet components
  * */
 //main
-WalletUI.UI = React.createClass({displayName: 'UI',
+snowUI.wallet.UI = React.createClass({displayName: 'UI',
 	getInitialState: function() {
 		var mystate = {
-			config:this.props.config || {section:snowPath.wallet,wallet:false,moon:false},
+			config:this.props.config || {section:snowUI.snowPath.wallet,wallet:false,moon:false},
 			wally:false,
 			testnet:false,
 			ready:false,
@@ -25,7 +19,7 @@ WalletUI.UI = React.createClass({displayName: 'UI',
 			connecting:false,
 			refresh:false,
 		}
-		if(this.props.config.section === snowPath.wallet && (!this.props.config.wallet || this.props.config.wallet === 'overview')) {
+		if(this.props.config.section === snowUI.snowPath.wallet && (!this.props.config.wallet || this.props.config.wallet === 'overview')) {
 			mystate.connecting = false;
 			mystate.connected = true;
 		}
@@ -37,7 +31,7 @@ WalletUI.UI = React.createClass({displayName: 'UI',
 		var _this = this,
 			sendProps = {config:nextProps.config,connectError:false};
 
-		if(snowUI.debug) snowlog.log('willreceiveprops main wallet',_this.state, nextProps)
+		if(snowUI.debug) snowLog.log('willreceiveprops main wallet',_this.state, nextProps)
 		
 		//grab the data for this wallet
 		 if(this.state.refresh && nextProps.config.moon === 'update') {
@@ -48,7 +42,7 @@ WalletUI.UI = React.createClass({displayName: 'UI',
 		} else if(!this.state.connected  || (nextProps.config.wallet  &&  nextProps.config.wallet !== _this.state.config.wallet)) {
 			/* got not connected or a new wallet*/
 			
-			if(snowUI.debug) snowlog.log('grab wallet', nextProps.config.wally)
+			if(snowUI.debug) snowLog.log('grab wallet', nextProps.config.wally)
 			
 			sendProps.testnet = false;
 			
@@ -63,7 +57,7 @@ WalletUI.UI = React.createClass({displayName: 'UI',
 		
 		} else if(!nextProps.config.wallet) {
 			/* no wallet*/
-			if(snowUI.debug) snowlog.log('no wallet')
+			if(snowUI.debug) snowLog.log('no wallet')
 			sendProps.connecting = false;
 			sendProps.ready = true;
 			sendProps.testnet = false;
@@ -71,7 +65,7 @@ WalletUI.UI = React.createClass({displayName: 'UI',
 			
 		} else {
 			/* pass through to ready*/
-			if(snowUI.debug) snowlog.log('pass through')
+			if(snowUI.debug) snowLog.log('pass through')
 			sendProps.ready = true;
 			sendProps.connecting = false;
 			sendProps.connected = true;
@@ -90,7 +84,7 @@ WalletUI.UI = React.createClass({displayName: 'UI',
 			
 			//run a status call and set connected state
 			snowUI.ajax.GET("/api/snowcoins/local/wallet",{ wallet:nextProps.config.wallet,moon:'status' },function(resp) {
-				if(snowUI.debug) snowlog.log('hitting  server new wallet',resp)
+				if(snowUI.debug) snowLog.log('hitting  server new wallet',resp)
 				if(resp.success === true)
 				{
 					
@@ -124,7 +118,7 @@ WalletUI.UI = React.createClass({displayName: 'UI',
 										
 						_this.setState({testnet:false,ready:true,connectError:resp.error,connected:false,connecting:false,refresh:false})
 						//snowUI.flash('error','Connection Error... Check wallet configuration.',2500);
-						if(snowUI.debug) snowlog.warn('No connection available',nextProps)
+						if(snowUI.debug) snowLog.warn('No connection available',nextProps)
 					
 				}
 			
@@ -151,7 +145,7 @@ WalletUI.UI = React.createClass({displayName: 'UI',
 		if(!this.props.config.wallet) this.setState({ready:true});			
 	},
 	componentWillUnMount: function() {
-		if(snowUI.debug) snowlog.info('wallet unmounted')
+		if(snowUI.debug) snowLog.info('wallet unmounted')
 		$('#walletbar').removeClass('bg-danger')
 		//snowUI.methods.fadeOut();
 				
@@ -174,36 +168,36 @@ WalletUI.UI = React.createClass({displayName: 'UI',
 			    
 		var showcomp = (this.props.config.moon) ? this.props.config.moon : 'skippedmoondostuffotherstuff'
 		
-		if(snowUI.debug) snowlog.log('main wallet component - current state:',showcomp, this.props,this.state)
+		if(snowUI.debug) snowLog.log('main wallet component - current state:',showcomp, this.props,this.state)
 		
 		var renderMe; 
 		
-		if(WalletUI[showcomp]) {
+		if(snowUI.wallet[showcomp]) {
 			
 			if(this.props.config.lockstatus === 2 && showcomp === 'passphrase')showcomp = 'setpassphrase'
 			
-			renderMe = WalletUI[showcomp]
+			renderMe = snowUI.wallet[showcomp]
 		
 		} else if(this.props.config.wallet) {
 			
 			if(this.props.config.wallet === 'new') 
-				renderMe = WalletUI.add
+				renderMe = snowUI.wallet.add
 			else
-				renderMe = WalletUI.dashboard
+				renderMe = snowUI.wallet.dashboard
 
 		} else {
 			
-			renderMe = WalletUI.overview
+			renderMe = snowUI.wallet.overview
 			
 		}     
 	    
-		if(snowUI.debug) snowlog.log('wallet render component',this.state.connecting,this.props.gates)
+		if(snowUI.debug) snowLog.log('wallet render component',this.state.connecting,this.props.gates)
 	    
 		//stop loading
 		//snowUI.loaderRender();
 		
 		if(this.state.connecting) {
-			if(snowUI.debug) snowlog.warn('not connected render')
+			if(snowUI.debug) snowLog.warn('not connected render')
 			//snowUI.methods.loaderStart();
 			return (React.DOM.div(null))
 			
@@ -211,7 +205,7 @@ WalletUI.UI = React.createClass({displayName: 'UI',
 			var message =  this.props.gates.showInfo
 			return (
 
-				React.DOM.div({className: "", id: "maindiv"}, " ", WalletUI.messageDisplay({type: "requestinfo", config: this.props.config, ready: this.state.ready, setWalletState: this.updateState, message: message}), " ")
+				React.DOM.div({className: "", id: "maindiv"}, " ", snowUI.wallet.messageDisplay({type: "requestinfo", config: this.props.config, ready: this.state.ready, setWalletState: this.updateState, message: message}), " ")
 
 			);
 				
@@ -219,7 +213,7 @@ WalletUI.UI = React.createClass({displayName: 'UI',
 			var message =  this.props.gates.showSuccess
 			return (
 
-				React.DOM.div({className: "", id: "maindiv"}, " ", WalletUI.messageDisplay({type: "requestsuccess", config: this.props.config, ready: this.state.ready, setWalletState: this.updateState, message: message}), " ")
+				React.DOM.div({className: "", id: "maindiv"}, " ", snowUI.wallet.messageDisplay({type: "requestsuccess", config: this.props.config, ready: this.state.ready, setWalletState: this.updateState, message: message}), " ")
 
 			);
 				
@@ -227,7 +221,7 @@ WalletUI.UI = React.createClass({displayName: 'UI',
 			var message =  this.props.gates.showWarning
 			return (
 
-				React.DOM.div({className: "", id: "maindiv"}, " ", WalletUI.messageDisplay({type: "requestwarning", config: this.props.config, ready: this.state.ready, setWalletState: this.updateState, message: message}), " ")
+				React.DOM.div({className: "", id: "maindiv"}, " ", snowUI.wallet.messageDisplay({type: "requestwarning", config: this.props.config, ready: this.state.ready, setWalletState: this.updateState, message: message}), " ")
 
 			);
 				
@@ -235,13 +229,13 @@ WalletUI.UI = React.createClass({displayName: 'UI',
 			var message = (this.props.gates.showErrorPage) ? this.props.gates.showError : this.state.connectError
 			return (
 
-				React.DOM.div({className: "", id: "maindiv"}, " ", WalletUI.connectError({config: this.props.config, ready: this.state.ready, setWalletState: this.updateState, message: message}), " ")
+				React.DOM.div({className: "", id: "maindiv"}, " ", snowUI.wallet.connectError({config: this.props.config, ready: this.state.ready, setWalletState: this.updateState, message: message}), " ")
 
 			);
 			
 		}  else if( !this.state.ready ) {
 			
-			if(snowUI.debug) snowlog.warn('wallet ui not ready')
+			if(snowUI.debug) snowLog.warn('wallet ui not ready')
 			return (React.DOM.div(null))
 			
 		} else {
@@ -256,12 +250,12 @@ WalletUI.UI = React.createClass({displayName: 'UI',
 });
 
 //remove wallet component
-WalletUI.remove = React.createClass({displayName: 'remove',
+snowUI.wallet.remove = React.createClass({displayName: 'remove',
 	confirmDelete: function() {
-		var confirm = window.prompt(snowtext.wallet.remove.confirm.text.replace(/{name}/g,this.props.config.wally.name))
+		var confirm = window.prompt(snowUI.snowText.wallet.remove.confirm.text.replace(/{name}/g,this.props.config.wally.name))
 		var _this = this;
 		if(confirm === this.props.config.wally.name) {
-			if(snowUI.debug) snowlog.warn('Deleting wallet ',this.props.config.wally.name,this.props)
+			if(snowUI.debug) snowLog.warn('Deleting wallet ',this.props.config.wally.name,this.props)
 			
 			var nowtime=new Date().getTime();
 			var url = "/api/snowcoins/local/remove-wallet"
@@ -275,18 +269,18 @@ WalletUI.remove = React.createClass({displayName: 'remove',
 				console.info(resp)
 				if(resp.success === true) {			
 					
-					snowUI.flash('success',snowtext.wallet.remove.removed.success.text.replace(/{name}/g,_this.props.config.wally.name),7000)
-					snowUI.methods.valueRoute(snowPath.wallet);
+					snowUI.flash('success',snowUI.snowText.wallet.remove.removed.success.text.replace(/{name}/g,_this.props.config.wally.name),7000)
+					snowUI.methods.valueRoute(snowUI.snowPath.wallet);
 				
 				} else {
 					if(resp.error)errorDiv.fadeIn().html(resp.error)
-					snowUI.flash('error',snowtext.wallet.remove.removed.success.text.replace('{name}',_this.props.config.wally.name),3000);
+					snowUI.flash('error',snowUI.snowText.wallet.remove.removed.success.text.replace('{name}',_this.props.config.wally.name),3000);
 				}
 			});
 				
 				
 		} else if(confirm && confirm !== this.props.config.wally.name) {
-			snowUI.flash('error',snowtext.wallet.remove.removed.wrong.text,10000);
+			snowUI.flash('error',snowUI.snowText.wallet.remove.removed.wrong.text,10000);
 		} else {
 			return false
 		}
@@ -300,25 +294,25 @@ WalletUI.remove = React.createClass({displayName: 'remove',
 	},
 	render: function() {
 	    
-	    if(snowUI.debug) snowlog.log('remove wallet component')
+	    if(snowUI.debug) snowLog.log('remove wallet component')
 	    _this = this;
-	    var message = snowUI._wallets[this.props.config.wally.key] && snowUI._wallets[this.props.config.wally.key].removeKey ?  snowtext.wallet.remove.goodinfo.text.replace('{name}',_this.props.config.wally.name) :  snowtext.wallet.remove.badinfo.text.replace('{name}',_this.props.config.wally.name)
+	    var message = snowUI._wallets[this.props.config.wally.key] && snowUI._wallets[this.props.config.wally.key].removeKey ?  snowUI.snowText.wallet.remove.goodinfo.text.replace('{name}',_this.props.config.wally.name) :  snowUI.snowText.wallet.remove.badinfo.text.replace('{name}',_this.props.config.wally.name)
 	    
-	    var btn = snowUI._wallets[this.props.config.wally.key] && snowUI._wallets[this.props.config.wally.key].removeKey ? (React.DOM.a({onClick: snowUI.methods.hrefRoute, href: snowPath.root + snowPath.wallet + '/' + _this.props.config.wally.key, className: "btn btn-default "}, React.DOM.span(null, snowtext.wallet.remove.btn.cancel))) : ''
+	    var btn = snowUI._wallets[this.props.config.wally.key] && snowUI._wallets[this.props.config.wally.key].removeKey ? (React.DOM.a({onClick: snowUI.methods.hrefRoute, href: snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wally.key, className: "btn btn-default "}, React.DOM.span(null, snowUI.snowText.wallet.remove.btn.cancel))) : ''
 	    return (
 		React.DOM.div({style: {padding:'10px'}}, 
-			React.DOM.div({className: "page-title"}, " ", snowtext.wallet.remove.title.text + _this.props.config.wally.name), 
+			React.DOM.div({className: "page-title"}, " ", snowUI.snowText.wallet.remove.title.text + _this.props.config.wally.name), 
 			React.DOM.div({className: "", style: {paddingTop:'20px'}}, 
 				
 				React.DOM.div({key: "adderror3423", className: "adderror", style: {display:'none'}}), 			
 				
 				React.DOM.p(null, React.DOM.span({dangerouslySetInnerHTML: {__html: message}})), 
 				React.DOM.p(null, 
-					ButtonToolbar(null, 
+					snowUI.ButtonToolbar(null, 
 						
 						btn, 
 							
-						React.DOM.button({onClick: snowUI._wallets[this.props.config.wally.key] && snowUI._wallets[this.props.config.wally.key].removeKey ? this.confirmDelete : function(){snowUI.methods.valueRoute(snowPath.wallet)}, className: "btn btn-danger "}, React.DOM.span(null, snowUI._wallets[this.props.config.wally.key] && snowUI._wallets[this.props.config.wally.key].removeKey ? snowtext.wallet.remove.btn.remove:snowtext.wallet.remove.btn.request))
+						React.DOM.button({onClick: snowUI._wallets[this.props.config.wally.key] && snowUI._wallets[this.props.config.wally.key].removeKey ? this.confirmDelete : function(){snowUI.methods.valueRoute(snowUI.snowPath.wallet)}, className: "btn btn-danger "}, React.DOM.span(null, snowUI._wallets[this.props.config.wally.key] && snowUI._wallets[this.props.config.wally.key].removeKey ? snowUI.snowText.wallet.remove.btn.remove:snowUI.snowText.wallet.remove.btn.request))
 			
 					)
 				
@@ -330,7 +324,7 @@ WalletUI.remove = React.createClass({displayName: 'remove',
 	}
 });
 //connect error component
-WalletUI.messageDisplay = React.createClass({displayName: 'messageDisplay',
+snowUI.wallet.messageDisplay = React.createClass({displayName: 'messageDisplay',
 	componentDidMount: function() {
 		//snowUI.loaderRender();
 	},
@@ -342,7 +336,7 @@ WalletUI.messageDisplay = React.createClass({displayName: 'messageDisplay',
 	},	
 	render: function() {
 	    
-	    if(snowUI.debug) snowlog.log('warning message component')
+	    if(snowUI.debug) snowLog.log('warning message component')
 	    
 	    return (React.DOM.div({style: {padding:'5px 20px'}}, 
 			React.DOM.div({className: this.props.type}, 
@@ -355,22 +349,22 @@ WalletUI.messageDisplay = React.createClass({displayName: 'messageDisplay',
 		));
 	}
 });
-WalletUI.displayMessage = WalletUI.messageDisplay
+snowUI.wallet.displayMessage = snowUI.wallet.messageDisplay
 
 //connect error component
-WalletUI.connectError = React.createClass({displayName: 'connectError',
+snowUI.wallet.connectError = React.createClass({displayName: 'connectError',
 	componentDidMount: function() {
 		//snowUI.loaderRender();
 	},
 	render: function() {
-	    if(snowUI.debug) snowlog.log('connect error component')
+	    if(snowUI.debug) snowLog.log('connect error component')
 	    
-	    return (WalletUI.add({config: this.props.config, setWalletState: this.props.setWalletState, message: this.props.message}) );
+	    return (snowUI.wallet.add({config: this.props.config, setWalletState: this.props.setWalletState, message: this.props.message}) );
 	}
 });
 
 //overview list component
-WalletUI.overview = React.createClass({displayName: 'overview',
+snowUI.wallet.overview = React.createClass({displayName: 'overview',
 	menuClick: function(e) {
 		
 		e.preventDefault();
@@ -395,7 +389,7 @@ WalletUI.overview = React.createClass({displayName: 'overview',
 	},
 	
 	render: function() {
-		if(snowUI.debug) snowlog.log('wallet overview component')
+		if(snowUI.debug) snowLog.log('wallet overview component')
 		if(this.props.config.mywallets instanceof Array) {
 			var _this = this;
 			//loop through our wallets and show a table
@@ -403,8 +397,8 @@ WalletUI.overview = React.createClass({displayName: 'overview',
 				
 				return (
 					React.DOM.tr({key: w.key}, 
-						React.DOM.td(null, React.DOM.a({onClick: _this.menuClick, 'data-snowmoon': snowPath.wallet + '/' + w.key+ '/update'}, React.DOM.span({className: "glyphicon glyphicon-pencil"}, " "))), 
-						React.DOM.td(null, React.DOM.a({onClick: _this.menuClick, 'data-snowmoon': snowPath.wallet + '/' + w.key+ '/dashboard'},  w.name, " ")), 
+						React.DOM.td(null, React.DOM.a({onClick: _this.menuClick, 'data-snowmoon': snowUI.snowPath.wallet + '/' + w.key+ '/update'}, React.DOM.span({className: "glyphicon glyphicon-pencil"}, " "))), 
+						React.DOM.td(null, React.DOM.a({onClick: _this.menuClick, 'data-snowmoon': snowUI.snowPath.wallet + '/' + w.key+ '/dashboard'},  w.name, " ")), 
 						React.DOM.td(null, " ",  w.coin, " "), 
 						React.DOM.td(null,  w.address+':'+w.port, " "), 
 						React.DOM.td(null, w.isSSL ? React.DOM.span({className: "glyphicon glyphicon-link"}) : ''), 
@@ -417,7 +411,7 @@ WalletUI.overview = React.createClass({displayName: 'overview',
 		return (
 			React.DOM.div({id: "snow-overview", className: "bs-example"}, 
 				
-				React.DOM.a({className: "btn btn-default btn-sm nav-item-add", onClick: snowUI.methods.hrefRoute, href: snowPath.root + snowPath.wallet + '/new'}, "Add New Wallet"), 
+				React.DOM.a({className: "btn btn-default btn-sm nav-item-add", onClick: snowUI.methods.hrefRoute, href: snowUI.snowPath.root + snowUI.snowPath.wallet + '/new'}, "Add New Wallet"), 
 				React.DOM.table({className: "table table-hover snowtablesort"}, 
 					React.DOM.thead(null, 
 						React.DOM.tr({key: "whead"}, 
@@ -443,7 +437,7 @@ WalletUI.overview = React.createClass({displayName: 'overview',
 });
 
 //wallet dashboard component
-WalletUI.dashboard = React.createClass({displayName: 'dashboard',
+snowUI.wallet.dashboard = React.createClass({displayName: 'dashboard',
 	getInitialState: function() {
 		
 		return {mounted:false,ready:this.props.ready,modals:{encryptModal:false}};
@@ -452,19 +446,19 @@ WalletUI.dashboard = React.createClass({displayName: 'dashboard',
 	},
 	componentWillReceiveProps: function (nextProps) {
 		var _this = this
-		if(snowUI.debug) snowlog.log('dashboard will receive props',this.props,nextProps)
+		if(snowUI.debug) snowLog.log('dashboard will receive props',this.props,nextProps)
 		//this.setState({ready:nextProps.ready})
 		if(this.props.config.wallet !== nextProps.config.wallet)this.getData(nextProps,function(resp){_this.setState({data:resp.data,mounted:true,ready:nextProps.ready}) })
 		
 	},
 	componentDidUpdate: function () {
 		var _this = this
-		if(snowUI.debug) snowlog.log('dashboard did update',this.props)
+		if(snowUI.debug) snowLog.log('dashboard did update',this.props)
 		snowUI.watchLoader();
 	},
 	componentDidMount: function() {
 		var _this = this
-		if(snowUI.debug) snowlog.log('dashboard did mount',this.props)
+		if(snowUI.debug) snowLog.log('dashboard did mount',this.props)
 		//_this.setState({mounted:true})
 		this.getData(this.props,function(resp){ _this.setState({data:resp.data,mounted:true}) })
 		
@@ -474,7 +468,7 @@ WalletUI.dashboard = React.createClass({displayName: 'dashboard',
 		this.setState({mounted:false,data:false,ready:false})
 	},
 	getData: function (props,cb) {
-		if(snowUI.debug) snowlog.log('data',props)
+		if(snowUI.debug) snowLog.log('data',props)
 		var url = "/api/snowcoins/local/wallet",
 			data = { wallet:props.config.wallet,moon:props.config.moon},
 			_this = this;
@@ -491,7 +485,8 @@ WalletUI.dashboard = React.createClass({displayName: 'dashboard',
 		return false
 	},
 	encryptModal: function() {
-		var modals = _this.state.modals;
+		var _this = this,
+			modals = _this.state.modals;
 		modals.encryptModal = true;
 		_this.setState({modals:modals});
 		
@@ -506,9 +501,9 @@ WalletUI.dashboard = React.createClass({displayName: 'dashboard',
 	},
 	render: function() {
 		
-		_this = this
+		var _this = this
 		
-		if(snowUI.debug) snowlog.log('wallet dashboard component',this.state.mounted)
+		if(snowUI.debug) snowLog.log('wallet dashboard component',this.state.mounted)
 		
 		if(this.state.mounted) {
 			var data = this.state.data;
@@ -538,7 +533,7 @@ WalletUI.dashboard = React.createClass({displayName: 'dashboard',
 					   React.DOM.div(null, 
 						React.DOM.a({onClick: snowUI.methods.modals.open.unlockWallet, className: "k"}, React.DOM.span(null, "Unlock Wallet"))
 					   ), React.DOM.div(null, 	
-						React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/passphrase', className: ""}, React.DOM.span(null, "Change Wallet Passphrase"))
+						React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/passphrase', className: ""}, React.DOM.span(null, "Change Wallet Passphrase"))
 					   )	
 					   
 					 )
@@ -548,9 +543,9 @@ WalletUI.dashboard = React.createClass({displayName: 'dashboard',
 				
 					React.DOM.div({id: "unlockwalletbutton"}, 
 					    React.DOM.p(null, "Your wallet is unlocked for ", React.DOM.span({className: "locktimer"}), " seconds."), 
-					    ButtonToolbar(null, 
+					    snowUI.ButtonToolbar(null, 
 						
-						React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/passphrase', className: ""}, React.DOM.span(null, "Change Wallet Passphrase"))
+						React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/passphrase', className: ""}, React.DOM.span(null, "Change Wallet Passphrase"))
 						
 					    )
 					 )
@@ -561,7 +556,7 @@ WalletUI.dashboard = React.createClass({displayName: 'dashboard',
 					React.DOM.div({id: "encryptwallet"}, 
 						React.DOM.div({id: "encryptwalletbutton"}, 
 							React.DOM.p(null, "Your wallet is not secure. Anyone with access to a copy of ", React.DOM.kbd(null, "wallet.dat"), " can send coin without using a passphrase."), 
-							React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/passphrase', className: ""}, "Set Passphrase Now")
+							React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/passphrase', className: ""}, "Set Passphrase Now")
 						)
 					)
 				)
@@ -585,8 +580,8 @@ WalletUI.dashboard = React.createClass({displayName: 'dashboard',
 							React.DOM.p(null, "wallet options")
 						), 
 						React.DOM.div({className: "snow-block-body"}, 
-							React.DOM.div(null, React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/backup', className: "backupwalletbutton text-muted"}, "Backup Wallet")), 
-							React.DOM.div(null, React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/update', className: "updatecoin"}, "Update ", this.props.config.wally.name.toUpperCase(), "   "))
+							React.DOM.div(null, React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/backup', className: "backupwalletbutton text-muted"}, "Backup Wallet")), 
+							React.DOM.div(null, React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/update', className: "updatecoin"}, "Update ", this.props.config.wally.name.toUpperCase(), "   "))
 						)
 					)
 				), 
@@ -616,7 +611,7 @@ WalletUI.dashboard = React.createClass({displayName: 'dashboard',
 	}
 });
 //backup
-WalletUI.backup = React.createClass({displayName: 'backup',
+snowUI.wallet.backup = React.createClass({displayName: 'backup',
 	mixins: [React.addons.LinkedStateMixin],
 	getInitialState: function() {
 		return {}
@@ -638,7 +633,7 @@ WalletUI.backup = React.createClass({displayName: 'backup',
 		
 		_this.setState({requesting:true});
 		
-		if(snowUI.debug) snowlog.log('backup wallet')
+		if(snowUI.debug) snowLog.log('backup wallet')
 		
 		if(_this.state.snowbackupname)
 		{
@@ -676,9 +671,9 @@ WalletUI.backup = React.createClass({displayName: 'backup',
 	    
 		_this = this
 	    
-		var encrypt = function(){ if(_this.props.config.lockstatus === 2 ) return (React.DOM.button({type: "button", onClick: function(){snowUI.methods.valueRoute(snowPath.wallet + '/' + _this.props.config.wallet + '/passphrase')}, className: "btn btn-info pull-right"}, "Set Passphrase Now") ); else return '' }
+		var encrypt = function(){ if(_this.props.config.lockstatus === 2 ) return (React.DOM.button({type: "button", onClick: function(){snowUI.methods.valueRoute(snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/passphrase')}, className: "btn btn-info pull-right"}, "Set Passphrase Now") ); else return '' }
 	   
-		if(snowUI.debug) snowlog.log('backup component')
+		if(snowUI.debug) snowLog.log('backup component')
 	    
 	    
 		var date=new Date();
@@ -712,10 +707,10 @@ WalletUI.backup = React.createClass({displayName: 'backup',
 								React.DOM.input({id: "snowbackupname", ref: "snowbackupname", placeholder: fname, className: "form-control coinstamp", valueLink: this.linkState('snowbackupname')})
 							), 
 							React.DOM.div({className: "form-group"}, 
-								ButtonToolbar(null, 
+								snowUI.ButtonToolbar(null, 
 									React.DOM.button({disabled: (this.state.requesting ||  this.state.snowbackupname  ) ? '' : 'disabled', id: "backupwalletsubmit", className: "btn ", rel: "backupwalletsubmit"}, this.state.requesting ? 'Backing Up...' : 'Backup'), 
 								
-									React.DOM.a({type: "button", onClick: snowUI.methods.hrefRoute, href: snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '', className: "btn btn-default pull-right"}, "Cancel"), 
+									React.DOM.a({type: "button", onClick: snowUI.methods.hrefRoute, href: snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '', className: "btn btn-default pull-right"}, "Cancel"), 
 									encrypt()
 								)
 							)
@@ -731,7 +726,7 @@ WalletUI.backup = React.createClass({displayName: 'backup',
 	}
 });
 //change passphrase
-WalletUI.passphrase = React.createClass({displayName: 'passphrase',
+snowUI.wallet.passphrase = React.createClass({displayName: 'passphrase',
 	mixins: [React.addons.LinkedStateMixin],
 	getInitialState: function() {
 		return {}
@@ -785,9 +780,9 @@ WalletUI.passphrase = React.createClass({displayName: 'passphrase',
 	    _this = this
 	    
 	    var isP = snowUI.methods.forms.passwordORnot.call(this).toString()
-	    var toggle = isP === 'text' ? snowtext.ui.hidepassphrase : snowtext.ui.showpassphrase;
+	    var toggle = isP === 'text' ? snowUI.snowText.ui.hidepassphrase : snowUI.snowText.ui.showpassphrase;
 	    
-	    if(snowUI.debug) snowlog.log('change pass component',isP)
+	    if(snowUI.debug) snowLog.log('change pass component',isP)
 	    return (
 		React.DOM.div({style: {padding:'5px 20px'}}, 
 			React.DOM.div({className: "col-xs-12 "}, 
@@ -816,7 +811,7 @@ WalletUI.passphrase = React.createClass({displayName: 'passphrase',
 					React.DOM.p({style: {textAlign:'right'}}, React.DOM.a({onClick: snowUI.methods.togglePassFields}, " ", toggle, " ")), 
 					React.DOM.div({className: "form-group"}, 
 						React.DOM.button({disabled: (this.state.requesting ||  !this.state.currentphrase  || (this.state.changephrase  !== this.state.confirmphrase )) ? 'disabled' : '', id: "confirmchangepassphrase", className: "btn "}, this.state.requesting ? 'Changing...' : 'Change Passphrase'), 
-						React.DOM.a({type: "button", onClick: snowUI.methods.hrefRoute, href: snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '', className: "btn btn-default pull-right"}, "Cancel")
+						React.DOM.a({type: "button", onClick: snowUI.methods.hrefRoute, href: snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '', className: "btn btn-default pull-right"}, "Cancel")
 					)
 				)
 			)	
@@ -826,7 +821,7 @@ WalletUI.passphrase = React.createClass({displayName: 'passphrase',
 	}
 });
 //change passphrase
-WalletUI.setpassphrase = React.createClass({displayName: 'setpassphrase',
+snowUI.wallet.setpassphrase = React.createClass({displayName: 'setpassphrase',
 	mixins: [React.addons.LinkedStateMixin],
 	getInitialState: function() {
 		return {}
@@ -842,7 +837,7 @@ WalletUI.setpassphrase = React.createClass({displayName: 'setpassphrase',
 		_this = this
 				
 		_this.setState({requesting:true});
-		if(snowUI.debug) snowlog.log('encrypt wallet')
+		if(snowUI.debug) snowLog.log('encrypt wallet')
 		
 		if(_this.state.epassword)
 		{
@@ -875,7 +870,7 @@ WalletUI.setpassphrase = React.createClass({displayName: 'setpassphrase',
 	},
 	render: function() {
 	    var _this = this;
-	    if(snowUI.debug) snowlog.log('change pass component')
+	    if(snowUI.debug) snowLog.log('change pass component')
 	    return (
 		React.DOM.div({style: {padding:'5px 20px'}}, 
 			React.DOM.div({className: "col-xs-12 "}, 
@@ -901,9 +896,9 @@ WalletUI.setpassphrase = React.createClass({displayName: 'setpassphrase',
 					
 						React.DOM.p(null, "Do ", React.DOM.strong(null, "NOT"), " lose this pass phrase or you will lose your coin.  To be secure you must delete all your old unencrypted backups."), 
 					
-						ButtonToolbar(null, 
+						snowUI.ButtonToolbar(null, 
 							
-							React.DOM.a({type: "button", onClick: snowUI.methods.hrefRoute, href: snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '', className: "btn btn-default pull-right"}, "Cancel"), 
+							React.DOM.a({type: "button", onClick: snowUI.methods.hrefRoute, href: snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '', className: "btn btn-default pull-right"}, "Cancel"), 
 							
 							React.DOM.button({disabled: (this.state.requesting || !this.state.epassword || this.state.epassword  !== this.state.econfirm ) ? 'disabled' : '', id: "confirmencrypt", rel: "confirmencrypt", className: "btn  pull-left"}, this.state.requesting ? 'Encrypting... be patient' : 'Encrypt Wallet')
 							

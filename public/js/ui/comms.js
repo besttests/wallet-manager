@@ -67,7 +67,7 @@
 	  }
 		
 	  if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
-		xhr.setRequestHeader("x-snow-token", _csrf);
+		xhr.setRequestHeader("x-snow-token", snowUI._csrf);
 		xhr.setRequestHeader("x-snow-window", window.name);
 	  }
 	});
@@ -103,22 +103,22 @@
 			location.href=data.redirect;
 		} 
 		if(data.path) {
-			resp = data;
+			var resp = data;
 
-			snowPath.root = '/' + resp.path.snowcoins;
-			snowPath.routeRoot = resp.path.snowcoins;
-			snowPath.router.root = resp.path.snowcoins;
+			snowUI.snowPath.root = '/' + resp.path.snowcoins;
+			snowUI.snowPath.routeRoot = resp.path.snowcoins;
+			snowUI.snowPath.router.root = resp.path.snowcoins;
 			
-			snowPath.d2c = '/' + resp.path.d2c;
-			snowPath.router.d2c = resp.path.d2c;
+			snowUI.snowPath.d2c = '/' + resp.path.d2c;
+			snowUI.snowPath.router.d2c = resp.path.d2c;
 			
-			snowPath.d3c = '/' + resp.path.d3c;
-			snowPath.router.d3c = resp.path.d3c;
+			snowUI.snowPath.d3c = '/' + resp.path.d3c;
+			snowUI.snowPath.router.d3c = resp.path.d3c;
 			
-			snowPath.share = '/' + resp.path.share;
-			snowPath.router.share = resp.path.share;
+			snowUI.snowPath.share = '/' + resp.path.share;
+			snowUI.snowPath.router.share = resp.path.share;
 			
-			snowPath.logout = '/' + resp.path.logout;
+			snowUI.snowPath.logout = '/' + resp.path.logout;
 			
 			if(data.path.link) {
 				if(data.path.link.port)snowUI.link.port = data.path.link.port;
@@ -127,7 +127,7 @@
 			}
 			
 			if(resp.path.snowcat)snowUI.snowcat = resp.path.snowcat;
-			if(snowUI.debug) snowlog.log(snowUI.snowcat,resp.path);
+			if(snowUI.debug) snowLog.log(snowUI.snowcat,resp.path);
 		}
 	});
 	
@@ -145,16 +145,16 @@ $(function() {
 	 * and SHOULD BE INTERCEPTED by the checkprivatenonce middleware
 	 * 
 	 * */
-	 if(snowUI.debug) snowlog.info(snowlanguages)
+	 if(snowUI.debug) snowLog.info(snowUI.snowLanguages)
 	$.ajax({async:false,url: "/api/snowcoins/local/contacts/?setnonce=true"})
 		.done(function( resp,status,xhr ) {
-			_csrf = xhr.getResponseHeader("x-snow-token");
-			if(snowUI.debug) snowlog.info(resp)
+			snowUI._csrf = xhr.getResponseHeader("x-snow-token");
+			if(snowUI.debug) snowLog.info(resp)
 			
 			//start our app
 			bone.router.start({root:resp.path.snowcoins,pushState: true});
 			
-			if(snowUI.debug) snowlog.info('token, send window name',_csrf,window.name);
+			if(snowUI.debug) snowLog.info('token, send window name',snowUI._csrf,window.name);
 			
 	});
 	
@@ -163,7 +163,7 @@ $(function() {
 	$(document).on('show.bs.tab','#dynamicaddtabs a[data-toggle="tab"],#dynamicaddtabs a[data-toggle="pill"]', function (e) {
 		//e.target // activated tab
 		//e.relatedTarget // previous tab
-		if(snowUI.debug) snowlog.log('switch tab divs')
+		if(snowUI.debug) snowLog.log('switch tab divs')
 			
 		var target = e.target.dataset.target;
 		$('#fw-useme').val(target)
@@ -171,7 +171,7 @@ $(function() {
 			
 	})
 	$(document).on('click','.snowtablesort th',function(){
-			if(snowUI.debug) snowlog.info('sort col')
+			if(snowUI.debug) snowLog.info('sort col')
 			if(this.asc === undefined) this.asc = true;
 			var table = $(this).parents('table').eq(0)
 			
@@ -180,7 +180,7 @@ $(function() {
 			
 			var rows = table.find('tbody tr').not( ".skipme" ).toArray().sort(snowUI.comparer($(this).index(),this))
 			
-			//if(snowUI.debug) snowlog.log(table.find('tr:gt(0)').toArray());
+			//if(snowUI.debug) snowLog.log(table.find('tr:gt(0)').toArray());
 			this.asc = !this.asc
 			if (!this.asc){
 				rows = rows.reverse()

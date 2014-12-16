@@ -1,17 +1,9 @@
-/* commons
- * */
-
-/* our languages are stored in snowlanguages which is retrieved on start
- * the default is snowcoins.get('language') or 'en-us'
- * 
- * changing saves across sessions  by adding the value to the users settings document
- * newsettings:{'language':'en-uk'}
- * 
- * the relaod is a json file
- * */
-
 var snowUI = {
-	snowtext: snowlanguages.language,
+	_csrf: snowUI._csrf,
+	snowLanguages: snowUI.snowLanguages,
+	get snowText() {
+		return snowUI.snowLanguages.language;
+	},
 	snowPath: {
 		linkServer: {
 			host: 'http://snow8:12888/',
@@ -87,7 +79,7 @@ var snowUI = {
 		.fadeTo("slow",0.00)
 		.promise()
 		.done(function() {
-			if(snowUI.debug) snowlog.log('fadeout')
+			if(snowUI.debug) snowLog.log('fadeout')
 			if(cb)cb()
 		});
 		//$('#maindiv').css('opacity',0.01);
@@ -95,11 +87,11 @@ var snowUI = {
 	fadeRenderIn: function (cb) {
 		
 		$('#maindiv')
-		.delay(450)
+		//.delay(450)
 		.fadeTo("slow",1.0)
 		.promise()
 		.done(function() {
-			if(snowUI.debug) snowlog.log('fadein') 
+			if(snowUI.debug) snowLog.log('fadein') 
 			if(cb)cb()
 		});
 	}, 
@@ -107,10 +99,10 @@ var snowUI = {
 		//get a new route
 		var run = function() {
 			$('#maindiv')
-			.fadeTo(100,0.0)
+			.fadeTo(50,0.0)
 			.promise()
 			.done(function() {
-				if(snowUI.debug) snowlog.log('fade out') 
+				if(snowUI.debug) snowLog.log('fade out') 
 				if(callback)callback()
 			});
 		}
@@ -118,7 +110,7 @@ var snowUI = {
 			run()
 		} else {
 			$('.loader')
-			.toggle(500)
+			.toggle(50)
 			.promise()
 			.done(function() {
 				run()
@@ -130,18 +122,18 @@ var snowUI = {
 	loaderRender: function(callback) {
 		//return a new route
 		$('#maindiv')
-		.fadeTo(100,1.0)
+		.fadeTo(50,1.0)
 		.promise()
 		.done(function() {
 			if($('.loader').css('display') === 'none') {
-				if(snowUI.debug) snowlog.log('fade in - loader already hidden') 
+				if(snowUI.debug) snowLog.log('fade in - loader already hidden') 
 				if(callback)callback()
 			} else {
 				$('.loader')
-				.toggle(150)
+				.toggle(50)
 				.promise()
 				.done(function() {
-					if(snowUI.debug) snowlog.log('fade in') 
+					if(snowUI.debug) snowLog.log('fade in') 
 					if(callback)callback()
 					//make sure that load is gone
 					snowUI.killLoader()
@@ -154,21 +146,21 @@ var snowUI = {
 	loadingStart: function(cb) {
 		$('.loader')
 		.toggle(true)
-		.delay(250)
+		//.delay(250)
 		.promise()
 		.done(function() {
-			if(snowUI.debug) snowlog.log('show load gif') 
+			if(snowUI.debug) snowLog.log('show load gif') 
 			if(cb)cb()
 		});
 		return false
 	},
 	loadingStop: function(cb) {
 		$('.loader')
-		.delay(250)
+		//.delay(250)
 		.toggle(false)
 		.promise()
 		.done(function() {
-			if(snowUI.debug) snowlog.log('hide load gif') 
+			if(snowUI.debug) snowLog.log('hide load gif') 
 			if(cb)cb()
 		});
 		return false
@@ -191,7 +183,7 @@ var snowUI = {
 		var wallet = e.target.dataset.snowmoon
 		if(!wallet) wallet = e.target.parentElement.dataset.snowmoon;
 		
-		if(snowUI.debug) snowlog.info(wallet,e.target)
+		if(snowUI.debug) snowLog.info(wallet,e.target)
 		
 		if(!wallet) {
 			snowUI.flash('error','Can not find a link for the wallet requested',2500)
@@ -206,7 +198,7 @@ var snowUI = {
 			if(resp.success === true) {			
 				
 				snowUI._wallets[wallet] = {removeKey: resp.key};
-				snowUI.methods.valueRoute(snowPath.wallet + '/' + wallet + '/remove');
+				snowUI.methods.valueRoute(snowUI.snowPath.wallet + '/' + wallet + '/remove');
 			
 			} else {
 				snowUI.loaderRender();
@@ -262,9 +254,9 @@ var snowUI = {
 			$.ajax({type:type,url: url,data:data})
 			.done(function( resp,status,xhr ) {
 				
-				_csrf = xhr.getResponseHeader("x-snow-token");
+				snowUI._csrf = xhr.getResponseHeader("x-snow-token");
 				snowUI.ajax.running = false
-				if(snowUI.debug) snowlog.log(type + 'call return')
+				if(snowUI.debug) snowLog.log(type + 'call return')
 				callback(resp)	
 			});					
 				
@@ -278,7 +270,7 @@ var snowUI = {
 	sortCol: function(who)
 	{
 		return false
-		if(snowUI.debug) snowlog.info('sort col',who,this._sorted)
+		if(snowUI.debug) snowLog.info('sort col',who,this._sorted)
 		
 		if(this._sorted.indexOf(who))
 			return false;
@@ -293,20 +285,20 @@ var snowUI = {
 			
 				var valA = $(index).attr('data-snowaccount');
 				var valB = $(who).attr('data-snowaccount');
-				if(snowUI.debug) snowlog.info(valA,valB)
+				if(snowUI.debug) snowLog.info(valA,valB)
 				return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB)
 						
 		} else if($(who).hasClass("sortbalance")) {
 				
 				var valA = $(index).attr('data-snowbalance');
 				var valB = $(who).attr('data-snowbalance');
-				if(snowUI.debug) snowlog.info(valA,valB)
+				if(snowUI.debug) snowLog.info(valA,valB)
 				return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB)
 						
 		} else if($(who).hasClass("sortaddresses")) {
 				var valA = $(index).find('.addresses .eachaddress').children().length-1;
 				var valB = $(who).find('.addresses .eachaddress').children().length-1;
-				if(snowUI.debug) snowlog.info(valA,valB)
+				if(snowUI.debug) snowLog.info(valA,valB)
 				return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB)
 						
 		} else if($(who).is(".snowsortcountitems"))
@@ -364,74 +356,66 @@ var snowUI = {
 	
 }
 
-var snowtext = snowUI.snowtext;
-
-var snowPath = snowUI.snowPath;
-
-/* messages */
-var snowmessage = snowUI.flash;
-
 		
+	
+	
+snowUI.eggy = function(e) {
 	var $navbarLogo = $('.walletbar-logo'),
-		$easterEgg = $('#easter-egg'),
-		$oldLogo = $('#old-logo');
-	
+	$easterEgg = $('#easter-egg'),
+	$oldLogo = $('#old-logo');
+
 	var hasOpened = false;
-	
-	var eggy = function(e) {
-		var $navbarLogo = $('.walletbar-logo'),
-		$easterEgg = $('#easter-egg')
-				
-		if ($navbarLogo.hasClass('clicked')) {
 			
-			$navbarLogo.removeClass('clicked');
+	if ($navbarLogo.hasClass('clicked')) {
+		
+		$navbarLogo.removeClass('clicked');
+		
+		$easterEgg.animate({ height: 0 }, 500, function() {
 			
-			$easterEgg.animate({ height: 0 }, 1000, function() {
-				
-				//$easterEgg.css({ height: 0 });
-			});
-			
-			
-		} else {
-			
-			$navbarLogo.addClass('clicked');
-			
-			$easterEgg.show();
-			
-			var height = $easterEgg.height();
-			
-			$easterEgg.css({ height: 0 });
-			
-			$easterEgg.animate({ height: '400px' }, 1000);
-			
-			if (!hasOpened) {
-				hasOpened = true;
-			} 
-			
-		}
-	
+			//$easterEgg.css({ height: 0 });
+		});
+		
+		
+	} else {
+		
+		$navbarLogo.addClass('clicked');
+		
+		$easterEgg.show();
+		
+		var height = $easterEgg.height();
+		
+		$easterEgg.css({ height: 0 });
+		
+		$easterEgg.animate({ height: '400px' }, 500);
+		
+		if (!hasOpened) {
+			hasOpened = true;
+		} 
+		
 	}
+
+}
 	
 
 
-	/*form label click to focus*/
-	$('label').click(function(){
-			var name=this.htmlFor;
-			//alert('input[name='+name+']');
-			$('input[name='+name+']').focus();
-			$('input#'+name).focus();
-	});
-	
-	Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator) {
-		var n = this,
-		decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-		decSeparator = decSeparator === undefined ? "." : decSeparator,
-		thouSeparator = thouSeparator === undefined ? "," : thouSeparator,
-		sign = n < 0 ? "-" : "",
-		i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
-		j = (j = i.length) > 3 ? j % 3 : 0;
-		return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "").replace(/\.?0+$/, "");
-	};
+/* form label click to focus */
+$('label').click(function(){
+	var name=this.htmlFor;
+	//alert('input[name='+name+']');
+	$('input[name='+name+']').focus();
+	$('input#'+name).focus();
+});
+
+Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator) {
+	var n = this,
+	decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+	decSeparator = decSeparator === undefined ? "." : decSeparator,
+	thouSeparator = thouSeparator === undefined ? "," : thouSeparator,
+	sign = n < 0 ? "-" : "",
+	i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
+	j = (j = i.length) > 3 ? j % 3 : 0;
+	return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "").replace(/\.?0+$/, "");
+};
 /**
  * 2014 snowkeeper
  * github.com/snowkeeper

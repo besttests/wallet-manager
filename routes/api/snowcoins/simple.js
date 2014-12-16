@@ -186,7 +186,7 @@ exports = module.exports = function(req, res) {
 							} catch(e) {
 								
 							}
-							var contents = 'var snowlanguages = '+ lang + ";\n" + "var snowpaths = " + paths; 
+							var contents = 'snowUI.snowLanguages = '+ lang + ";\n" + "snowUI.snowPaths = " + paths; 
 					 
 							return res.send(contents);
 							

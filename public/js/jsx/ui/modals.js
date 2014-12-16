@@ -2,17 +2,11 @@
  * @jsx React.DOM
  */
 
-/* not used but thats how you can use touch events
- * */
-//React.initializeTouchEvents(true);
 
-/* not used but thats how you can use animation and other transition goodies
- * */
-//var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 // Our custom component is managing whether the Modal is visible
-var addModal = React.createClass({
-	mixins: [OverlayMixin], 
+snowUI.addModal = React.createClass({
+	mixins: [snowUI.OverlayMixin], 
 
 	getInitialState: function () {
 		return {
@@ -55,7 +49,7 @@ var addModal = React.createClass({
 		);
 	},
 
-	// This is called by the `OverlayMixin` when this component
+	// This is called by the `snowUI.OverlayMixin` when this component
 	// is mounted or updated and the return value is appended to the body.
 	renderOverlay: function () {
 		if (!this.state.isModalOpen) {
@@ -68,12 +62,12 @@ var addModal = React.createClass({
 					{this.props.buttons}
 				</div>
 				<div className="pull-right">
-					<Button bsStyle="default" onClick={this.handleToggle}>Cancel</Button>
+					<snowUI.Button bsStyle="default" onClick={this.handleToggle}>Cancel</snowUI.Button>
 				</div>
 			</div>
 		)
 		return (
-			<Modal title={this.props.title} onRequestHide={this.handleToggle}>
+			<snowUI.Modal title={this.props.title} onRequestHide={this.handleToggle}>
 				<div className="modal-body">
 					{this.props.children}
 				</div>
@@ -82,7 +76,7 @@ var addModal = React.createClass({
 					{!this.props.hideFooter ? foot : ''}
 					
 				</div>
-			</Modal>
+			</snowUI.Modal>
 		);
 	}
 });
@@ -162,7 +156,7 @@ snowUI.controllers.ui.modals = function() {
 				e.preventDefault();
 				
 				_this.setState({requesting:true});
-				if(snowUI.debug) snowlog.log('unlock wallet',snowUI.methods)
+				if(snowUI.debug) snowLog.log('unlock wallet',snowUI.methods)
 				if(_this.state.unlockphrase)
 				{
 					var nowtime=new Date().getTime()
@@ -230,13 +224,13 @@ snowUI.controllers.ui.modals = function() {
 /**
  * all of our modals are defined here.  call them with the function() 
  * */
-var snowModals = {}
+snowUI.snowModals = {}
 
-var unlockWallet = function() {
+snowUI.snowModals.unlockWallet = function() {
 	var uButtons = <button onClick={snowUI.methods.modals.unlockWallet.request}  disabled={!this.state.unlockphrase || this.state.requesting ? 'disabled' : ''}  id="confirmunlock" className="btn btn-warning" rel="modal">{this.state.requesting ? 'Unlocking...' : 'Unlock Wallet'}</button>
-	if(snowUI.debug) snowlog.log('unlock wallet',this.state)
-	var toggle = this.state.showPasswords ? snowtext.ui.hidepassphrase : snowtext.ui.showpassphrase;
-	return (<addModal me="unlockWallet" methods={{}} open={this.state.modals.unlockWallet} title={"Unlock " + this.state.wally.name} buttons={uButtons}  >
+	if(snowUI.debug) snowLog.log('unlock wallet',this.state)
+	var toggle = this.state.showPasswords ? snowUI.snowText.ui.hidepassphrase : snowUI.snowText.ui.showpassphrase;
+	return (<snowUI.addModal me="unlockWallet" methods={{}} open={this.state.modals.unlockWallet} title={"Unlock " + this.state.wally.name} buttons={uButtons}  >
 			<div> 
 				
 					<div style={{display:'none'}} className="adderror"></div>
@@ -262,72 +256,69 @@ var unlockWallet = function() {
 					<p style={{textAlign:'right'}}><a onClick={this.togglePassFields}> {toggle} </a></p>
 				
 			</div>
-		</addModal> )
+		</snowUI.addModal> )
 }
-snowModals.unlockWallet = unlockWallet
 
 
-var encryptWallet = function() {
+snowUI.snowModals.encryptWallet = function() {
 	var _this = this
 	
 	var config = _this.config()
-	if(snowUI.debug) snowlog.log('config in encrypt wallet',config)
+	if(snowUI.debug) snowLog.log('config in encrypt wallet',config)
 	if(!config.locked) {
 		var eButtons = (
-				<ButtonToolbar >
-				<button id="confirmencryptbackup" onClick={function(){snowUI.methods.modals.close();snowUI.methods.valueRoute(_this.props.section + '/' + _this.props.wallet + '/passphrase')}} className="btn btn-warning pull-right">{snowtext.modals.encrypt.buttons.encrypt}</button>
-				<button className="btn btn-info backupwalletbutton  pull-right"  onClick={function(){snowUI.methods.modals.close();snowUI.methods.valueRoute(_this.props.section + '/' + _this.props.wallet + '/backup')}} ><span>{snowtext.modals.encrypt.buttons.backup}</span></button>
-				</ButtonToolbar>
+				<snowUI.ButtonToolbar >
+				<button id="confirmencryptbackup" onClick={function(){snowUI.methods.modals.close();snowUI.methods.valueRoute(_this.props.section + '/' + _this.props.wallet + '/passphrase')}} className="btn btn-warning pull-right">{snowUI.snowText.modals.encrypt.buttons.encrypt}</button>
+				<button className="btn btn-info backupwalletbutton  pull-right"  onClick={function(){snowUI.methods.modals.close();snowUI.methods.valueRoute(_this.props.section + '/' + _this.props.wallet + '/backup')}} ><span>{snowUI.snowText.modals.encrypt.buttons.backup}</span></button>
+				</snowUI.ButtonToolbar>
 		)
-		var text = (<div id="encryptwalletbackupfirst" dangerouslySetInnerHTML={{__html: snowtext.modals.encrypt.notlocked.text}} />)
+		var text = (<div id="encryptwalletbackupfirst" dangerouslySetInnerHTML={{__html: snowUI.snowText.modals.encrypt.notlocked.text}} />)
 		
 	} else {
 		var eButtons = (
-				<ButtonToolbar >
-				<button className="btn btn-info backupwalletbutton  pull-right"  onClick={function(){snowUI.methods.modals.close();snowUI.methods.valueRoute(_this.props.section + '/' + _this.props.wallet + '/backup')}} ><span>{snowtext.modals.encrypt.buttons.backup}</span></button>
-				</ButtonToolbar>
+				<snowUI.ButtonToolbar >
+				<button className="btn btn-info backupwalletbutton  pull-right"  onClick={function(){snowUI.methods.modals.close();snowUI.methods.valueRoute(_this.props.section + '/' + _this.props.wallet + '/backup')}} ><span>{snowUI.snowText.modals.encrypt.buttons.backup}</span></button>
+				</snowUI.ButtonToolbar>
 		)
-		var text = (<div id="encryptwalletbackupfirst" dangerouslySetInnerHTML={{__html: snowtext.modals.encrypt.locked.text}} />)
+		var text = (<div id="encryptwalletbackupfirst" dangerouslySetInnerHTML={{__html: snowUI.snowText.modals.encrypt.locked.text}} />)
 	}
-	return (<addModal me="encryptWallet"  methods={{}} buttons={eButtons} open={this.state.modals.encryptWallet} title={"Encrypt " + this.state.wally.name}   >
+	return (<snowUI.addModal me="encryptWallet"  methods={{}} buttons={eButtons} open={this.state.modals.encryptWallet} title={"Encrypt " + this.state.wally.name}   >
 		{text}			
 		
-	</addModal>)
+	</snowUI.addModal>)
 		
 }
-snowModals.encryptWallet = encryptWallet
 
-var genericModal = function(conf,close) {
+snowUI.snowModals.genericModal = function(conf,close) {
 	var _this = this,
 		config = conf.modal;
 	
 	if(!config.confirm)config.confirm = 'Confirm';
 	
 	var eButtons = (
-			<ButtonToolbar >
+			<snowUI.ButtonToolbar >
 			<button onClick={config.click}    id="removegenericmodalbutton" className={"btn " + config.btnClass } rel="modal">{config.confirm} </button>
 			
-			</ButtonToolbar>
+			</snowUI.ButtonToolbar>
 		)
-		return (<addModal me="generic"  methods={{close:close}} buttons={eButtons} open={this.state.genericModal}  title={config.title}   >
+		return (<snowUI.addModal me="generic"  methods={{close:close}} buttons={eButtons} open={this.state.genericModal}  title={config.title}   >
 						
 			<div  >
 				<div dangerouslySetInnerHTML={{__html: config.body}} />
 			</div>
-		</addModal>)
+		</snowUI.addModal>)
 		
 }
-snowModals.genericModal = genericModal
 
 
-var removeItem = function(click,close) {
+snowUI.snowModals.removeItem = function(click,close) {
 	var _this = this
 	var eButtons = (
-			<ButtonToolbar >
+			<snowUI.ButtonToolbar >
 			<button onClick={click}  data-snowdata={this.state.id}  id="removedynamicmodalbutton" className="btn btn-danger" rel="modal">Permanently Remove Item Now </button>
-			</ButtonToolbar>
+			</snowUI.ButtonToolbar>
 		)
-		return (<addModal me="removeDynamic"  methods={{close:close}} buttons={eButtons} open={this.state.removeItem}  title={"Remove Item "}   >
+		return (<snowUI.addModal me="removeDynamic"  methods={{close:close}} buttons={eButtons} open={this.state.removeItem}  title={"Remove Item "}   >
 						
 			<div id="removemenow" >
 				<p style={{fontWeight:'bold'}}> This action is permanent  </p>
@@ -338,18 +329,17 @@ var removeItem = function(click,close) {
 				
 				
 			</div>
-		</addModal>)
+		</snowUI.addModal>)
 		
 }
-snowModals.removeItem = removeItem
 
 
-snowModals.addressBook = function() {
+snowUI.snowModals.addressBook = function() {
 	var _this = this;
-	return (<addModal me="addressBook"   open={this.props.config.modals.addressBook}  title={"Saved Addresses "}   >
+	return (<snowUI.addModal me="addressBook"   open={this.props.config.modals.addressBook}  title={"Saved Addresses "}   >
 			<div dangerouslySetInnerHTML={{__html: this.state.addressBookHtml}} />
 			
-		</addModal>)
+		</snowUI.addModal>)
 		
 }
 /**

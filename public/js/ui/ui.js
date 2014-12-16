@@ -8,17 +8,17 @@
 
 /* you can use animation and other transition goodies
  * */
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+snowUI.ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 
 /* bootstrap components
  * */
-var Flash = ReactBootstrap.Alert;
-var Btn = ReactBootstrap.Button;
-var Button = Btn;
-var Modal = ReactBootstrap.Modal;
-var OverlayMixin = ReactBootstrap.OverlayMixin;
-var ButtonToolbar = ReactBootstrap.ButtonToolbar;
+snowUI.Flash = ReactBootstrap.Alert;
+snowUI.Btn = ReactBootstrap.Button;
+snowUI.Button = snowUI.Btn;
+snowUI.Modal = ReactBootstrap.Modal;
+snowUI.OverlayMixin = ReactBootstrap.OverlayMixin;
+snowUI.ButtonToolbar = ReactBootstrap.ButtonToolbar;
 
 /* create the container object
  * */
@@ -35,13 +35,13 @@ snowUI.SnowpiFlash = React.createClass({displayName: 'SnowpiFlash',
 		return ({showclass:'info'});
 	},
 	render: function() {
-		if(snowUI.debug) snowlog.log(this.props);
+		if(snowUI.debug) snowLog.log(this.props);
 		if(!this.state.isVisible)
 		    return null;
 
 		var message = this.props.message ? this.props.message : this.props.children;
 		return (
-		    Flash({bsStyle: this.props.showclass, onDismiss: this.dismissFlash}, 
+		    snowUI.Flash({bsStyle: this.props.showclass, onDismiss: this.dismissFlash}, 
 			React.DOM.p(null, message)
 		    )
 		);
@@ -65,7 +65,7 @@ snowUI.SnowpiMan = React.createClass({displayName: 'SnowpiMan',
 	render: function() {
 	    
 	    return this.transferPropsTo(
-		React.DOM.div({style: this.props.divstyle, dangerouslySetInnerHTML: {__html: snowtext.logoman}})
+		React.DOM.div({style: this.props.divstyle, dangerouslySetInnerHTML: {__html: snowUI.snowText.logoman}})
 	    );
 	}
 });
@@ -77,7 +77,7 @@ snowUI.SnowpiMan = React.createClass({displayName: 'SnowpiMan',
 snowUI.leftMenu = React.createClass({displayName: 'leftMenu',
 	getInitialState: function() {
 		return ({
-			config:this.props.config || {section:snowPath.router.wallet,wallet:'all',moon:'overview'}
+			config:this.props.config || {section:snowUI.snowPath.router.wallet,wallet:'all',moon:'overview'}
 		})
 	},
 	componentWillReceiveProps: function(nextProps) {
@@ -91,14 +91,14 @@ snowUI.leftMenu = React.createClass({displayName: 'leftMenu',
 	render: function() {
 		var showmenu
 		
-		if(this.state.config.section === snowPath.router.wallet) {
+		if(this.state.config.section === snowUI.snowPath.router.wallet) {
 			
 			if(this.state.config.wallet && this.state.config.wallet !== 'new')
 				showmenu = snowUI.walletMenu 
 			else
 				showmenu = snowUI.defaultMenu
 				
-		} else if(this.state.config.section === snowPath.router.receive || this.state.config.section === snowPath.router.settings) {
+		} else if(this.state.config.section === snowUI.snowPath.router.receive || this.state.config.section === snowUI.snowPath.router.settings) {
 			
 			showmenu = snowUI.receiveMenu
 			
@@ -107,7 +107,7 @@ snowUI.leftMenu = React.createClass({displayName: 'leftMenu',
 			showmenu = snowUI.defaultMenu
 		}	
 		
-		if(snowUI.debug) snowlog.log('main menu component',this.state.config)
+		if(snowUI.debug) snowLog.log('main menu component',this.state.config)
 		
 		return (
 			React.DOM.div({className: "menufade"}, showmenu({config: this.state.config}), " ")			
@@ -119,7 +119,7 @@ snowUI.leftMenu = React.createClass({displayName: 'leftMenu',
 snowUI.walletMenu = React.createClass({displayName: 'walletMenu',
 	getInitialState: function() {
 		return ({
-			config:this.props.config || {section:snowPath.wallet,wallet:false,moon:false}
+			config:this.props.config || {section:snowUI.snowPath.wallet,wallet:false,moon:false}
 		})
 	},
 	componentWillReceiveProps: function(nextProps) {
@@ -144,12 +144,12 @@ snowUI.walletMenu = React.createClass({displayName: 'walletMenu',
 		var moon = $(e.target).parent()[0].dataset.snowmoon;
 		
 		if(moon !== undefined)
-			snowUI.methods.valueRoute(snowPath.wallet + '/' + this.state.config.wallet + '/' + moon);
+			snowUI.methods.valueRoute(snowUI.snowPath.wallet + '/' + this.state.config.wallet + '/' + moon);
 		else {
 			
 			var moon = $(e.target)[0].dataset.snowmoon;
 			if(moon !== undefined) {
-				snowUI.methods.valueRoute(snowPath.wallet + '/' + this.state.config.wallet + '/' + moon);
+				snowUI.methods.valueRoute(snowUI.snowPath.wallet + '/' + this.state.config.wallet + '/' + moon);
 			} else {
 				snowUI.flash('error','Link error',1000)
 				
@@ -167,11 +167,11 @@ snowUI.walletMenu = React.createClass({displayName: 'walletMenu',
 		var data = {'action':'request',wally:_this.props.config.wally.key}
 		
 		snowUI.ajax.GET(url,data,function(resp) {
-			if(snowUI.debug) snowlog.info('remove wallet request from wallet menu',resp)
+			if(snowUI.debug) snowLog.info('remove wallet request from wallet menu',resp)
 			if(resp.success === true) {			
 				
 				snowUI._wallets[_this.props.config.wally.key] = {removeKey: resp.key};
-				snowUI.methods.valueRoute(snowPath.wallet + '/' + _this.props.config.wally.key + '/remove');
+				snowUI.methods.valueRoute(snowUI.snowPath.wallet + '/' + _this.props.config.wally.key + '/remove');
 			
 			} else {
 				
@@ -187,22 +187,22 @@ snowUI.walletMenu = React.createClass({displayName: 'walletMenu',
 		var testnet = this.state.config.testnet ? (React.DOM.div({id: "testnet-flash", title: "", 'data-toggle': "tooltip", 'data-placement': "right", 'data-container': "body", className: "dogemenulink", 'data-original-title': "This wallet is on the TESTNET!", style: {display:'block'}}, React.DOM.span({className: "glyphicon glyphicon-text-width"}), " TESTNET ")) : ''
 		
 		var _this = this;
-	    if(snowUI.debug) snowlog.log('wallet menu component')
+	    if(snowUI.debug) snowLog.log('wallet menu component')
 	    return (
 		
 			React.DOM.div({id: "menuwallet "}, 
 				testnet, 
-				React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/dashboard', 'data-snowmoon': "dashboard", id: "dogedash", 'data-container': "#menuspy", className: "dogemenulink ", title: snowtext.menu.dashboard.title}, " ", React.DOM.span({className: "glyphicon glyphicon-th"}), " ", snowtext.menu.dashboard.name), 
+				React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/dashboard', 'data-snowmoon': "dashboard", id: "dogedash", 'data-container': "#menuspy", className: "dogemenulink ", title: snowUI.snowText.menu.dashboard.title}, " ", React.DOM.span({className: "glyphicon glyphicon-th"}), " ", snowUI.snowText.menu.dashboard.name), 
 				
-				React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/accounts', 'data-snowmoon': "accounts", id: "dogeacc", 'data-container': "#menuspy", className: "dogemenulink", title: snowtext.menu.accounts.title}, " ", React.DOM.span({className: "glyphicon glyphicon-list"}), " ", snowtext.menu.accounts.name), 
+				React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/accounts', 'data-snowmoon': "accounts", id: "dogeacc", 'data-container': "#menuspy", className: "dogemenulink", title: snowUI.snowText.menu.accounts.title}, " ", React.DOM.span({className: "glyphicon glyphicon-list"}), " ", snowUI.snowText.menu.accounts.name), 
 				
-				React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/send', 'data-snowmoon': "send", id: "dogesend", 'data-container': "#menuspy", className: "dogemenulink", title: snowtext.menu.send.title}, " ", React.DOM.span({className: "glyphicon glyphicon-share"}), " ", snowtext.menu.send.name), 
+				React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/send', 'data-snowmoon': "send", id: "dogesend", 'data-container': "#menuspy", className: "dogemenulink", title: snowUI.snowText.menu.send.title}, " ", React.DOM.span({className: "glyphicon glyphicon-share"}), " ", snowUI.snowText.menu.send.name), 
 				
-				React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/transactions', 'data-snowmoon': "transactions", id: "dogetx", 'data-container': "#menuspy", className: "dogemenulink", title: snowtext.menu.tx.title}, " ", React.DOM.span({className: "glyphicon glyphicon-list-alt"}), " ", snowtext.menu.tx.name), 
+				React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/transactions', 'data-snowmoon': "transactions", id: "dogetx", 'data-container': "#menuspy", className: "dogemenulink", title: snowUI.snowText.menu.tx.title}, " ", React.DOM.span({className: "glyphicon glyphicon-list-alt"}), " ", snowUI.snowText.menu.tx.name), 
 				
-				React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/update', 'data-snowmoon': "update", id: "dogeupdate", 'data-container': "#menuspy", className: "dogemenulink", title: snowtext.menu.update.title}, React.DOM.span({className: "glyphicon glyphicon-pencil"}), " ", snowtext.menu.update.name, " ", React.DOM.span({id: "updatecoinspan", style: {display:"none"}})), 
+				React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/update', 'data-snowmoon': "update", id: "dogeupdate", 'data-container': "#menuspy", className: "dogemenulink", title: snowUI.snowText.menu.update.title}, React.DOM.span({className: "glyphicon glyphicon-pencil"}), " ", snowUI.snowText.menu.update.name, " ", React.DOM.span({id: "updatecoinspan", style: {display:"none"}})), 
 				
-				React.DOM.a({onClick: this.removeWallet, 'data-snowmoon': "remove", id: "dogeremove", 'data-container': "#menuspy", className: "dogemenulink", title: snowtext.menu.remove.title}, React.DOM.span({className: "glyphicon glyphicon-trash"}), " ", snowtext.menu.remove.name, " ", React.DOM.span({id: "updatecoinspan", style: {display:"none"}}))
+				React.DOM.a({onClick: this.removeWallet, 'data-snowmoon': "remove", id: "dogeremove", 'data-container': "#menuspy", className: "dogemenulink", title: snowUI.snowText.menu.remove.title}, React.DOM.span({className: "glyphicon glyphicon-trash"}), " ", snowUI.snowText.menu.remove.name, " ", React.DOM.span({id: "updatecoinspan", style: {display:"none"}}))
 			)
 				
 		
@@ -213,7 +213,7 @@ snowUI.walletMenu = React.createClass({displayName: 'walletMenu',
 snowUI.receiveMenu = React.createClass({displayName: 'receiveMenu',
 	getInitialState: function() {
 		return ({
-			config:this.props.config || {section:snowPath.wallet,wallet:'all',moon:'overview'}
+			config:this.props.config || {section:snowUI.snowPath.wallet,wallet:'all',moon:'overview'}
 		})
 	},
 	componentWillReceiveProps: function(nextProps) {
@@ -227,15 +227,15 @@ snowUI.receiveMenu = React.createClass({displayName: 'receiveMenu',
 	},
 	render: function() {
 	   
-	    if(snowUI.debug) snowlog.log('receive menu component')
+	    if(snowUI.debug) snowLog.log('receive menu component')
 	    return (
 		
 			React.DOM.div({id: "menudcc"}, 
-				React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowPath.root + snowPath.wallet, 'data-snowmoon': snowPath.router.wallet, id: "dogewallets", 'data-container': "#menuspy", className: "dogedccmenulink", title: snowtext.menu.left.wallet.title}, " ", React.DOM.span({onClick: this.menuClick, 'data-snowmoon': snowPath.wallet, className: "glyphicon glyphicon-briefcase"}), " ", snowtext.menu.left.wallet.name), 
+				React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.wallet, 'data-snowmoon': snowUI.snowPath.router.wallet, id: "dogewallets", 'data-container': "#menuspy", className: "dogedccmenulink", title: snowUI.snowText.menu.left.wallet.title}, " ", React.DOM.span({onClick: this.menuClick, 'data-snowmoon': snowUI.snowPath.wallet, className: "glyphicon glyphicon-briefcase"}), " ", snowUI.snowText.menu.left.wallet.name), 
 				
-				React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowPath.root + snowPath.receive, 'data-snowmoon': snowPath.router.receive, id: "dogedccsetup", 'data-container': "#menuspy", className: "dogedccmenulink", title: snowtext.menu.left.receive.title}, " ", React.DOM.span({onClick: this.menuClick, 'data-snowmoon': snowPath.receive, className: "glyphicon glyphicon-tasks"}), " ", snowtext.menu.left.receive.name), 
+				React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.receive, 'data-snowmoon': snowUI.snowPath.router.receive, id: "dogedccsetup", 'data-container': "#menuspy", className: "dogedccmenulink", title: snowUI.snowText.menu.left.receive.title}, " ", React.DOM.span({onClick: this.menuClick, 'data-snowmoon': snowUI.snowPath.receive, className: "glyphicon glyphicon-tasks"}), " ", snowUI.snowText.menu.left.receive.name), 
 				
-				React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowPath.root + snowPath.settings, 'data-snowmoon': snowPath.router.settings, id: "dogedccsettings", 'data-container': "#menuspy", className: "dogedccmenulink", title: snowtext.menu.left.settings.title}, " ", React.DOM.span({onClick: this.menuClick, 'data-snowmoon': snowPath.settings, className: "glyphicon glyphicon-cog"}), " ", snowtext.menu.left.settings.name)
+				React.DOM.a({onClick: snowUI.methods.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.settings, 'data-snowmoon': snowUI.snowPath.router.settings, id: "dogedccsettings", 'data-container': "#menuspy", className: "dogedccmenulink", title: snowUI.snowText.menu.left.settings.title}, " ", React.DOM.span({onClick: this.menuClick, 'data-snowmoon': snowUI.snowPath.settings, className: "glyphicon glyphicon-cog"}), " ", snowUI.snowText.menu.left.settings.name)
 				
 			)
 				
@@ -267,12 +267,12 @@ snowUI.walletSelect = React.createClass({displayName: 'walletSelect',
 					_this.props.route(val)	
 				} else {
 					if(!config.moon)config.moon = 'dashboard';
-					_this.props.route(snowPath.wallet + '/' + val + '/' + config.moon)
+					_this.props.route(snowUI.snowPath.wallet + '/' + val + '/' + config.moon)
 				}
 			},
 			effect: "fade"
 		});
-		//if(snowUI.debug) snowlog.log('wallet select updated')
+		//if(snowUI.debug) snowLog.log('wallet select updated')
 	},
 	render: function() {
 		var wallets;
@@ -283,23 +283,23 @@ snowUI.walletSelect = React.createClass({displayName: 'walletSelect',
 				);
 			});
 		}
-		if(this.props.section === snowPath.router.wallet) {
-			var _df = (this.props.wallet) ? this.props.wallet : snowPath.root + snowPath.wallet;
+		if(this.props.section === snowUI.snowPath.router.wallet) {
+			var _df = (this.props.wallet) ? this.props.wallet : snowUI.snowPath.root + snowUI.snowPath.wallet;
 		} else {
 			var _df = '/' + this.props.section;
 		} 
-		//if(snowUI.debug) snowlog.log(_df)
+		//if(snowUI.debug) snowLog.log(_df)
 		return this.transferPropsTo(
 			React.DOM.div({className: "list"}, 
 				React.DOM.div({className: "walletmsg", style: {display:'none'}}), 
 				React.DOM.select({onChange: this.props.route, id: "walletselect", value: _df}, 
-					React.DOM.option({value: snowPath.root + snowPath.wallet}, snowtext.menu.selectWallet.name), 
+					React.DOM.option({value: snowUI.snowPath.root + snowUI.snowPath.wallet}, snowUI.snowText.menu.selectWallet.name), 
 					wallets, 
 					React.DOM.optgroup(null), 
-					React.DOM.option({value: snowPath.wallet + '/new'}, snowtext.menu.plus.name), 
-					React.DOM.option({value: snowPath.receive}, snowtext.menu.receive.name), 
-					React.DOM.option({value: snowPath.settings}, snowtext.menu.settings.name), 
-					React.DOM.option({value: snowPath.link}, snowtext.menu.link.name)
+					React.DOM.option({value: snowUI.snowPath.wallet + '/new'}, snowUI.snowText.menu.plus.name), 
+					React.DOM.option({value: snowUI.snowPath.receive}, snowUI.snowText.menu.receive.name), 
+					React.DOM.option({value: snowUI.snowPath.settings}, snowUI.snowText.menu.settings.name), 
+					React.DOM.option({value: snowUI.snowPath.link}, snowUI.snowText.menu.link.name)
 				)
 			)
 		);
@@ -308,7 +308,7 @@ snowUI.walletSelect = React.createClass({displayName: 'walletSelect',
 
 
 
-var UI = React.createClass({displayName: 'UI',
+snowUI.UI = React.createClass({displayName: 'UI',
 	mixins: [React.addons.LinkedStateMixin],
 	getDefaultProps: function() {
 		return {
@@ -360,7 +360,7 @@ var UI = React.createClass({displayName: 'UI',
 				clearInterval(snowUI.intervals.locktimer)
 				snowUI.intervals.locktimer = false
 				$('#walletbar').removeClass('flash-to-success')
-				if(snowUI.debug) snowlog.log('reset lock status')
+				if(snowUI.debug) snowLog.log('reset lock status')
 				if(state)_this.setState({locked:true,unlocked:false,lockstatus:0,unlockeduntil:false,unlockedtimeformat:false})
 			},
 			changelock: function(lock){
@@ -401,7 +401,7 @@ var UI = React.createClass({displayName: 'UI',
 								clearInterval(snowUI.intervals.locktimer)
 								snowUI.intervals.locktimer = false
 								walletbar(false)
-								if(snowUI.debug) snowlog.log('reset lock status')
+								if(snowUI.debug) snowLog.log('reset lock status')
 								_this.setState({locked:true,unlocked:false,lockstatus:0,unlockeduntil:false,unlockedtimeformat:false})
 							}
 							i++;
@@ -473,14 +473,14 @@ var UI = React.createClass({displayName: 'UI',
 	},
 	componentWillMount: function() {
 		//this.loadToggle()
-		if(snowUI.debug) snowlog.log('ui will mount')
+		if(snowUI.debug) snowLog.log('ui will mount')
 		//snowUI.loadingStart();
 		return false
 	},
 	componentDidMount: function() {
 		
 		if(!this.state.mounted) {
-			if(snowUI.debug) snowlog.log('ui is mounted')
+			if(snowUI.debug) snowLog.log('ui is mounted')
 			var update = {}
 			if(this.props.section !== undefined)update.section = this.props.section;
 			if(this.props.moon !== undefined)update.moon = this.props.moon;
@@ -513,12 +513,12 @@ var UI = React.createClass({displayName: 'UI',
 		
 		//grab array of available wallets
 			var _this = this
-			if(snowUI.debug) snowlog.log('update wallet list on new wallet')			
+			if(snowUI.debug) snowLog.log('update wallet list on new wallet')			
 			$.ajax({async:false,url: "/api/snowcoins/local/change-wallet"})
 				.done(function( resp,status,xhr ) {
 					
-					_csrf = xhr.getResponseHeader("x-snow-token");
-					if(snowUI.debug) snowlog.log('got wallies',resp.wally, props.wallet)
+					snowUI._csrf = xhr.getResponseHeader("x-snow-token");
+					if(snowUI.debug) snowLog.log('got wallies',resp.wally, props.wallet)
 					
 					//locater
 					var a = []; 
@@ -560,7 +560,7 @@ var UI = React.createClass({displayName: 'UI',
 					
 					}
 					newState.userSettings = resp.userSettings;
-					if(snowUI.debug) snowlog.log('set ui state ',newState)
+					if(snowUI.debug) snowLog.log('set ui state ',newState)
 					_this.setState(newState);
 					
 					
@@ -602,7 +602,7 @@ var UI = React.createClass({displayName: 'UI',
 		* but to many state changes affect the base UI,
 		* so it seems easier to keep all of our info here
 		* */
-		if(nextProps.section === snowPath.router.wallet && nextProps.wallet && nextProps.wallet !== undefined) {
+		if(nextProps.section === snowUI.snowPath.router.wallet && nextProps.wallet && nextProps.wallet !== undefined) {
 			if(nextProps.wallet === 'new') {
 				
 				//kill intervals
@@ -617,7 +617,7 @@ var UI = React.createClass({displayName: 'UI',
 				
 			} else if(nextProps.wallet !== this.state.wallet) {
 				
-				if(snowUI.debug) snowlog.log('should be a new wallet',nextProps.wallet ,this.state.wallet)
+				if(snowUI.debug) snowLog.log('should be a new wallet',nextProps.wallet ,this.state.wallet)
 				
 				React.unmountComponentAtNode(document.getElementById('snowcoins'));
 				
@@ -664,12 +664,12 @@ var UI = React.createClass({displayName: 'UI',
 		
 		update.requesting = false;
 		
-		if(snowUI.debug) snowlog.log('ui get props update state',update)
+		if(snowUI.debug) snowLog.log('ui get props update state',update)
 		
 		/* this is a grabber for the wallets
 		 * I let it run on every page change in case changes are made outside of this session
 		 * but it really only needs to run for the wallet section
-		 * if(nextProps.section === snowPath.router.wallet && nextProps.wallet !== this.state.wallet)
+		 * if(nextProps.section === snowUI.snowPath.router.wallet && nextProps.wallet !== this.state.wallet)
 		 * */
 		if(nextProps.wallet !== this.state.wallet)
 			this.getWallets(nextProps,update)
@@ -683,7 +683,7 @@ var UI = React.createClass({displayName: 'UI',
 	updateState: function(prop) {
 		if(typeof prop === 'object')
 			this.setState(prop);
-		if(snowUI.debug) snowlog.log('update state from outside/child component',prop)	
+		if(snowUI.debug) snowLog.log('update state from outside/child component',prop)	
 		return false
 	},
 	changeTheme: function() {
@@ -702,10 +702,10 @@ var UI = React.createClass({displayName: 'UI',
 		
 		snowUI.ajax.GET(url,data,function(resp) {
 			if(resp.success === true) {
-				if(snowUI.debug) snowlog.info('set user theme')
+				if(snowUI.debug) snowLog.info('set user theme')
 				
 			} else {
-				if(snowUI.debug) snowlog.error(resp)
+				if(snowUI.debug) snowLog.error(resp)
 				
 			}
 			return false
@@ -728,7 +728,7 @@ var UI = React.createClass({displayName: 'UI',
 				bone.router.navigate(route, {trigger:trigger});
 			});
 		}
-		if(snowUI.debug) snowlog.log('value route', 'skip loading: '+skipload+', trigger: '+trigger,snowPath.root + route)
+		if(snowUI.debug) snowLog.log('value route', 'skip loading: '+skipload+', trigger: '+trigger,snowUI.snowPath.root + route)
 		return false
 	},
 	hrefRoute: function(route) {
@@ -736,11 +736,11 @@ var UI = React.createClass({displayName: 'UI',
 		var _this = this
 		var newroute = $(route.target)	
 		snowUI.loaderFetch(function(){
-			if(snowUI.debug) snowlog.log('href loader route',snowPath.root,newroute)
+			if(snowUI.debug) snowLog.log('href loader route',snowUI.snowPath.root,newroute)
 			var moon =  newroute[0] ? newroute.closest('a')[0].pathname : false
 			if(moon) {
-				moon = moon.replace(("/" + snowPath.router.root + "/"),'')
-				if(snowUI.debug) snowlog.log('moon owner',moon)
+				moon = moon.replace(("/" + snowUI.snowPath.router.root + "/"),'')
+				if(snowUI.debug) snowLog.log('moon owner',moon)
 				bone.router.navigate(moon, {trigger:true});
 			} else {
 				snowUI.flash('error','Link error',2000)
@@ -755,15 +755,15 @@ var UI = React.createClass({displayName: 'UI',
 	buttonRoute: function(route) {
 		route.preventDefault();
 		snowUI.loaderFetch(function(){
-			bone.router.navigate(snowPath.root + $(route.target)[0].dataset.snowmoon, {trigger:true});
-			if(snowUI.debug) snowlog.log('button route',$(route.target)[0].dataset.snowmoon)
+			bone.router.navigate(snowUI.snowPath.root + $(route.target)[0].dataset.snowmoon, {trigger:true});
+			if(snowUI.debug) snowLog.log('button route',$(route.target)[0].dataset.snowmoon)
 
 		});
 		return false
 	},
 	eggy: function() {
 		
-		eggy();
+		snowUI.eggy();
 	},
 	togglePassFields: function() {
 		this.setState({showPasswords:!this.state.showPasswords})
@@ -785,22 +785,22 @@ var UI = React.createClass({displayName: 'UI',
 		
 		//set up our psuedo routes
 		var comp = {}
-		comp[snowPath.router.wallet]=snowUI.wallet.UI;
-		comp[snowPath.router.receive]=snowUI.receive.UI;
-		comp[snowPath.router.settings]=snowUI.settings.UI;
-		comp[snowPath.router.inq]=snowUI.link.UI;
+		comp[snowUI.snowPath.router.wallet]=snowUI.wallet.UI;
+		comp[snowUI.snowPath.router.receive]=snowUI.receive.UI;
+		comp[snowUI.snowPath.router.settings]=snowUI.settings.UI;
+		comp[snowUI.snowPath.router.inq]=snowUI.link.UI;
 		
 		var gates = this.state.gates
 		
 		var mycomp = comp[this.props.section]
 		if(!mycomp){
-			if(snowUI.debug) snowlog.error(' mycomp failed, probably a 404:',mycomp,comp[this.props.section])
+			if(snowUI.debug) snowLog.error(' mycomp failed, probably a 404:',mycomp,comp[this.props.section])
 			mycomp=snowUI.wallet.UI
 			gates.showWarning = '404 Not Found';
 			gates.showWarningPage = true;
 		}
 		
-		if(snowUI.debug) snowlog.log('check state UI',this.state.mounted,mycomp,this.props.section,gates);
+		if(snowUI.debug) snowLog.log('check state UI',this.state.mounted,mycomp,this.props.section,gates);
 		
 		if(this.state.mounted) {
 			var mountwallet = function() {
@@ -823,7 +823,7 @@ var UI = React.createClass({displayName: 'UI',
 		
 		var testnet = this.state.testnet ? 'testnet':''
 		
-		if(snowUI.debug) snowlog.log('testnet',this.state.testnet)
+		if(snowUI.debug) snowLog.log('testnet',this.state.testnet)
 		  	
 		//mount
 		return (
@@ -832,23 +832,23 @@ var UI = React.createClass({displayName: 'UI',
 				React.DOM.div({id: "walletbar", className: "walletbar affix"}, 
 					  React.DOM.div({className: "wallet"}, 
 						React.DOM.div({className: "button-group"}, 
-							Btn({bsStyle: "link", 'data-toggle': "dropdown", className: "dropdown-toggle"}, snowtext.menu.menu.name), 
+							snowUI.Btn({bsStyle: "link", 'data-toggle': "dropdown", className: "dropdown-toggle"}, snowUI.snowText.menu.menu.name), 
 							React.DOM.ul({className: "dropdown-menu", role: "menu"}, 
 												
-								React.DOM.li({className: "nav-item-home"}, " ", React.DOM.a({onClick: this.hrefRoute, href:  snowPath.root + snowPath.wallet}, snowtext.menu.list.name)), 
-								React.DOM.li({className: "nav-item-receive"}, React.DOM.a({onClick: this.hrefRoute, href:  snowPath.root + snowPath.receive, title: snowtext.menu.receive.title}, snowtext.menu.receive.name)), 
-								React.DOM.li({className: "nav-item-add"}, " ", React.DOM.a({onClick: this.hrefRoute, href: snowPath.wallet + '/new'}, snowtext.menu.plus.name)), 
-								React.DOM.li({className: "nav-item-settings"}, React.DOM.a({onClick: this.hrefRoute, href:  snowPath.root + snowPath.settings, title: snowtext.menu.settings.title}, snowtext.menu.settings.name)), 
+								React.DOM.li({className: "nav-item-home"}, " ", React.DOM.a({onClick: this.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.wallet}, snowUI.snowText.menu.list.name)), 
+								React.DOM.li({className: "nav-item-receive"}, React.DOM.a({onClick: this.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.receive, title: snowUI.snowText.menu.receive.title}, snowUI.snowText.menu.receive.name)), 
+								React.DOM.li({className: "nav-item-add"}, " ", React.DOM.a({onClick: this.hrefRoute, href: snowUI.snowPath.wallet + '/new'}, snowUI.snowText.menu.plus.name)), 
+								React.DOM.li({className: "nav-item-settings"}, React.DOM.a({onClick: this.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.settings, title: snowUI.snowText.menu.settings.title}, snowUI.snowText.menu.settings.name)), 
 								
 								React.DOM.li({className: "divider"}), 
-								React.DOM.li({className: "nav-item-settings"}, React.DOM.a({onClick: this.hrefRoute, href:  snowPath.root + snowPath.settings + '/language', title: snowlanguages.mylanguage}, snowlanguages.mylanguage)), 
+								React.DOM.li({className: "nav-item-settings"}, React.DOM.a({onClick: this.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.settings + '/language', title: snowUI.snowLanguages.mylanguage}, snowUI.snowLanguages.mylanguage)), 
 								React.DOM.li({className: "divider"}), 
 								React.DOM.li({className: "nav-item-settings"}, React.DOM.div(null, React.DOM.div({className: "walletmenuspan"}, snowUI.snowcat), React.DOM.div({className: "clearfix"}), " ")), 
 								React.DOM.li({className: "divider"}), 
 								React.DOM.li(null, 
 									React.DOM.div(null, 
 										React.DOM.div({onClick: this.changeTheme, className: "walletmenuspan changetheme ", title: "Switch between the light and dark theme", 'data-toggle': "", 'data-placement': "bottom", 'data-container': "body", 'data-trigger': "hover focus", style: {cursor:'pointer'}}, React.DOM.span({className: "glyphicon glyphicon-adjust"})), 
-										React.DOM.div({className: "walletmenuspan ", title: ".link", 'data-toggle': "", 'data-placement': "bottom", 'data-container': "body", 'data-trigger': "hover focus"}, " ", React.DOM.a({onClick: this.hrefRoute, href:  snowPath.root + snowPath.inq}, React.DOM.span({className: "glyphicon glyphicon-globe"}))), 
+										React.DOM.div({className: "walletmenuspan ", title: ".link", 'data-toggle': "", 'data-placement': "bottom", 'data-container': "body", 'data-trigger': "hover focus"}, " ", React.DOM.a({onClick: this.hrefRoute, href:  snowUI.snowPath.root + snowUI.snowPath.inq}, React.DOM.span({className: "glyphicon glyphicon-globe"}))), 
 										React.DOM.div({className: "walletmenuspan ", title: "Logout", 'data-toggle': "", 'data-placement': "right", 'data-container': "body", 'data-trigger': "hover focus"}, " ", React.DOM.a({href: "/snowout"}, " ", React.DOM.span({className: "glyphicon glyphicon-log-out"}))), 
 										React.DOM.div({className: "clearfix"})
 									)
@@ -888,8 +888,8 @@ var UI = React.createClass({displayName: 'UI',
 					)
 				), 
 			/* add the modals */	
-			unlockWallet.call(this), 
-			encryptWallet.call(this)
+			snowUI.snowModals.unlockWallet.call(this), 
+			snowUI.snowModals.encryptWallet.call(this)
 				
 			/* end snowpi-body */
 			)

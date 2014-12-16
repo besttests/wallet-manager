@@ -8,17 +8,17 @@
 
 /* you can use animation and other transition goodies
  * */
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+snowUI.ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 
 /* bootstrap components
  * */
-var Flash = ReactBootstrap.Alert;
-var Btn = ReactBootstrap.Button;
-var Button = Btn;
-var Modal = ReactBootstrap.Modal;
-var OverlayMixin = ReactBootstrap.OverlayMixin;
-var ButtonToolbar = ReactBootstrap.ButtonToolbar;
+snowUI.Flash = ReactBootstrap.Alert;
+snowUI.Btn = ReactBootstrap.Button;
+snowUI.Button = snowUI.Btn;
+snowUI.Modal = ReactBootstrap.Modal;
+snowUI.OverlayMixin = ReactBootstrap.OverlayMixin;
+snowUI.ButtonToolbar = ReactBootstrap.ButtonToolbar;
 
 /* create the container object
  * */
@@ -35,15 +35,15 @@ snowUI.SnowpiFlash = React.createClass({
 		return ({showclass:'info'});
 	},
 	render: function() {
-		if(snowUI.debug) snowlog.log(this.props);
+		if(snowUI.debug) snowLog.log(this.props);
 		if(!this.state.isVisible)
 		    return null;
 
 		var message = this.props.message ? this.props.message : this.props.children;
 		return (
-		    <Flash bsStyle={this.props.showclass} onDismiss={this.dismissFlash}>
+		    <snowUI.Flash bsStyle={this.props.showclass} onDismiss={this.dismissFlash}>
 			<p>{message}</p>
-		    </Flash>
+		    </snowUI.Flash>
 		);
 	},
 	
@@ -65,7 +65,7 @@ snowUI.SnowpiMan = React.createClass({
 	render: function() {
 	    
 	    return this.transferPropsTo(
-		<div style={this.props.divstyle} dangerouslySetInnerHTML={{__html: snowtext.logoman}} />
+		<div style={this.props.divstyle} dangerouslySetInnerHTML={{__html: snowUI.snowText.logoman}} />
 	    );
 	}
 });
@@ -77,7 +77,7 @@ snowUI.SnowpiMan = React.createClass({
 snowUI.leftMenu = React.createClass({
 	getInitialState: function() {
 		return ({
-			config:this.props.config || {section:snowPath.router.wallet,wallet:'all',moon:'overview'}
+			config:this.props.config || {section:snowUI.snowPath.router.wallet,wallet:'all',moon:'overview'}
 		})
 	},
 	componentWillReceiveProps: function(nextProps) {
@@ -91,14 +91,14 @@ snowUI.leftMenu = React.createClass({
 	render: function() {
 		var showmenu
 		
-		if(this.state.config.section === snowPath.router.wallet) {
+		if(this.state.config.section === snowUI.snowPath.router.wallet) {
 			
 			if(this.state.config.wallet && this.state.config.wallet !== 'new')
 				showmenu = snowUI.walletMenu 
 			else
 				showmenu = snowUI.defaultMenu
 				
-		} else if(this.state.config.section === snowPath.router.receive || this.state.config.section === snowPath.router.settings) {
+		} else if(this.state.config.section === snowUI.snowPath.router.receive || this.state.config.section === snowUI.snowPath.router.settings) {
 			
 			showmenu = snowUI.receiveMenu
 			
@@ -107,7 +107,7 @@ snowUI.leftMenu = React.createClass({
 			showmenu = snowUI.defaultMenu
 		}	
 		
-		if(snowUI.debug) snowlog.log('main menu component',this.state.config)
+		if(snowUI.debug) snowLog.log('main menu component',this.state.config)
 		
 		return (
 			<div className="menufade"><showmenu config={this.state.config} /> </div>			
@@ -119,7 +119,7 @@ snowUI.leftMenu = React.createClass({
 snowUI.walletMenu = React.createClass({
 	getInitialState: function() {
 		return ({
-			config:this.props.config || {section:snowPath.wallet,wallet:false,moon:false}
+			config:this.props.config || {section:snowUI.snowPath.wallet,wallet:false,moon:false}
 		})
 	},
 	componentWillReceiveProps: function(nextProps) {
@@ -144,12 +144,12 @@ snowUI.walletMenu = React.createClass({
 		var moon = $(e.target).parent()[0].dataset.snowmoon;
 		
 		if(moon !== undefined)
-			snowUI.methods.valueRoute(snowPath.wallet + '/' + this.state.config.wallet + '/' + moon);
+			snowUI.methods.valueRoute(snowUI.snowPath.wallet + '/' + this.state.config.wallet + '/' + moon);
 		else {
 			
 			var moon = $(e.target)[0].dataset.snowmoon;
 			if(moon !== undefined) {
-				snowUI.methods.valueRoute(snowPath.wallet + '/' + this.state.config.wallet + '/' + moon);
+				snowUI.methods.valueRoute(snowUI.snowPath.wallet + '/' + this.state.config.wallet + '/' + moon);
 			} else {
 				snowUI.flash('error','Link error',1000)
 				
@@ -167,11 +167,11 @@ snowUI.walletMenu = React.createClass({
 		var data = {'action':'request',wally:_this.props.config.wally.key}
 		
 		snowUI.ajax.GET(url,data,function(resp) {
-			if(snowUI.debug) snowlog.info('remove wallet request from wallet menu',resp)
+			if(snowUI.debug) snowLog.info('remove wallet request from wallet menu',resp)
 			if(resp.success === true) {			
 				
 				snowUI._wallets[_this.props.config.wally.key] = {removeKey: resp.key};
-				snowUI.methods.valueRoute(snowPath.wallet + '/' + _this.props.config.wally.key + '/remove');
+				snowUI.methods.valueRoute(snowUI.snowPath.wallet + '/' + _this.props.config.wally.key + '/remove');
 			
 			} else {
 				
@@ -187,22 +187,22 @@ snowUI.walletMenu = React.createClass({
 		var testnet = this.state.config.testnet ? (<div id="testnet-flash" title="" data-toggle="tooltip" data-placement="right" data-container="body" className="dogemenulink" data-original-title="This wallet is on the TESTNET!" style={{display:'block'}}><span className="glyphicon glyphicon-text-width"></span> TESTNET </div>) : ''
 		
 		var _this = this;
-	    if(snowUI.debug) snowlog.log('wallet menu component')
+	    if(snowUI.debug) snowLog.log('wallet menu component')
 	    return (
 		
 			<div id="menuwallet " >
 				{testnet}
-				<a  onClick={snowUI.methods.hrefRoute} href={ snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/dashboard'} data-snowmoon="dashboard" id="dogedash" data-container="#menuspy"  className="dogemenulink " title={snowtext.menu.dashboard.title}> <span className="glyphicon glyphicon-th"></span> {snowtext.menu.dashboard.name}</a>
+				<a  onClick={snowUI.methods.hrefRoute} href={ snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/dashboard'} data-snowmoon="dashboard" id="dogedash" data-container="#menuspy"  className="dogemenulink " title={snowUI.snowText.menu.dashboard.title}> <span className="glyphicon glyphicon-th"></span> {snowUI.snowText.menu.dashboard.name}</a>
 				
-				<a  onClick={snowUI.methods.hrefRoute} href={ snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/accounts'} data-snowmoon="accounts" id="dogeacc" data-container="#menuspy"  className="dogemenulink" title={snowtext.menu.accounts.title}> <span className="glyphicon glyphicon-list"></span> {snowtext.menu.accounts.name}</a>
+				<a  onClick={snowUI.methods.hrefRoute} href={ snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/accounts'} data-snowmoon="accounts" id="dogeacc" data-container="#menuspy"  className="dogemenulink" title={snowUI.snowText.menu.accounts.title}> <span className="glyphicon glyphicon-list"></span> {snowUI.snowText.menu.accounts.name}</a>
 				
-				<a  onClick={snowUI.methods.hrefRoute} href={ snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/send'}data-snowmoon="send" id="dogesend" data-container="#menuspy"  className="dogemenulink" title={snowtext.menu.send.title}> <span className="glyphicon glyphicon-share"></span> {snowtext.menu.send.name}</a>
+				<a  onClick={snowUI.methods.hrefRoute} href={ snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/send'}data-snowmoon="send" id="dogesend" data-container="#menuspy"  className="dogemenulink" title={snowUI.snowText.menu.send.title}> <span className="glyphicon glyphicon-share"></span> {snowUI.snowText.menu.send.name}</a>
 				
-				<a  onClick={snowUI.methods.hrefRoute} href={ snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/transactions'} data-snowmoon="transactions" id="dogetx" data-container="#menuspy" className="dogemenulink" title={snowtext.menu.tx.title}> <span className="glyphicon glyphicon-list-alt"></span> {snowtext.menu.tx.name}</a>
+				<a  onClick={snowUI.methods.hrefRoute} href={ snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/transactions'} data-snowmoon="transactions" id="dogetx" data-container="#menuspy" className="dogemenulink" title={snowUI.snowText.menu.tx.title}> <span className="glyphicon glyphicon-list-alt"></span> {snowUI.snowText.menu.tx.name}</a>
 				
-				<a  onClick={snowUI.methods.hrefRoute} href={ snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/update'} data-snowmoon="update" id="dogeupdate" data-container="#menuspy"  className="dogemenulink" title={snowtext.menu.update.title}><span className="glyphicon glyphicon-pencil"></span> {snowtext.menu.update.name} <span id="updatecoinspan" style={{display:"none"}}></span></a>
+				<a  onClick={snowUI.methods.hrefRoute} href={ snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/update'} data-snowmoon="update" id="dogeupdate" data-container="#menuspy"  className="dogemenulink" title={snowUI.snowText.menu.update.title}><span className="glyphicon glyphicon-pencil"></span> {snowUI.snowText.menu.update.name} <span id="updatecoinspan" style={{display:"none"}}></span></a>
 				
-				<a onClick={this.removeWallet} data-snowmoon="remove" id="dogeremove" data-container="#menuspy"  className="dogemenulink" title={snowtext.menu.remove.title}><span className="glyphicon glyphicon-trash"></span> {snowtext.menu.remove.name} <span id="updatecoinspan" style={{display:"none"}}></span></a>
+				<a onClick={this.removeWallet} data-snowmoon="remove" id="dogeremove" data-container="#menuspy"  className="dogemenulink" title={snowUI.snowText.menu.remove.title}><span className="glyphicon glyphicon-trash"></span> {snowUI.snowText.menu.remove.name} <span id="updatecoinspan" style={{display:"none"}}></span></a>
 			</div>
 				
 		
@@ -213,7 +213,7 @@ snowUI.walletMenu = React.createClass({
 snowUI.receiveMenu = React.createClass({
 	getInitialState: function() {
 		return ({
-			config:this.props.config || {section:snowPath.wallet,wallet:'all',moon:'overview'}
+			config:this.props.config || {section:snowUI.snowPath.wallet,wallet:'all',moon:'overview'}
 		})
 	},
 	componentWillReceiveProps: function(nextProps) {
@@ -227,15 +227,15 @@ snowUI.receiveMenu = React.createClass({
 	},
 	render: function() {
 	   
-	    if(snowUI.debug) snowlog.log('receive menu component')
+	    if(snowUI.debug) snowLog.log('receive menu component')
 	    return (
 		
 			<div id="menudcc" >
-				<a  onClick={snowUI.methods.hrefRoute} href={ snowPath.root + snowPath.wallet } data-snowmoon={snowPath.router.wallet} id="dogewallets" data-container="#menuspy"  className="dogedccmenulink" title={snowtext.menu.left.wallet.title}> <span onClick={this.menuClick}  data-snowmoon={snowPath.wallet}  className="glyphicon glyphicon-briefcase"></span> {snowtext.menu.left.wallet.name}</a>
+				<a  onClick={snowUI.methods.hrefRoute} href={ snowUI.snowPath.root + snowUI.snowPath.wallet } data-snowmoon={snowUI.snowPath.router.wallet} id="dogewallets" data-container="#menuspy"  className="dogedccmenulink" title={snowUI.snowText.menu.left.wallet.title}> <span onClick={this.menuClick}  data-snowmoon={snowUI.snowPath.wallet}  className="glyphicon glyphicon-briefcase"></span> {snowUI.snowText.menu.left.wallet.name}</a>
 				
-				<a onClick={snowUI.methods.hrefRoute} href={ snowPath.root + snowPath.receive }  data-snowmoon={snowPath.router.receive} id="dogedccsetup" data-container="#menuspy" className="dogedccmenulink" title={snowtext.menu.left.receive.title}> <span  onClick={this.menuClick}  data-snowmoon={snowPath.receive} className="glyphicon glyphicon-tasks"></span> {snowtext.menu.left.receive.name}</a>
+				<a onClick={snowUI.methods.hrefRoute} href={ snowUI.snowPath.root + snowUI.snowPath.receive }  data-snowmoon={snowUI.snowPath.router.receive} id="dogedccsetup" data-container="#menuspy" className="dogedccmenulink" title={snowUI.snowText.menu.left.receive.title}> <span  onClick={this.menuClick}  data-snowmoon={snowUI.snowPath.receive} className="glyphicon glyphicon-tasks"></span> {snowUI.snowText.menu.left.receive.name}</a>
 				
-				<a onClick={snowUI.methods.hrefRoute} href={ snowPath.root + snowPath.settings }  data-snowmoon={snowPath.router.settings} id="dogedccsettings" data-container="#menuspy"  className="dogedccmenulink" title={snowtext.menu.left.settings.title}> <span  onClick={this.menuClick}  data-snowmoon={snowPath.settings} className="glyphicon glyphicon-cog"></span> {snowtext.menu.left.settings.name}</a>
+				<a onClick={snowUI.methods.hrefRoute} href={ snowUI.snowPath.root + snowUI.snowPath.settings }  data-snowmoon={snowUI.snowPath.router.settings} id="dogedccsettings" data-container="#menuspy"  className="dogedccmenulink" title={snowUI.snowText.menu.left.settings.title}> <span  onClick={this.menuClick}  data-snowmoon={snowUI.snowPath.settings} className="glyphicon glyphicon-cog"></span> {snowUI.snowText.menu.left.settings.name}</a>
 				
 			</div>
 				
@@ -267,12 +267,12 @@ snowUI.walletSelect = React.createClass({
 					_this.props.route(val)	
 				} else {
 					if(!config.moon)config.moon = 'dashboard';
-					_this.props.route(snowPath.wallet + '/' + val + '/' + config.moon)
+					_this.props.route(snowUI.snowPath.wallet + '/' + val + '/' + config.moon)
 				}
 			},
 			effect: "fade"
 		});
-		//if(snowUI.debug) snowlog.log('wallet select updated')
+		//if(snowUI.debug) snowLog.log('wallet select updated')
 	},
 	render: function() {
 		var wallets;
@@ -283,23 +283,23 @@ snowUI.walletSelect = React.createClass({
 				);
 			});
 		}
-		if(this.props.section === snowPath.router.wallet) {
-			var _df = (this.props.wallet) ? this.props.wallet : snowPath.root + snowPath.wallet;
+		if(this.props.section === snowUI.snowPath.router.wallet) {
+			var _df = (this.props.wallet) ? this.props.wallet : snowUI.snowPath.root + snowUI.snowPath.wallet;
 		} else {
 			var _df = '/' + this.props.section;
 		} 
-		//if(snowUI.debug) snowlog.log(_df)
+		//if(snowUI.debug) snowLog.log(_df)
 		return this.transferPropsTo(
 			<div className="list">
 				<div className="walletmsg" style={{display:'none'}} />
 				<select onChange={this.props.route} id="walletselect" value={_df}>
-					<option  value={snowPath.root + snowPath.wallet} >{snowtext.menu.selectWallet.name}</option>
+					<option  value={snowUI.snowPath.root + snowUI.snowPath.wallet} >{snowUI.snowText.menu.selectWallet.name}</option>
 					{wallets}
 					<optgroup></optgroup>
-					<option  value={snowPath.wallet + '/new'}  >{snowtext.menu.plus.name}</option>
-					<option value={snowPath.receive}  >{snowtext.menu.receive.name}</option>
-					<option value={snowPath.settings}  >{snowtext.menu.settings.name}</option>
-					<option value={snowPath.link}  >{snowtext.menu.link.name}</option>
+					<option  value={snowUI.snowPath.wallet + '/new'}  >{snowUI.snowText.menu.plus.name}</option>
+					<option value={snowUI.snowPath.receive}  >{snowUI.snowText.menu.receive.name}</option>
+					<option value={snowUI.snowPath.settings}  >{snowUI.snowText.menu.settings.name}</option>
+					<option value={snowUI.snowPath.link}  >{snowUI.snowText.menu.link.name}</option>
 				</select>
 			</div>
 		);
@@ -308,7 +308,7 @@ snowUI.walletSelect = React.createClass({
 
 
 
-var UI = React.createClass({
+snowUI.UI = React.createClass({
 	mixins: [React.addons.LinkedStateMixin],
 	getDefaultProps: function() {
 		return {
@@ -360,7 +360,7 @@ var UI = React.createClass({
 				clearInterval(snowUI.intervals.locktimer)
 				snowUI.intervals.locktimer = false
 				$('#walletbar').removeClass('flash-to-success')
-				if(snowUI.debug) snowlog.log('reset lock status')
+				if(snowUI.debug) snowLog.log('reset lock status')
 				if(state)_this.setState({locked:true,unlocked:false,lockstatus:0,unlockeduntil:false,unlockedtimeformat:false})
 			},
 			changelock: function(lock){
@@ -401,7 +401,7 @@ var UI = React.createClass({
 								clearInterval(snowUI.intervals.locktimer)
 								snowUI.intervals.locktimer = false
 								walletbar(false)
-								if(snowUI.debug) snowlog.log('reset lock status')
+								if(snowUI.debug) snowLog.log('reset lock status')
 								_this.setState({locked:true,unlocked:false,lockstatus:0,unlockeduntil:false,unlockedtimeformat:false})
 							}
 							i++;
@@ -473,14 +473,14 @@ var UI = React.createClass({
 	},
 	componentWillMount: function() {
 		//this.loadToggle()
-		if(snowUI.debug) snowlog.log('ui will mount')
+		if(snowUI.debug) snowLog.log('ui will mount')
 		//snowUI.loadingStart();
 		return false
 	},
 	componentDidMount: function() {
 		
 		if(!this.state.mounted) {
-			if(snowUI.debug) snowlog.log('ui is mounted')
+			if(snowUI.debug) snowLog.log('ui is mounted')
 			var update = {}
 			if(this.props.section !== undefined)update.section = this.props.section;
 			if(this.props.moon !== undefined)update.moon = this.props.moon;
@@ -513,12 +513,12 @@ var UI = React.createClass({
 		
 		//grab array of available wallets
 			var _this = this
-			if(snowUI.debug) snowlog.log('update wallet list on new wallet')			
+			if(snowUI.debug) snowLog.log('update wallet list on new wallet')			
 			$.ajax({async:false,url: "/api/snowcoins/local/change-wallet"})
 				.done(function( resp,status,xhr ) {
 					
-					_csrf = xhr.getResponseHeader("x-snow-token");
-					if(snowUI.debug) snowlog.log('got wallies',resp.wally, props.wallet)
+					snowUI._csrf = xhr.getResponseHeader("x-snow-token");
+					if(snowUI.debug) snowLog.log('got wallies',resp.wally, props.wallet)
 					
 					//locater
 					var a = []; 
@@ -560,7 +560,7 @@ var UI = React.createClass({
 					
 					}
 					newState.userSettings = resp.userSettings;
-					if(snowUI.debug) snowlog.log('set ui state ',newState)
+					if(snowUI.debug) snowLog.log('set ui state ',newState)
 					_this.setState(newState);
 					
 					
@@ -602,7 +602,7 @@ var UI = React.createClass({
 		* but to many state changes affect the base UI,
 		* so it seems easier to keep all of our info here
 		* */
-		if(nextProps.section === snowPath.router.wallet && nextProps.wallet && nextProps.wallet !== undefined) {
+		if(nextProps.section === snowUI.snowPath.router.wallet && nextProps.wallet && nextProps.wallet !== undefined) {
 			if(nextProps.wallet === 'new') {
 				
 				//kill intervals
@@ -617,7 +617,7 @@ var UI = React.createClass({
 				
 			} else if(nextProps.wallet !== this.state.wallet) {
 				
-				if(snowUI.debug) snowlog.log('should be a new wallet',nextProps.wallet ,this.state.wallet)
+				if(snowUI.debug) snowLog.log('should be a new wallet',nextProps.wallet ,this.state.wallet)
 				
 				React.unmountComponentAtNode(document.getElementById('snowcoins'));
 				
@@ -664,12 +664,12 @@ var UI = React.createClass({
 		
 		update.requesting = false;
 		
-		if(snowUI.debug) snowlog.log('ui get props update state',update)
+		if(snowUI.debug) snowLog.log('ui get props update state',update)
 		
 		/* this is a grabber for the wallets
 		 * I let it run on every page change in case changes are made outside of this session
 		 * but it really only needs to run for the wallet section
-		 * if(nextProps.section === snowPath.router.wallet && nextProps.wallet !== this.state.wallet)
+		 * if(nextProps.section === snowUI.snowPath.router.wallet && nextProps.wallet !== this.state.wallet)
 		 * */
 		if(nextProps.wallet !== this.state.wallet)
 			this.getWallets(nextProps,update)
@@ -683,7 +683,7 @@ var UI = React.createClass({
 	updateState: function(prop) {
 		if(typeof prop === 'object')
 			this.setState(prop);
-		if(snowUI.debug) snowlog.log('update state from outside/child component',prop)	
+		if(snowUI.debug) snowLog.log('update state from outside/child component',prop)	
 		return false
 	},
 	changeTheme: function() {
@@ -702,10 +702,10 @@ var UI = React.createClass({
 		
 		snowUI.ajax.GET(url,data,function(resp) {
 			if(resp.success === true) {
-				if(snowUI.debug) snowlog.info('set user theme')
+				if(snowUI.debug) snowLog.info('set user theme')
 				
 			} else {
-				if(snowUI.debug) snowlog.error(resp)
+				if(snowUI.debug) snowLog.error(resp)
 				
 			}
 			return false
@@ -728,7 +728,7 @@ var UI = React.createClass({
 				bone.router.navigate(route, {trigger:trigger});
 			});
 		}
-		if(snowUI.debug) snowlog.log('value route', 'skip loading: '+skipload+', trigger: '+trigger,snowPath.root + route)
+		if(snowUI.debug) snowLog.log('value route', 'skip loading: '+skipload+', trigger: '+trigger,snowUI.snowPath.root + route)
 		return false
 	},
 	hrefRoute: function(route) {
@@ -736,11 +736,11 @@ var UI = React.createClass({
 		var _this = this
 		var newroute = $(route.target)	
 		snowUI.loaderFetch(function(){
-			if(snowUI.debug) snowlog.log('href loader route',snowPath.root,newroute)
+			if(snowUI.debug) snowLog.log('href loader route',snowUI.snowPath.root,newroute)
 			var moon =  newroute[0] ? newroute.closest('a')[0].pathname : false
 			if(moon) {
-				moon = moon.replace(("/" + snowPath.router.root + "/"),'')
-				if(snowUI.debug) snowlog.log('moon owner',moon)
+				moon = moon.replace(("/" + snowUI.snowPath.router.root + "/"),'')
+				if(snowUI.debug) snowLog.log('moon owner',moon)
 				bone.router.navigate(moon, {trigger:true});
 			} else {
 				snowUI.flash('error','Link error',2000)
@@ -755,15 +755,15 @@ var UI = React.createClass({
 	buttonRoute: function(route) {
 		route.preventDefault();
 		snowUI.loaderFetch(function(){
-			bone.router.navigate(snowPath.root + $(route.target)[0].dataset.snowmoon, {trigger:true});
-			if(snowUI.debug) snowlog.log('button route',$(route.target)[0].dataset.snowmoon)
+			bone.router.navigate(snowUI.snowPath.root + $(route.target)[0].dataset.snowmoon, {trigger:true});
+			if(snowUI.debug) snowLog.log('button route',$(route.target)[0].dataset.snowmoon)
 
 		});
 		return false
 	},
 	eggy: function() {
 		
-		eggy();
+		snowUI.eggy();
 	},
 	togglePassFields: function() {
 		this.setState({showPasswords:!this.state.showPasswords})
@@ -785,22 +785,22 @@ var UI = React.createClass({
 		
 		//set up our psuedo routes
 		var comp = {}
-		comp[snowPath.router.wallet]=snowUI.wallet.UI;
-		comp[snowPath.router.receive]=snowUI.receive.UI;
-		comp[snowPath.router.settings]=snowUI.settings.UI;
-		comp[snowPath.router.inq]=snowUI.link.UI;
+		comp[snowUI.snowPath.router.wallet]=snowUI.wallet.UI;
+		comp[snowUI.snowPath.router.receive]=snowUI.receive.UI;
+		comp[snowUI.snowPath.router.settings]=snowUI.settings.UI;
+		comp[snowUI.snowPath.router.inq]=snowUI.link.UI;
 		
 		var gates = this.state.gates
 		
 		var mycomp = comp[this.props.section]
 		if(!mycomp){
-			if(snowUI.debug) snowlog.error(' mycomp failed, probably a 404:',mycomp,comp[this.props.section])
+			if(snowUI.debug) snowLog.error(' mycomp failed, probably a 404:',mycomp,comp[this.props.section])
 			mycomp=snowUI.wallet.UI
 			gates.showWarning = '404 Not Found';
 			gates.showWarningPage = true;
 		}
 		
-		if(snowUI.debug) snowlog.log('check state UI',this.state.mounted,mycomp,this.props.section,gates);
+		if(snowUI.debug) snowLog.log('check state UI',this.state.mounted,mycomp,this.props.section,gates);
 		
 		if(this.state.mounted) {
 			var mountwallet = function() {
@@ -823,7 +823,7 @@ var UI = React.createClass({
 		
 		var testnet = this.state.testnet ? 'testnet':''
 		
-		if(snowUI.debug) snowlog.log('testnet',this.state.testnet)
+		if(snowUI.debug) snowLog.log('testnet',this.state.testnet)
 		  	
 		//mount
 		return (
@@ -832,23 +832,23 @@ var UI = React.createClass({
 				<div id="walletbar"  className="walletbar affix">
 					  <div className="wallet">
 						<div className="button-group">
-							<Btn bsStyle="link" data-toggle="dropdown" className="dropdown-toggle">{snowtext.menu.menu.name}</Btn>
+							<snowUI.Btn bsStyle="link" data-toggle="dropdown" className="dropdown-toggle">{snowUI.snowText.menu.menu.name}</snowUI.Btn>
 							<ul className="dropdown-menu" role="menu" >
 												
-								<li className="nav-item-home"> <a onClick={this.hrefRoute} href={ snowPath.root + snowPath.wallet } >{snowtext.menu.list.name}</a></li>
-								<li className="nav-item-receive"><a onClick={this.hrefRoute} href={ snowPath.root + snowPath.receive} title={snowtext.menu.receive.title}>{snowtext.menu.receive.name}</a></li>
-								<li className="nav-item-add"> <a onClick={this.hrefRoute} href={snowPath.wallet + '/new'} >{snowtext.menu.plus.name}</a></li>
-								<li className="nav-item-settings"><a onClick={this.hrefRoute} href={ snowPath.root + snowPath.settings} title={snowtext.menu.settings.title}>{snowtext.menu.settings.name}</a></li>
+								<li className="nav-item-home"> <a onClick={this.hrefRoute} href={ snowUI.snowPath.root + snowUI.snowPath.wallet } >{snowUI.snowText.menu.list.name}</a></li>
+								<li className="nav-item-receive"><a onClick={this.hrefRoute} href={ snowUI.snowPath.root + snowUI.snowPath.receive} title={snowUI.snowText.menu.receive.title}>{snowUI.snowText.menu.receive.name}</a></li>
+								<li className="nav-item-add"> <a onClick={this.hrefRoute} href={snowUI.snowPath.wallet + '/new'} >{snowUI.snowText.menu.plus.name}</a></li>
+								<li className="nav-item-settings"><a onClick={this.hrefRoute} href={ snowUI.snowPath.root + snowUI.snowPath.settings} title={snowUI.snowText.menu.settings.title}>{snowUI.snowText.menu.settings.name}</a></li>
 								
 								<li className="divider" />
-								<li className="nav-item-settings"><a onClick={this.hrefRoute} href={ snowPath.root + snowPath.settings + '/language'} title={snowlanguages.mylanguage}>{snowlanguages.mylanguage}</a></li>
+								<li className="nav-item-settings"><a onClick={this.hrefRoute} href={ snowUI.snowPath.root + snowUI.snowPath.settings + '/language'} title={snowUI.snowLanguages.mylanguage}>{snowUI.snowLanguages.mylanguage}</a></li>
 								<li className="divider" />
 								<li className="nav-item-settings"><div><div className="walletmenuspan">{snowUI.snowcat}</div><div className="clearfix" /> </div></li>
 								<li className="divider" />
 								<li>
 									<div>
 										<div onClick={this.changeTheme} className="walletmenuspan changetheme " title='Switch between the light and dark theme' data-toggle="" data-placement="bottom" data-container="body" data-trigger="hover focus" style={{cursor:'pointer'}}><span className="glyphicon glyphicon-adjust" /></div>
-										<div className="walletmenuspan " title='.link' data-toggle="" data-placement="bottom" data-container="body" data-trigger="hover focus"> <a  onClick={this.hrefRoute} href={ snowPath.root + snowPath.inq } ><span className="glyphicon glyphicon-globe" /></a></div>
+										<div className="walletmenuspan " title='.link' data-toggle="" data-placement="bottom" data-container="body" data-trigger="hover focus"> <a  onClick={this.hrefRoute} href={ snowUI.snowPath.root + snowUI.snowPath.inq } ><span className="glyphicon glyphicon-globe" /></a></div>
 										<div className="walletmenuspan " title='Logout' data-toggle="" data-placement="right" data-container="body" data-trigger="hover focus"> <a href='/snowout'> <span className="glyphicon glyphicon-log-out" /></a></div>
 										<div className="clearfix" /> 
 									</div>
@@ -888,8 +888,8 @@ var UI = React.createClass({
 					</div>
 				</div>
 			{/* add the modals */}	
-			{unlockWallet.call(this)}
-			{encryptWallet.call(this)}
+			{snowUI.snowModals.unlockWallet.call(this)}
+			{snowUI.snowModals.encryptWallet.call(this)}
 				
 			{/* end snowpi-body */}
 			</div>

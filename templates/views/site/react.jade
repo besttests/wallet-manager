@@ -1,6 +1,5 @@
 extends ../../layouts/react
 block head
-	script #{locals.data.defaultcoins}
 block content
 	.fademessage(style='display:none;')
 		.html
@@ -33,16 +32,18 @@ block content
 			div#loadgif(style="")
 block js
 	script.
-		var _csrf = '#{locals.token}';
+		var snowUI = {};
+		snowUI._csrf = '#{locals.token}';
+	
+	script(src='/api/snowcoins/simple/language')
 	
 	script(src='/snowhub/js/libraries.min.js')
 	
-	script(src='/api/snowcoins/simple/language')
-	script(src='/bonetemplates')
-
 	script(src='/snowhub/js/snowbug.js')
-	script(src='/snowhub/js/allinone.js')
+	script(src='/snowhub/js/ui.min.js')
 	
-
+	script #{locals.data.defaultcoins}
+	
+	script(src='/bonetemplates')
 		
 		

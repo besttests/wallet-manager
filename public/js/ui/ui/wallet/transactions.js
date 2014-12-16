@@ -2,12 +2,8 @@
  * @jsx React.DOM
  */
 
-/* not used but thats how you can use touch events
- * */
-React.initializeTouchEvents(true);
-
 //overview list component
-WalletUI.transactions = React.createClass({displayName: 'transactions',
+snowUI.wallet.transactions = React.createClass({displayName: 'transactions',
 	getInitialState: function() {
 		return ({
 			requesting:false,
@@ -21,7 +17,7 @@ WalletUI.transactions = React.createClass({displayName: 'transactions',
 		var _this = this
 		
 		
-		if(snowUI.debug) snowlog.log('tx will receive props',this.props,nextProps)
+		if(snowUI.debug) snowLog.log('tx will receive props',this.props,nextProps)
 		
 		if(!this.state.requesting && nextProps.ready) {
 			this.setState({requesting:true});
@@ -38,7 +34,7 @@ WalletUI.transactions = React.createClass({displayName: 'transactions',
 	},
 	getData: function (props,cb) {
 		
-		if(snowUI.debug) snowlog.log('tx data',props)
+		if(snowUI.debug) snowLog.log('tx data',props)
 		
 		var url = "/api/snowcoins/local/wallet",
 			data = { wallet:props.config.wallet,moon:props.config.moon},
@@ -77,7 +73,7 @@ WalletUI.transactions = React.createClass({displayName: 'transactions',
 		var acc = $('#txaccounts').val();
 		var start = 0;
 		this.setState({mounted:false,start:start,num:num,account:acc});
-		snowUI.methods.valueRoute(snowPath.wallet + '/' + this.props.config.wallet + '/' + this.props.config.moon + '/' + acc + '/' + start + '/' + num,{trigger:true,skipload:true})
+		snowUI.methods.valueRoute(snowUI.snowPath.wallet + '/' + this.props.config.wallet + '/' + this.props.config.moon + '/' + acc + '/' + start + '/' + num,{trigger:true,skipload:true})
 	},
 	prev: function() {
 		var account = this.state.account,
@@ -85,7 +81,7 @@ WalletUI.transactions = React.createClass({displayName: 'transactions',
 			num = this.state.num;
 		
 		this.setState({mounted:false,start:start,num:num,account:account});
-		snowUI.methods.valueRoute(snowPath.wallet + '/' + this.props.config.wallet + '/' + this.props.config.moon + '/' + account + '/' + start + '/' + num,{trigger:true,skipload:true})
+		snowUI.methods.valueRoute(snowUI.snowPath.wallet + '/' + this.props.config.wallet + '/' + this.props.config.moon + '/' + account + '/' + start + '/' + num,{trigger:true,skipload:true})
 		
 	},
 	next: function() {
@@ -95,9 +91,9 @@ WalletUI.transactions = React.createClass({displayName: 'transactions',
 			num = this.state.num;
 		
 		this.setState({mounted:false,start:start,num:num,account:account});
-		snowUI.methods.valueRoute(snowPath.wallet + '/' + this.props.config.wallet + '/' + this.props.config.moon + '/' + account + '/' + start + '/' + num,{trigger:true,skipload:true})
+		snowUI.methods.valueRoute(snowUI.snowPath.wallet + '/' + this.props.config.wallet + '/' + this.props.config.moon + '/' + account + '/' + start + '/' + num,{trigger:true,skipload:true})
 		
-	},
+	}, 
 	createTxHtml: function(val) {
 		var html ="<div id='"+val.time+"-div'><table class=''><tbody><tr class='skipme'><td> account</td><td>"+val.account+"<tr class='skipme'><td> address<td>"+val.address+"<tr class='skipme'><td> category<td>"+val.category+"<tr class='skipme'><td> amount<td>"+parseFloat(val.amount).formatMoney()+"<tr class='skipme'><td> fee<td>"+parseFloat(val.fee).formatMoney()+"<tr class='skipme'><td> confirmations<td>"+val.confirmations+"<tr class='skipme'><td> blockhash</td><td> "+val.blockhash+"</td></tr><tr class='skipme'><td> blockindex<td>"+val.blockindex+"</td></tr>";
 		
@@ -110,7 +106,7 @@ WalletUI.transactions = React.createClass({displayName: 'transactions',
 		return html;
 	},
 	showTx: function(e) {
-		if(snowUI.debug) snowlog.log('showTX')
+		if(snowUI.debug) snowLog.log('showTX')
 		var tr = $(e.currentTarget).closest('tr')
 		var after = tr.next().is('.txrowsmore');
 		$('.txrowsmore').toggle(400,function() {
@@ -122,12 +118,12 @@ WalletUI.transactions = React.createClass({displayName: 'transactions',
 			} catch(e) {
 				var data={}
 			}
-			if(snowUI.debug) snowlog.log(data,'showTX')
+			if(snowUI.debug) snowLog.log(data,'showTX')
 			$(e.currentTarget).closest('tr').after('<tr class="txrowsmore"><td></td><td colspan="5">'+this.createTxHtml(data)+'</td></tr>').next().toggle(400);
 		}
 	},
 	render: function() {
-	    if(snowUI.debug) snowlog.log('wallet transaction component',this.props,this.state)
+	    if(snowUI.debug) snowLog.log('wallet transaction component',this.props,this.state)
 		
 		var _this = this,
 			next = ' disabled',
@@ -190,13 +186,13 @@ WalletUI.transactions = React.createClass({displayName: 'transactions',
 				var accs = '<option value="">no accounts found</option>'
 			}
 			
-			var pagerprev = prev.trim() === 'disabled' || this.state.account === 'all' ? '':(React.DOM.li({className: 'previous pull-left '+prev}, React.DOM.a({onClick: this.prev}, snowtext.wallet.tx.pager.prev.replace('{num}',this.state.num))));
+			var pagerprev = prev.trim() === 'disabled' || this.state.account === 'all' ? '':(React.DOM.li({className: 'previous pull-left '+prev}, React.DOM.a({onClick: this.prev}, snowUI.snowText.wallet.tx.pager.prev.replace('{num}',this.state.num))));
 			
-			var pagernext = next.trim() === 'disabled' || this.state.account === 'all' ? '':(React.DOM.li({className: 'next pull-right '+next}, React.DOM.a({onClick: this.next}, snowtext.wallet.tx.pager.next.replace('{num}',this.state.num))));
+			var pagernext = next.trim() === 'disabled' || this.state.account === 'all' ? '':(React.DOM.li({className: 'next pull-right '+next}, React.DOM.a({onClick: this.next}, snowUI.snowText.wallet.tx.pager.next.replace('{num}',this.state.num))));
 			
-			var pagerprev2 = prev.trim() === 'disabled' || this.state.account === 'all' ? '':(React.DOM.li({className: 'previous pull-left '+prev}, React.DOM.a({onClick: this.prev}, snowtext.wallet.tx.pager.prev.replace('{num}',this.state.num))));
+			var pagerprev2 = prev.trim() === 'disabled' || this.state.account === 'all' ? '':(React.DOM.li({className: 'previous pull-left '+prev}, React.DOM.a({onClick: this.prev}, snowUI.snowText.wallet.tx.pager.prev.replace('{num}',this.state.num))));
 			
-			var pagernext2 = next.trim() === 'disabled' || this.state.account === 'all' ? '':(React.DOM.li({className: 'next pull-right '+next}, React.DOM.a({onClick: this.next}, snowtext.wallet.tx.pager.next.replace('{num}',this.state.num))));
+			var pagernext2 = next.trim() === 'disabled' || this.state.account === 'all' ? '':(React.DOM.li({className: 'next pull-right '+next}, React.DOM.a({onClick: this.next}, snowUI.snowText.wallet.tx.pager.next.replace('{num}',this.state.num))));
 			
 			return (
 				React.DOM.div({style: {padding:'5px 20px'}}, 

@@ -136,6 +136,13 @@ exports = module.exports = function(req, res) {
 							}
 							
 						});
+					} else if(_.isObject(newsettings)) {
+						Settings.model.userSettings(req.user.id,newsettings,function(err2,val2) {
+							locals.data.userSettings = val;
+							locals.data.userSettings.language = newsettings.language;
+							next();							
+						})
+							
 					} else {
 						locals.data.userSettings = val;
 						next();

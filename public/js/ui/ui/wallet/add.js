@@ -2,12 +2,9 @@
  * @jsx React.DOM
  */
 
-/* not used but thats how you can use touch events
- * */
-React.initializeTouchEvents(true);
 
 //add new wallet component
-WalletUI.add = React.createClass({displayName: 'add',
+snowUI.wallet.add = React.createClass({displayName: 'add',
 	mixins: [React.addons.LinkedStateMixin],
 	getInitialState: function() {
 		return {
@@ -18,13 +15,13 @@ WalletUI.add = React.createClass({displayName: 'add',
 	},
 	componentWillReceiveProps: function (nextProps) {
 		
-		if(snowUI.debug) snowlog.log('add/update will receive props',nextProps.config.wally)
+		if(snowUI.debug) snowLog.log('add/update will receive props',nextProps.config.wally)
 		
 		if(this.state.refresh || (nextProps.config.wally && nextProps.config.wally.key)) {
 			this.setState({refresh:false})
 			this.setState(nextProps.config.wally)
 			this.validator(nextProps.config.wally)
-			if(snowUI.debug) snowlog.log(this.state)
+			if(snowUI.debug) snowLog.log(this.state)
 			
 			return false;
 		}
@@ -47,15 +44,15 @@ WalletUI.add = React.createClass({displayName: 'add',
 		
 	},
 	componentWillMount: function() {
-		if(snowUI.debug) snowlog.log('add/update will mount')
+		if(snowUI.debug) snowLog.log('add/update will mount')
 		this.setState(this.props.config.wally)
 		this.validator(this.props.config.wally)
 	},
 	componentWillUnMount: function() {
-		if(snowUI.debug) snowlog.log('add/update un-mounted')
+		if(snowUI.debug) snowLog.log('add/update un-mounted')
 	},
 	componentDidUpdate: function() {
-		if(snowUI.debug) snowlog.log('add/update will update')
+		if(snowUI.debug) snowLog.log('add/update will update')
 		this.validator(this.state)
 		snowUI.watchLoader()
 		
@@ -66,7 +63,7 @@ WalletUI.add = React.createClass({displayName: 'add',
 		if(state.key && state.name && state.address && state.port && state.coin) {
 			
 			if(!state.validated) {
-				if(snowUI.debug) snowlog.log('update wally validated',this.state.validated)
+				if(snowUI.debug) snowLog.log('update wally validated',this.state.validated)
 				this.setState({validated:true});
 			}
 			
@@ -74,7 +71,7 @@ WalletUI.add = React.createClass({displayName: 'add',
 			
 			
 			if(!state.validated){
-				if(snowUI.debug) snowlog.log('new wally validated',this.state.validated)
+				if(snowUI.debug) snowLog.log('new wally validated',this.state.validated)
 				this.setState({validated:true});
 			}
 			
@@ -82,7 +79,7 @@ WalletUI.add = React.createClass({displayName: 'add',
 			
 			
 			if(state.validated){
-				if(snowUI.debug) snowlog.log(' wally not validated',this.state.validated)
+				if(snowUI.debug) snowLog.log(' wally not validated',this.state.validated)
 				this.setState({validated:false});
 			}
 		}
@@ -90,17 +87,17 @@ WalletUI.add = React.createClass({displayName: 'add',
 	componentDidMount: function() {
 		/* jquery-ui autocompletes */
 		var _this = this
-		$( this.refs['aw-coin'].getDOMNode()).autocomplete({ source: defaultcoins,minLength:0,select: function( event, ui ) {
+		$( this.refs['aw-coin'].getDOMNode()).autocomplete({ source: snowUI.defaultcoins,minLength:0,select: function( event, ui ) {
 			_this.setState({'coin':ui.item.value})
-			//if(snowUI.debug) snowlog.info(event,ui)
+			//if(snowUI.debug) snowLog.info(event,ui)
 		}}).focus(function(){$(this).autocomplete('search', $(this).val())});
-		$( this.refs['aw-cointicker'].getDOMNode()).autocomplete({ source: defaultcointickers,minLength:0 }).focus(function(){$(this).autocomplete('search', $(this).val())});
+		$( this.refs['aw-cointicker'].getDOMNode()).autocomplete({ source: snowUI.defaultcointickers,minLength:0 }).focus(function(){$(this).autocomplete('search', $(this).val())});
 		
 		snowUI.loaderRender();
 		
 	},
 	shouldComponentUpdate: function() {
-		if(snowUI.debug) snowlog.info('wallet form will update',!this.state.stopUpdate);
+		if(snowUI.debug) snowLog.info('wallet form will update',!this.state.stopUpdate);
 		return !this.state.stopUpdate
 	},
 	walletForm: function(e) {
@@ -109,7 +106,7 @@ WalletUI.add = React.createClass({displayName: 'add',
 		
 		var formData = $( e.target ).serialize();
 		
-		if(snowUI.debug) snowlog.log('wallet form',formData);
+		if(snowUI.debug) snowLog.log('wallet form',formData);
 		
 		if(this.state.validated)
 		{
@@ -175,7 +172,7 @@ WalletUI.add = React.createClass({displayName: 'add',
 							
 							//allow update rendering
 							_this.setState({stopUpdate:false});
-							snowUI.methods.valueRoute(snowPath.wallet + '/' + resp.wally.key + '/update',true)
+							snowUI.methods.valueRoute(snowUI.snowPath.wallet + '/' + resp.wally.key + '/update',true)
 							
 							//snowUI.flash('success','Wallet is Updating',1500)
 						
@@ -188,7 +185,7 @@ WalletUI.add = React.createClass({displayName: 'add',
 						_this.setState({stopUpdate:false});
 						snowUI.flash('success','New wallet created.',3000)
 						snowUI.methods.resetWallets(_this.props.config,function() {
-							snowUI.methods.valueRoute(snowPath.wallet + '/' + resp.wally.key )	
+							snowUI.methods.valueRoute(snowUI.snowPath.wallet + '/' + resp.wally.key )	
 						})
 						
 						
@@ -237,10 +234,10 @@ WalletUI.add = React.createClass({displayName: 'add',
 	    
 	    _this = this
 	    
-	    if(snowUI.debug) snowlog.log('wallet add component',this.state,this.props.config.wally)
+	    if(snowUI.debug) snowLog.log('wallet add component',this.state,this.props.config.wally)
 	    var errormessage,title;
 	    if(this.props.message) {
-		    errormessage = (WalletUI.messageDisplay({message: this.props.message, type: "requesterror", title: "Please check your configuration"}));
+		    errormessage = (snowUI.wallet.messageDisplay({message: this.props.message, type: "requesterror", title: "Please check your configuration"}));
 		    title = false
 	    } else {
 		    title = (React.DOM.div({className: "page-title "}, 
@@ -251,8 +248,8 @@ WalletUI.add = React.createClass({displayName: 'add',
 	    
 	    var changeorencrypt = this.props.config.lockstatus === 2 ? 'Turn Encryption On':'Change  Passphrase'
 		
-		var walletbuttons = !this.state.key ? '' : (ButtonToolbar(null, React.DOM.a({onClick: snowUI.methods.hrefRoute, href: snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/backup', className: "btn btn-default btn-sm pull-left"}, React.DOM.span(null, "Backup")), 
-						React.DOM.a({onClick: snowUI.methods.hrefRoute, href: snowPath.root + snowPath.wallet + '/' + _this.props.config.wallet + '/passphrase', className: "btn btn-default btn-sm pull-left"}, React.DOM.span(null, changeorencrypt)), React.DOM.a({onClick: snowUI.deleteWallet, 'data-snowmoon': this.props.config.wally.key, className: "btn btn-danger btn-sm pull-right"}, React.DOM.span(null, "Delete"))))
+		var walletbuttons = !this.state.key ? '' : (snowUI.ButtonToolbar(null, React.DOM.a({onClick: snowUI.methods.hrefRoute, href: snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/backup', className: "btn btn-default btn-sm pull-left"}, React.DOM.span(null, "Backup")), 
+						React.DOM.a({onClick: snowUI.methods.hrefRoute, href: snowUI.snowPath.root + snowUI.snowPath.wallet + '/' + _this.props.config.wallet + '/passphrase', className: "btn btn-default btn-sm pull-left"}, React.DOM.span(null, changeorencrypt)), React.DOM.a({onClick: snowUI.deleteWallet, 'data-snowmoon': this.props.config.wally.key, className: "btn btn-danger btn-sm pull-right"}, React.DOM.span(null, "Delete"))))
 	    return (
 		React.DOM.div({id: "", style: {padding:'35px 20px'}, className: "row"}, 
 			errormessage, 
@@ -411,10 +408,10 @@ WalletUI.add = React.createClass({displayName: 'add',
 				), 
 				React.DOM.div({className: "col-sm-10 col-sm-offset-1 col-md-10"}, 
 					React.DOM.div({className: "form-group"}, 
-						ButtonToolbar(null, 
+						snowUI.ButtonToolbar(null, 
 						React.DOM.input({type: "hidden", name: "key", ref: "aw-key", value: this.props.config.wally.key}), 
 						React.DOM.button({type: "submit", disabled: !this.state.validated ? 'disabled' : '', className: "addwalletbutton btn  awbutton"}, this.state.requesting ? (this.props.config.wally.key ? 'Updateing Wallet' : 'Ading Wallet...') : (this.props.config.wally.key ? 'Update Wallet' : 'Add Wallet')), 
-						React.DOM.a({onClick: snowUI.methods.hrefRoute, href: snowPath.root + snowPath.wallet, className: "btn btn-default btn-sm pull-right"}, React.DOM.span(null, "Cancel"))
+						React.DOM.a({onClick: snowUI.methods.hrefRoute, href: snowUI.snowPath.root + snowUI.snowPath.wallet, className: "btn btn-default btn-sm pull-right"}, React.DOM.span(null, "Cancel"))
 						)
 					)
 				), 
@@ -427,7 +424,7 @@ WalletUI.add = React.createClass({displayName: 'add',
 	}
 });
 //update copies add... go figure
-WalletUI.update = WalletUI.add;
+snowUI.wallet.update = snowUI.wallet.add;
 
 /**
  * 2014 snowkeeper

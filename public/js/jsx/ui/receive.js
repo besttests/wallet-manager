@@ -2,38 +2,11 @@
  * @jsx React.DOM
  */
 
-/* not used but thats how you can use touch events
- * */
-//React.initializeTouchEvents(true);
-
-/* not used but thats how you can use animation and other transition goodies
- * */
-//var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
-
-/**
- * we will use yes for true
- * we will use no for false
- * 
- * React has some built ins that rely on state being true/false like classSet()
- * and these will not work with yes/no but can easily be modified / reproduced
- * 
- * this single app uses the yes/no var so if you want you can switch back to true/false
- * 
- * */
-var yes = 'yes', no = 'no';
-//var yes = true, no = false;
-
-
-
-var ReceiveUI = snowUI.receive
-
-
-
 /**
  * receive components
  * */
 //main
-ReceiveUI.UI = React.createClass({
+snowUI.receive.UI = React.createClass({
 	getInitialState: function() {
 		return ({
 			dynamic:'active in',
@@ -58,14 +31,14 @@ ReceiveUI.UI = React.createClass({
 		})
 	},
 	componentWillReceiveProps: function(nextProps) {
-		if(snowUI.debug) snowlog.log('receive willgetprops')
+		if(snowUI.debug) snowLog.log('receive willgetprops')
 		var _state = this.getFalseState();
 		var page = nextProps.config.page || this.state.component
 			
 		_state[page] = 'in active'
 		_state.component = page
 		this.setState(_state)
-		if(snowUI.debug) snowlog.log('receive willgetprops','false state:',_state,nextProps)
+		if(snowUI.debug) snowLog.log('receive willgetprops','false state:',_state,nextProps)
 		/* now get our data */
 		this.getPage(page)
 		
@@ -81,11 +54,11 @@ ReceiveUI.UI = React.createClass({
 		
 		snowUI.ajax.GET(url,data,function(resp) {
 			if(resp.success === true) {
-				if(snowUI.debug) snowlog.info('got data for ' + po,resp.data,po)
+				if(snowUI.debug) snowLog.info('got data for ' + po,resp.data,po)
 				if(resp.ip && resp.ip!='')snowUI.myip=resp.ip;
 				_this.setState({data:resp.data,connecting:false})
 			} else {
-				if(snowUI.debug) snowlog.error(resp)
+				if(snowUI.debug) snowLog.error(resp)
 				_this.setState({error:true,message:'Error retrieving data',connecting:false})
 			}
 		})
@@ -94,7 +67,7 @@ ReceiveUI.UI = React.createClass({
 		
 	},
 	componentDidUpdate: function() {
-		if(snowUI.debug) snowlog.info('receive did update')
+		if(snowUI.debug) snowLog.info('receive did update')
 	},
 	componentWillMount: function() {
 		//$('body').find('[rel=popover]').popover('destroy');
@@ -106,7 +79,7 @@ ReceiveUI.UI = React.createClass({
 				
 	},
 	componentDidMount: function() {
-		if(snowUI.debug) snowlog.info('receive did mount')
+		if(snowUI.debug) snowLog.info('receive did mount')
 		var me = $('a[data-target="'+this.props.config.page+'"]')
 		me.tab('show')	
 	},
@@ -117,9 +90,9 @@ ReceiveUI.UI = React.createClass({
 			skipload:false,
 			trigger:true
 		}
-		if(snowUI.debug) snowlog.info(me,them)
+		if(snowUI.debug) snowLog.info(me,them)
 		me.tab('show')
-		snowUI.methods.valueRoute(snowPath.receive + '/' + me[0].dataset.target,options)
+		snowUI.methods.valueRoute(snowUI.snowPath.receive + '/' + me[0].dataset.target,options)
 	},
 	render: function() {
 		
@@ -129,25 +102,25 @@ ReceiveUI.UI = React.createClass({
 		var renderMe,
 			showcomp = this.props.config.page || this.state.component
 		
-		if(snowUI.debug) snowlog.log('receive component',this.state)
+		if(snowUI.debug) snowLog.log('receive component',this.state)
 		
 		if(this.state.error ) {
 			
-			 renderMe = (<WalletUI.displayMessage   message ={this.state.message} type = 'warning' />)
+			 renderMe = (<snowUI.wallet.displayMessage   message ={this.state.message} type = 'warning' />)
 			
 			
 		} else if(!this.state.data) {
-			if(snowUI.debug) snowlog.warn('empty render for receive')
+			if(snowUI.debug) snowLog.warn('empty render for receive')
 			
 		
-		} else if(ReceiveUI[showcomp]) {
+		} else if(snowUI.receive[showcomp]) {
 			
-			var po = ReceiveUI[showcomp]
+			var po = snowUI.receive[showcomp]
 			renderMe = (<po config={this.props.config} state={this.state} />)
 		
 		} else {
 			
-			renderMe = (<WalletUI.displayMessage  title = '404 Not Found' message = 'I could not find the page you are looking for. ' type = 'requesterror' />)
+			renderMe = (<snowUI.wallet.displayMessage  title = '404 Not Found' message = 'I could not find the page you are looking for. ' type = 'requesterror' />)
 			 
 		}     
 		
@@ -176,10 +149,10 @@ ReceiveUI.UI = React.createClass({
 					<div className="collapse navbar-collapse navbar-dccnav-collapse">
 						<ul className="nav navbar-nav dccnavlis"  role="tablist" data-tabs="tabs" >
 							
-							<li className="active" ><a   data-target="shortcuts"   role="tab" data-toggle="tab"  onClick={this.changeTab} >{snowtext.receive.tabs.static.text}</a></li>
-							<li ><a onClick={this.changeTab}  data-target="dynamic" role="tab" data-toggle="tab" id="lidynamic" >{snowtext.receive.tabs.dynamic.text}</a></li>
-							<li ><a  data-target="keys"  role="tab" data-toggle="tab" onClick={this.changeTab} >{snowtext.receive.tabs.keys.text}</a></li>
-							<li ><a  id="litrackers" data-target="trackers"   role="tab" data-toggle="tab" onClick={this.changeTab} >{snowtext.receive.tabs.trackers.text}</a></li>
+							<li className="active" ><a   data-target="shortcuts"   role="tab" data-toggle="tab"  onClick={this.changeTab} >{snowUI.snowText.receive.tabs.static.text}</a></li>
+							<li ><a onClick={this.changeTab}  data-target="dynamic" role="tab" data-toggle="tab" id="lidynamic" >{snowUI.snowText.receive.tabs.dynamic.text}</a></li>
+							<li ><a  data-target="keys"  role="tab" data-toggle="tab" onClick={this.changeTab} >{snowUI.snowText.receive.tabs.keys.text}</a></li>
+							<li ><a  id="litrackers" data-target="trackers"   role="tab" data-toggle="tab" onClick={this.changeTab} >{snowUI.snowText.receive.tabs.trackers.text}</a></li>
 
 							<li><a onClick={function(){ return location.reload()}}><span className="glyphicon glyphicon-refresh"></span></a></li>
 						</ul>
@@ -200,7 +173,7 @@ ReceiveUI.UI = React.createClass({
 
 
 //dynamic component
-ReceiveUI.dynamic = React.createClass({
+snowUI.receive.dynamic = React.createClass({
 	getInitialState: function() {
 		return {
 			requesting:false,
@@ -211,7 +184,7 @@ ReceiveUI.dynamic = React.createClass({
 		}
 	},
 	componentWillReceiveProps: function(nextProps) {
-		if(snowUI.debug) snowlog.info('receive props' ,nextProps)
+		if(snowUI.debug) snowLog.info('receive props' ,nextProps)
 		
 	},
 	shouldComponentUpdate: function() {
@@ -222,7 +195,7 @@ ReceiveUI.dynamic = React.createClass({
 		
 	},
 	componentDidUpdate: function() {
-		if(snowUI.debug) snowlog.info('dynamic did update')
+		if(snowUI.debug) snowLog.info('dynamic did update')
 		this.listen()
 		snowUI.watchLoader();
 		
@@ -240,7 +213,7 @@ ReceiveUI.dynamic = React.createClass({
 		this.listen()
 	},
 	listen: function() {
-		$("#dccadddynamic #receivertype").autocomplete({ source: defaultcoins,minLength:0}).focus(function(){$(this).autocomplete('search', $(this).val())});
+		$("#dccadddynamic #receivertype").autocomplete({ source: snowUI.defaultcoins,minLength:0}).focus(function(){$(this).autocomplete('search', $(this).val())});
 		$("#dccadddynamic #account").autocomplete({ 
 			source: function(req, response) { 
 					   $.ajax({
@@ -268,7 +241,7 @@ ReceiveUI.dynamic = React.createClass({
 		
 	},
 	submitForm: function(e) {
-		if(snowUI.debug) snowlog.info('submit dynamic add form',e)
+		if(snowUI.debug) snowLog.info('submit dynamic add form',e)
 		e.preventDefault();
 		var _this = this
 		this.setState({requesting:true});
@@ -312,12 +285,12 @@ ReceiveUI.dynamic = React.createClass({
 			snowUI.ajax.POST(url,data,function(resp) {
 				if(resp.success === true) {
 					
-					snowUI.methods.valueRoute(snowPath.receive + '/' + _this.props.config.page)
+					snowUI.methods.valueRoute(snowUI.snowPath.receive + '/' + _this.props.config.page)
 					snowUI.flash('success','Dynamic receiver added',2500)
 					this.setState({requesting:false});
 				
 				} else {
-					if(snowUI.debug) snowlog.error(resp)
+					if(snowUI.debug) snowLog.error(resp)
 					_this.setState({requesting:false});
 					snowUI.flash('error',resp.err,3500)
 					//_this.setState({error:true,message:'Error retrieving data',connecting:false})
@@ -328,7 +301,7 @@ ReceiveUI.dynamic = React.createClass({
 	},
 	removeAsk: function(e) {
 		
-		if(snowUI.debug) snowlog.log('opem remove modal',e.target,e.target.dataset.dccwid)
+		if(snowUI.debug) snowLog.log('opem remove modal',e.target,e.target.dataset.dccwid)
 		
 		var target = e.target.dataset.dccwid,
 			iden = e.target.dataset.dcciden;
@@ -338,7 +311,7 @@ ReceiveUI.dynamic = React.createClass({
 		
 	},
 	removeNow: function(e) {
-		if(snowUI.debug) snowlog.log('removeNow',this.state._candidate)
+		if(snowUI.debug) snowLog.log('removeNow',this.state._candidate)
 		var url = "/api/snowcoins/local/receive/setup",
 			data = {'action':'delete',wally:this.state._candidate}
 		this.setState({canUpdate:false,removeItem:false});
@@ -353,7 +326,7 @@ ReceiveUI.dynamic = React.createClass({
 					snowUI.flash('success','Dynamic receiver removed',2500)
 				
 				} else {
-					if(snowUI.debug) snowlog.error(resp)
+					if(snowUI.debug) snowLog.error(resp)
 					this.setState({_candidate:false,canUpdate:true});
 					snowUI.flash('error',resp.err,3500)
 					//_this.setState({error:true,message:'Error retrieving data',connecting:false})
@@ -366,9 +339,9 @@ ReceiveUI.dynamic = React.createClass({
 		}
 	}, 
 	render: function() {
-		if(snowUI.debug) snowlog.log('dynamic component', this.props)
+		if(snowUI.debug) snowLog.log('dynamic component', this.props)
 		
-		var text = snowtext.receive.dynamic,
+		var text = snowUI.snowText.receive.dynamic,
 			results;
 		
 		var list = this.props.state.data[this.props.state.component]
@@ -456,7 +429,7 @@ ReceiveUI.dynamic = React.createClass({
 							</div>
 							<div className="form-group">
 								<button    disabled={(this.state.requesting) ? 'disabled' : ''}  className="btn " >{this.state.requesting ? 'Adding...' : 'Add Dynamic Receiver'}</button>
-								<a type="button"  onClick={snowUI.methods.hrefRoute} href={snowPath.root + snowPath.receive + '/' + this.props.state.component}   className="btn btn-default pull-right" >Cancel</a>
+								<a type="button"  onClick={snowUI.methods.hrefRoute} href={snowUI.snowPath.root + snowUI.snowPath.receive + '/' + this.props.state.component}   className="btn btn-default pull-right" >Cancel</a>
 							</div>
 						</div>
 						<input type="hidden" ref="action" name="action" defaultValue="add-wallet" />
@@ -470,7 +443,7 @@ ReceiveUI.dynamic = React.createClass({
 			<div >
 				<div id="dynamicpage" className={"col-md-12  tab-pane fade in active"}>
 					<div className="snow-block-body">
-						  <a type="button"  onClick={snowUI.methods.hrefRoute}  href={snowPath.root + snowPath.receive + '/' + this.props.state.component + '/add'} className="btn btn-sm btn-default adddccwalletbutton">{text.button.add.text}</a>
+						  <a type="button"  onClick={snowUI.methods.hrefRoute}  href={snowUI.snowPath.root + snowUI.snowPath.receive + '/' + this.props.state.component + '/add'} className="btn btn-sm btn-default adddccwalletbutton">{text.button.add.text}</a>
 						  <div className="table-responsive">
 							<table className="table table-hover snowtablesort"  >
 								<thead>
@@ -493,7 +466,7 @@ ReceiveUI.dynamic = React.createClass({
 					</div>
 					<div className="clearfix"></div>
 				</div>
-				{removeItem.call(this,this.removeNow)}
+				{snowUI.snowModals.removeItem.call(this,this.removeNow)}
 			</div>			
 		
 			);
@@ -517,7 +490,7 @@ ReceiveUI.dynamic = React.createClass({
 });
 
 //client component
-ReceiveUI.shortcuts = React.createClass({
+snowUI.receive.shortcuts = React.createClass({
 	getInitialState: function() {
 		return {
 			requesting:false,
@@ -528,7 +501,7 @@ ReceiveUI.shortcuts = React.createClass({
 		}
 	},
 	componentWillReceiveProps: function(nextProps) {
-		if(snowUI.debug) snowlog.info('receive props' ,nextProps)
+		if(snowUI.debug) snowLog.info('receive props' ,nextProps)
 		
 	},
 	shouldComponentUpdate: function() {
@@ -539,7 +512,7 @@ ReceiveUI.shortcuts = React.createClass({
 		
 	},
 	componentDidUpdate: function() {
-		if(snowUI.debug) snowlog.info('static did update')
+		if(snowUI.debug) snowLog.info('static did update')
 		this.listen()
 		snowUI.watchLoader();
 		
@@ -560,7 +533,7 @@ ReceiveUI.shortcuts = React.createClass({
 		
 	},
 	listen: function() {
-		$("#dccaddofflineform #coin").autocomplete({ source: defaultcoins,minLength:0}).focus(function(){$(this).autocomplete('search', $(this).val())});
+		$("#dccaddofflineform #coin").autocomplete({ source: snowUI.defaultcoins,minLength:0}).focus(function(){$(this).autocomplete('search', $(this).val())});
 		$("#dccaddofflineform #account").autocomplete({ 
 			source: function(req, response) { 
 					   $.ajax({
@@ -607,7 +580,7 @@ ReceiveUI.shortcuts = React.createClass({
 		$('#dccaddofflineform').find('[rel=popover]').popover();
 	},
 	submitForm: function(e) {
-		if(snowUI.debug) snowlog.info('submit shortcut add form',e)
+		if(snowUI.debug) snowLog.info('submit shortcut add form',e)
 		e.preventDefault();
 		var _this = this
 		this.setState({requesting:true});
@@ -648,12 +621,12 @@ ReceiveUI.shortcuts = React.createClass({
 			snowUI.ajax.POST(url,data,function(resp) {
 				if(resp.success === true) {
 					
-					snowUI.methods.valueRoute(snowPath.receive + '/' + _this.props.config.page)
+					snowUI.methods.valueRoute(snowUI.snowPath.receive + '/' + _this.props.config.page)
 					snowUI.flash('success','Shortcut ' + shortcut + ' added',2500)
 					this.setState({requesting:false});
 					
 				} else {
-					if(snowUI.debug) snowlog.error(resp)
+					if(snowUI.debug) snowLog.error(resp)
 					_this.setState({requesting:false});
 					snowUI.flash('error',resp.err,3500)
 					//_this.setState({error:true,message:'Error retrieving data',connecting:false})
@@ -664,7 +637,7 @@ ReceiveUI.shortcuts = React.createClass({
 	},
 	removeAsk: function(e) {
 		
-		if(snowUI.debug) snowlog.log('open remove modal',e.target,e.target.dataset.dccwid)
+		if(snowUI.debug) snowLog.log('open remove modal',e.target,e.target.dataset.dccwid)
 		
 		var target = e.target.dataset.dccwid,
 			iden = e.target.dataset.dcciden;
@@ -673,7 +646,7 @@ ReceiveUI.shortcuts = React.createClass({
 		
 	},
 	removeNow: function(e) {
-		if(snowUI.debug) snowlog.log('removeNow',this.state._candidate)
+		if(snowUI.debug) snowLog.log('removeNow',this.state._candidate)
 		var url = "/api/snowcoins/local/receive/setup",
 			data = {'action':'delete-unattended',wid:this.state._candidate}
 		this.setState({canUpdate:false,removeItem:false});
@@ -687,7 +660,7 @@ ReceiveUI.shortcuts = React.createClass({
 					snowUI.flash('success','Shortcut removing now.',2500)
 				
 				} else {
-					if(snowUI.debug) snowlog.warn(resp.error)
+					if(snowUI.debug) snowLog.warn(resp.error)
 					this.setState({_candidate:false,canUpdate:true});
 					snowUI.flash('error',resp.error,3500)
 					//_this.setState({error:true,message:'Error retrieving data',connecting:false})
@@ -702,17 +675,17 @@ ReceiveUI.shortcuts = React.createClass({
 	render: function() {
 		
 		snowUI.loaderRender();
-		var text = snowtext.receive.static,
+		var text = snowUI.snowText.receive.static,
 			results,
 			_this = this;
 		var list = this.props.state.data[this.props.state.component]
-		if(snowUI.debug) snowlog.log('static receiver component', list)
+		if(snowUI.debug) snowLog.log('static receiver component', list)
 		if(list instanceof Array) {
 			var results = list.map(function (val) {
 				
 				var format = val.sign.format === '1' ? 'Share' : val.sign.format === '2' ? ' Share & Pay' : 'Payments';
 				var locked = val.sign.lock ? 'Will Encrypt' : 'Viewable';
-				var sharehost = snowUI.link.state === 'on' ? snowPath.linkServer.host + '.' + _this.props.config.userSettings.linkName + '.' + val.apikey : snowPath.share + '/' + val.apikey;
+				var sharehost = snowUI.link.state === 'on' ? snowUI.snowPath.linkServer.host + '.' + _this.props.config.userSettings.linkName + '.' + val.apikey : snowUI.snowPath.share + '/' + val.apikey;
 				return (
 					
 					<tr id={val._id} key={val._id} >
@@ -730,9 +703,9 @@ ReceiveUI.shortcuts = React.createClass({
 			return (
 			<div >
 				<div id="staticpage" className={"col-md-12  tab-pane fade  in active"}>
-					<ButtonToolbar>
-						  <a type="button"  onClick={snowUI.methods.hrefRoute}  href={snowPath.root + snowPath.receive + '/' + this.props.state.component + '/add'} className="btn btn-sm btn-default adddccwalletbutton">{text.button.add.text}</a>
-					</ButtonToolbar >
+					<snowUI.ButtonToolbar>
+						  <a type="button"  onClick={snowUI.methods.hrefRoute}  href={snowUI.snowPath.root + snowUI.snowPath.receive + '/' + this.props.state.component + '/add'} className="btn btn-sm btn-default adddccwalletbutton">{text.button.add.text}</a>
+					</snowUI.ButtonToolbar >
 					<div className="snow-block-body">
 						
 						<div className="table-responsive">
@@ -755,7 +728,7 @@ ReceiveUI.shortcuts = React.createClass({
 						
 					</div>
 					<div className="clearfix"></div>
-					{removeItem.call(this,this.removeNow)}
+					{snowUI.snowModals.removeItem.call(this,this.removeNow)}
 				</div>
 			</div>			
 		
@@ -786,7 +759,7 @@ ReceiveUI.shortcuts = React.createClass({
 				      <div className="form-group input-group">
 						<span className="input-group-addon input-group-sm coinstamp"  style={{textTransform:'capitalize'}}>
 							shortcut &nbsp;
-							<a  className="helppopover" rel="popover" data-trigger="click focus" title="Accessing Share Pages" data-html="true" data-container="body" data-content={"<p>You can access share pages by the shortcut.</p><p>With a   <a href='http://snowcoins.link/snowcat' target='_blank'>.link account</a> you can share addresses like so: <a href='http://snowcoins.link/.snowkeeper.donate' target='_blank' >http://snowcoins.link/.snowkeeper.donate</a></p><p>There is also a <a href='"+snowPath.share+"' target='_blank' >local page</a> you can expose to the internet instead of using a .link account.</p>"} data-toggle="popover" data-placement="bottom" ><span className="glyphicon glyphicon-question-sign "/> </a>
+							<a  className="helppopover" rel="popover" data-trigger="click focus" title="Accessing Share Pages" data-html="true" data-container="body" data-content={"<p>You can access share pages by the shortcut.</p><p>With a   <a href='http://snowcoins.link/snowcat' target='_blank'>.link account</a> you can share addresses like so: <a href='http://snowcoins.link/.snowkeeper.donate' target='_blank' >http://snowcoins.link/.snowkeeper.donate</a></p><p>There is also a <a href='"+snowUI.snowPath.share+"' target='_blank' >local page</a> you can expose to the internet instead of using a .link account.</p>"} data-toggle="popover" data-placement="bottom" ><span className="glyphicon glyphicon-question-sign "/> </a>
 						</span>
 						<input type="text" id="shortcut" name="shortcut" placeholder="must be unique" className="form-control coinstamp input input-faded" />
 						<input type="hidden" name="action" defaultValue="add-offline" />
@@ -834,20 +807,20 @@ ReceiveUI.shortcuts = React.createClass({
 						<input type="text" id="address" name="address" placeholder="address" className="form-control coinstamp input input-faded" />
 					</div>
 					<div className="form-group input-group">
-						<span className="input-group-addon  coinstamp" style={{textTransform:'capitalize'}}>{snowtext.accounts.address.moreinfo.pin.text}</span>
-						<input type="text"  name="pin" id="pin" placeholder={snowtext.accounts.address.moreinfo.pin.placeholder} className="form-control coinstamp" />
+						<span className="input-group-addon  coinstamp" style={{textTransform:'capitalize'}}>{snowUI.snowText.accounts.address.moreinfo.pin.text}</span>
+						<input type="text"  name="pin" id="pin" placeholder={snowUI.snowText.accounts.address.moreinfo.pin.placeholder} className="form-control coinstamp" />
 					</div>
 					<div className="form-group input-group">
-						<span className="input-group-addon  coinstamp"  style={{textTransform:'capitalize'}}>{snowtext.accounts.address.moreinfo.pinphrase.text}</span>
-						<input type="text"    name="keyphrase" id="keyphrase" placeholder={snowtext.accounts.address.moreinfo.pinphrase.placeholder} className="form-control coinstamp" />
+						<span className="input-group-addon  coinstamp"  style={{textTransform:'capitalize'}}>{snowUI.snowText.accounts.address.moreinfo.pinphrase.text}</span>
+						<input type="text"    name="keyphrase" id="keyphrase" placeholder={snowUI.snowText.accounts.address.moreinfo.pinphrase.placeholder} className="form-control coinstamp" />
 					</div>
 					<div className="form-group input-group">
 						<span  className="input-group-addon   coinstamp" style={{textTransform:'capitalize',borderRight:'1px initial initial',paddingRight:25}}>
-							{snowtext.accounts.address.moreinfo.lock.lockinput}
+							{snowUI.snowText.accounts.address.moreinfo.lock.lockinput}
 						</span>
 							<select    id="lock" name="lock" className="form-control coinstamp">
-								<option value="no">{snowtext.accounts.address.moreinfo.lock.option.no}</option>
-								<option value="yes">{snowtext.accounts.address.moreinfo.lock.option.yes}</option>
+								<option value="no">{snowUI.snowText.accounts.address.moreinfo.lock.option.no}</option>
+								<option value="yes">{snowUI.snowText.accounts.address.moreinfo.lock.option.yes}</option>
 							</select>
 					</div>
 					<div className="form-group input-group"><span className="input-group-addon input-group-sm coinstamp"  style={{textTransform:'capitalize'}}>type</span>
@@ -860,7 +833,7 @@ ReceiveUI.shortcuts = React.createClass({
 				
 					<div className="form-group">
 						<button    disabled={(this.state.requesting) ? 'disabled' : ''}  className="btn " >{this.state.requesting ? 'Adding shortcut...' : 'Add Shortcut'}</button>
-						<a type="button"  onClick={snowUI.methods.hrefRoute} href={snowPath.root + snowPath.receive + '/' + this.props.state.component}   className="btn btn-default pull-right" >Cancel</a>
+						<a type="button"  onClick={snowUI.methods.hrefRoute} href={snowUI.snowPath.root + snowUI.snowPath.receive + '/' + this.props.state.component}   className="btn btn-default pull-right" >Cancel</a>
 					</div>
 				  </div>
 					
@@ -885,7 +858,7 @@ ReceiveUI.shortcuts = React.createClass({
 
 
 //client component
-ReceiveUI.keys = React.createClass({
+snowUI.receive.keys = React.createClass({
 	getInitialState: function() {
 		return {
 			requesting:false,
@@ -896,7 +869,7 @@ ReceiveUI.keys = React.createClass({
 		}
 	},
 	componentWillReceiveProps: function(nextProps) {
-		if(snowUI.debug) snowlog.info('receive props keyspage' ,nextProps)
+		if(snowUI.debug) snowLog.info('receive props keyspage' ,nextProps)
 		return false;
 	},
 	shouldComponentUpdate: function() {
@@ -907,7 +880,7 @@ ReceiveUI.keys = React.createClass({
 		
 	},
 	componentDidUpdate: function() {
-		if(snowUI.debug) snowlog.info('keyspage did update')
+		if(snowUI.debug) snowLog.info('keyspage did update')
 		this.listen()
 		snowUI.watchLoader();
 		$('#keyspageform').find('[rel=popover]').popover();
@@ -928,7 +901,7 @@ ReceiveUI.keys = React.createClass({
 		return false;
 	},
 	listen: function() {
-		$("#keyspageform #type").autocomplete({ source: defaultcoins,minLength:0}).focus(function(){$(this).autocomplete('search', $(this).val())});
+		$("#keyspageform #type").autocomplete({ source: snowUI.defaultcoins,minLength:0}).focus(function(){$(this).autocomplete('search', $(this).val())});
 		$("#keyspageform #account").autocomplete({ 
 			source: function(req, response) { 
 					   $.ajax({
@@ -955,7 +928,7 @@ ReceiveUI.keys = React.createClass({
 		return false;
 	},
 	submitForm: function(e) {
-		if(snowUI.debug) snowlog.info('submit keyspageform add form',e)
+		if(snowUI.debug) snowLog.info('submit keyspageform add form',e)
 		e.preventDefault();
 		var _this = this
 		this.setState({requesting:true});
@@ -996,12 +969,12 @@ ReceiveUI.keys = React.createClass({
 			snowUI.ajax.POST(url,data,function(resp) {
 				if(resp.success === true) {
 					
-					snowUI.methods.valueRoute(snowPath.receive + '/' + _this.props.config.page)
+					snowUI.methods.valueRoute(snowUI.snowPath.receive + '/' + _this.props.config.page)
 					snowUI.flash('success','API Access granted',2500)
 					this.setState({requesting:false});
 					
 				} else {
-					if(snowUI.debug) snowlog.error(resp)
+					if(snowUI.debug) snowLog.error(resp)
 					_this.setState({requesting:false});
 					snowUI.flash('error',resp.err,3500)
 					//_this.setState({error:true,message:'Error retrieving data',connecting:false})
@@ -1013,7 +986,7 @@ ReceiveUI.keys = React.createClass({
 	},
 	removeAsk: function(e) {
 		
-		if(snowUI.debug) snowlog.log('open remove modal',e.target,e.target.dataset.dccwid)
+		if(snowUI.debug) snowLog.log('open remove modal',e.target,e.target.dataset.dccwid)
 		
 		var target = e.target.dataset.dccwid,
 			iden = e.target.dataset.dcciden;
@@ -1023,7 +996,7 @@ ReceiveUI.keys = React.createClass({
 		
 	},
 	removeNow: function(e) {
-		if(snowUI.debug) snowlog.log('removeNow',this.state._candidate)
+		if(snowUI.debug) snowLog.log('removeNow',this.state._candidate)
 		var url = "/api/snowcoins/local/receive/setup",
 			data = {'action':'delete-client',ccid:this.state._candidate}
 		this.setState({canUpdate:false,removeItem:false});
@@ -1037,7 +1010,7 @@ ReceiveUI.keys = React.createClass({
 					snowUI.flash('success','API access removed',2500)
 				
 				} else {
-					if(snowUI.debug) snowlog.warn(resp.error)
+					if(snowUI.debug) snowLog.warn(resp.error)
 					this.setState({_candidate:false,canUpdate:true});
 					snowUI.flash('error',resp.error,3500)
 					//_this.setState({error:true,message:'Error retrieving data',connecting:false})
@@ -1066,9 +1039,9 @@ ReceiveUI.keys = React.createClass({
 			
 	},
 	render: function() {
-		if(snowUI.debug) snowlog.log('client keys component')
+		if(snowUI.debug) snowLog.log('client keys component')
 		snowUI.loaderRender();
-		var text = snowtext.receive.keys,
+		var text = snowUI.snowText.receive.keys,
 			results;
 			
 		var addItem = function() {
@@ -1144,7 +1117,7 @@ ReceiveUI.keys = React.createClass({
 					</div>
 					<div className="form-group">
 						<button    disabled={(this.state.requesting) ? 'disabled' : ''}  className="btn " >{this.state.requesting ? text.form.button.adding : text.form.button.add}</button>
-						<a type="button"  onClick={snowUI.methods.hrefRoute} href={snowPath.root + snowPath.receive + '/' + this.props.state.component}   className="btn btn-default pull-right" >{text.form.button.cancel}</a>
+						<a type="button"  onClick={snowUI.methods.hrefRoute} href={snowUI.snowPath.root + snowUI.snowPath.receive + '/' + this.props.state.component}   className="btn btn-default pull-right" >{text.form.button.cancel}</a>
 					</div>
 				</form>
 			</div>
@@ -1164,7 +1137,7 @@ ReceiveUI.keys = React.createClass({
 					<tr id={val._id} key={val._id} >
 						<td  data-dccwid={val._id} data-dcciden={val.name} onClick={this.removeAsk} style={{cursor:"pointer"}} > <span  data-dccwid={val._id}  data-dcciden={val.name}  className="removedccwallet text-danger glyphicon glyphicon-remove"> &nbsp; </span></td>
 						<td> {val.name} </td>
-						<td> <a href={(val.type === 'master' ?  snowPath.d3c :  snowPath.d2c) + '/' + val.apikey} target="_blank" >{val.type}</a> </td>
+						<td> <a href={(val.type === 'master' ?  snowUI.snowPath.d3c :  snowUI.snowPath.d2c) + '/' + val.apikey} target="_blank" >{val.type}</a> </td>
 						<td> {val.apikey} </td>
 						<td> {val.ip || '--'}  </td>
 						<td> {val.clients.length>0 ? val.clients.map(function(v){ return ' ' + v.name + ' ' }) : val.type === 'master' ? 'all clients' : '--'}  </td>
@@ -1177,10 +1150,10 @@ ReceiveUI.keys = React.createClass({
 				<div >
 					<div id="keyspage" className={"col-md-12  tab-pane fade  in active"}>
 						<div className="snow-block-body">
-							<ButtonToolbar>
-								  <a type="button"  onClick={snowUI.methods.hrefRoute}  href={snowPath.root + snowPath.receive + '/' + this.props.state.component + '/add'} className="btn btn-sm btn-default ">{text.button.add.text}</a>
+							<snowUI.ButtonToolbar>
+								  <a type="button"  onClick={snowUI.methods.hrefRoute}  href={snowUI.snowPath.root + snowUI.snowPath.receive + '/' + this.props.state.component + '/add'} className="btn btn-sm btn-default ">{text.button.add.text}</a>
 							  
-							</ButtonToolbar >
+							</snowUI.ButtonToolbar >
 							<div className="table-responsive">
 								<table className="table table-hover snowtablesort" >
 									<thead>
@@ -1203,7 +1176,7 @@ ReceiveUI.keys = React.createClass({
 						<div className="clearfix"></div>
 					</div>
 					
-					{removeItem.call(this,this.removeNow,function(){ this.setState({removeItem:false}) }.bind(this) )}
+					{snowUI.snowModals.removeItem.call(this,this.removeNow,function(){ this.setState({removeItem:false}) }.bind(this) )}
 				</div>			
 			)
 		}.bind(this)
@@ -1225,7 +1198,7 @@ ReceiveUI.keys = React.createClass({
 
 
 //trackers component
-ReceiveUI.trackers = React.createClass({
+snowUI.receive.trackers = React.createClass({
 	getInitialState: function() {
 		return {
 			requesting:false,
@@ -1237,7 +1210,7 @@ ReceiveUI.trackers = React.createClass({
 		}
 	},
 	componentWillReceiveProps: function(nextProps) {
-		if(snowUI.debug) snowlog.info('tracker receive props' ,nextProps)
+		if(snowUI.debug) snowLog.info('tracker receive props' ,nextProps)
 		
 	},
 	shouldComponentUpdate: function() {
@@ -1248,7 +1221,7 @@ ReceiveUI.trackers = React.createClass({
 		
 	},
 	componentDidUpdate: function() {
-		if(snowUI.debug) snowlog.info('trackers did update')
+		if(snowUI.debug) snowLog.info('trackers did update')
 		if(!this.state.listen)this.listen()
 		
 		snowUI.watchLoader();
@@ -1262,13 +1235,13 @@ ReceiveUI.trackers = React.createClass({
 			
 	},
 	componentDidMount: function() {
-		if(snowUI.debug) snowlog.info('trackers did mount')
+		if(snowUI.debug) snowLog.info('trackers did mount')
 		snowUI.watchLoader();
 		if(!this.state.listen)this.listen()
 	},
 	listen: function() {
 		if(!this.state.listen)this.setState({listen:true});
-		$("#dcctrackerform #receivertype").autocomplete({ source: defaultcoins,minLength:0}).focus(function(){$(this).autocomplete('search', $(this).val())});
+		$("#dcctrackerform #receivertype").autocomplete({ source: snowUI.defaultcoins,minLength:0}).focus(function(){$(this).autocomplete('search', $(this).val())});
 		//fill account drop down from wallet selection
 		$("#dcctrackerform #account").autocomplete({ 
 			source: function(req, response) { 
@@ -1311,7 +1284,7 @@ ReceiveUI.trackers = React.createClass({
 		
 	},
 	submitForm: function(e) {
-		if(snowUI.debug) snowlog.info('submit trackers add form',e)
+		if(snowUI.debug) snowLog.info('submit trackers add form',e)
 		e.preventDefault();
 		var _this = this
 		this.setState({requesting:true});
@@ -1337,12 +1310,12 @@ ReceiveUI.trackers = React.createClass({
 			snowUI.ajax.POST(url,data,function(resp) {
 				if(resp.success === true) {
 					
-					snowUI.methods.valueRoute(snowPath.receive + '/' + _this.props.config.page)
+					snowUI.methods.valueRoute(snowUI.snowPath.receive + '/' + _this.props.config.page)
 					snowUI.flash('success','Tracker added',2500)
 					this.setState({requesting:false});
 					
 				} else {
-					if(snowUI.debug) snowlog.error(resp)
+					if(snowUI.debug) snowLog.error(resp)
 					_this.setState({requesting:false});
 					snowUI.flash('error',resp.error,3500)
 					//_this.setState({error:true,message:'Error retrieving data',connecting:false})
@@ -1353,7 +1326,7 @@ ReceiveUI.trackers = React.createClass({
 	},
 	removeAsk: function(e) {
 		
-		if(snowUI.debug) snowlog.log('open tracker modal',e.target,e.target.dataset.dccwid)
+		if(snowUI.debug) snowLog.log('open tracker modal',e.target,e.target.dataset.dccwid)
 		
 		var target = e.target.dataset.dccwid,
 			iden = e.target.dataset.dcciden;
@@ -1363,7 +1336,7 @@ ReceiveUI.trackers = React.createClass({
 		
 	},
 	removeNow: function(e) {
-		if(snowUI.debug) snowlog.log('removeNow',this.state)
+		if(snowUI.debug) snowLog.log('removeNow',this.state)
 		var url = "/api/snowcoins/local/receive/setup",
 			data = {'action':'delete-tracker',tracker:this.state._candidate}
 		
@@ -1377,7 +1350,7 @@ ReceiveUI.trackers = React.createClass({
 					snowUI.flash('success','Tracker removed',2500)
 				
 				} else {
-					if(snowUI.debug) snowlog.error(resp)
+					if(snowUI.debug) snowLog.error(resp)
 					this.setState({_candidate:false,canUpdate:true});
 					snowUI.flash('error',resp.error,3500)
 					//_this.setState({error:true,message:'Error retrieving data',connecting:false})
@@ -1390,9 +1363,9 @@ ReceiveUI.trackers = React.createClass({
 		}
 	}, 
 	render: function() {
-		if(snowUI.debug) snowlog.log('trackers component', this.props)
+		if(snowUI.debug) snowLog.log('trackers component', this.props)
 		
-		var text = snowtext.receive.trackers,
+		var text = snowUI.snowText.receive.trackers,
 			results;
 		
 		var list = this.props.state.data[this.props.state.component]
@@ -1424,7 +1397,7 @@ ReceiveUI.trackers = React.createClass({
 			<div >
 				<div id="trackerspage" className={"col-md-12  tab-pane fade in active"}>
 					<div className="snow-block-body">
-						  <a type="button"  onClick={snowUI.methods.hrefRoute}  href={snowPath.root + snowPath.receive + '/' + this.props.state.component + '/add'} className="btn btn-sm btn-default adddccwalletbutton">{text.button.add.text}</a>
+						  <a type="button"  onClick={snowUI.methods.hrefRoute}  href={snowUI.snowPath.root + snowUI.snowPath.receive + '/' + this.props.state.component + '/add'} className="btn btn-sm btn-default adddccwalletbutton">{text.button.add.text}</a>
 						  <div className="table-responsive">
 							<table className="table table-hover snowtablesort">
 								<thead>
@@ -1448,7 +1421,7 @@ ReceiveUI.trackers = React.createClass({
 					</div>
 					<div className="clearfix"></div>
 				</div>
-				{removeItem.call(this,this.removeNow,function(){ this.setState({removeItem:false}) }.bind(this) )}
+				{snowUI.snowModals.removeItem.call(this,this.removeNow,function(){ this.setState({removeItem:false}) }.bind(this) )}
 			</div>			
 		
 			);
@@ -1514,7 +1487,7 @@ ReceiveUI.trackers = React.createClass({
 							
 							<div className="form-group">
 								<button    disabled={(this.state.requesting) ? 'disabled' : ''}  id="confirmchangepassphrase" className="btn " >{this.state.requesting ? 'Adding...' : 'Add Tracker'}</button>
-								<a type="button"  onClick={snowUI.methods.hrefRoute} href={snowPath.root + snowPath.receive + '/' + this.props.state.component}   className="btn btn-default pull-right" >Cancel</a>
+								<a type="button"  onClick={snowUI.methods.hrefRoute} href={snowUI.snowPath.root + snowUI.snowPath.receive + '/' + this.props.state.component}   className="btn btn-default pull-right" >Cancel</a>
 							</div>
 						</div>
 						<input type="hidden" ref="action" name="action" value="add-tracker" />

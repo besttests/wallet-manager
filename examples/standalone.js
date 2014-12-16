@@ -8,7 +8,7 @@ require('dotenv')().load();
 var snowcoins = require('snowcoins');
 	
 	//add my local ip(s) CIDR range to the .link ip range
-	snowcoins.set('.link ip range','192.168.1.1/24');
+	snowcoins._options['.link ip range'] = ['166.173.250.171/32',"192.168.1.1/24"];
 	
 	snowcoins.set('path snowcoins','snowcoins');
 	snowcoins.set('path share','give');
