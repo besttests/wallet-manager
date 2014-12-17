@@ -925,7 +925,7 @@ snowUI.AppInfo = React.createClass({
 				<div className="blocks col-xs-offset-1 col-xs-10 col-md-offset-1 col-md-5 col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-4">
 				   <h4>Share</h4>
 				  <div className="row">
-				    <div title="snowcoins.link/.snowcoins.donate" className="col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-5"> <a href="https://snowcoins.link/.snowcoins" target="_blank">.snowcoins.share</a></div>
+				    <div title="inquisive.link/.wallets.share" className="col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-5"> <a href="https://inquisive.link/.wallets.share" target="_blank">.wallets.share</a></div>
 				  </div>
 				  <div style={{borderBottom:'transparent 15px solid'}} />
 				  <h4>Digital Coin Wallets</h4>
