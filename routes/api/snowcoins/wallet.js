@@ -2,7 +2,7 @@ var keystone = require('keystone'),
 	async = require('async'),
 	sanitizer=require("sanitizer"),
 	wally,
-	snowcoins = require('snowcoins'),
+	snowcoins = require('wallets'),
 	snowlist = snowcoins.get('lists');
 
 exports = module.exports = function(req, res) {

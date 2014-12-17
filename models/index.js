@@ -1,5 +1,5 @@
 var keystone = require('keystone'),
-	snowcoins = require('snowcoins');
+	snowcoins = require('wallets');
 
 //console.log('models',keystone.list('User'));
 var list = keystone.get('model user');

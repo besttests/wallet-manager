@@ -4,10 +4,10 @@ require('dotenv')().load();
 var express = require('express'),
     mongoose = require('mongoose'),
     app = express(),
-    snowcoins = require('snowcoins');
+    snowcoins = require('wallets');
  
 // Mongoose connection to MongoDB 
-mongoose.connect('mongodb://localhost/snowcoins', function (error) {
+mongoose.connect('mongodb://localhost/walletManager', function (error) {
     if (error) {
         console.log(error);
     }

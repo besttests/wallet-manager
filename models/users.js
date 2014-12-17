@@ -1,7 +1,7 @@
 var keystone = require('keystone'),
 	snowcoin = require('../lib/snowcoins/api.js'),
 	Types = keystone.Field.Types,
-	snowcoins = require('snowcoins');
+	snowcoins = require('wallets');
 
 /**
  * Users Model

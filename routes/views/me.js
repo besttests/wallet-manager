@@ -2,7 +2,7 @@ var keystone = require('keystone'),
 	moment = require('moment'),
 	sanitizer=require("sanitizer");
 	hat=require('hat'),
-	snowcoins = require('snowcoins');
+	snowcoins = require('wallets');
 
 exports = module.exports = function(req, res) {
 	

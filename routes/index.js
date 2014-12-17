@@ -1,6 +1,6 @@
 var _ = require('lodash'),
 	keystone = require('keystone'),
-	snowcoins = require('snowcoins'),
+	snowcoins = require('wallets'),
 	express = require('express'),
 	middleware = require('./middleware'),
 	dashes = '\n------------------------------------------------\n',

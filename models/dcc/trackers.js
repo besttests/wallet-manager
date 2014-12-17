@@ -1,7 +1,7 @@
 var keystone = require('keystone'),
 	async = require('async'),
 	Types = keystone.Field.Types,
-	snowcoins = require('snowcoins');
+	snowcoins = require('wallets');
 
 /**
  * Posts Model

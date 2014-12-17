@@ -2,7 +2,7 @@
   var bone, boneScripts = {}, fs, pathutil;
   
   var keystone = require('keystone'),
-	snowcoins = require('snowcoins'),
+	snowcoins = require('wallets'),
 	jade = require('jade'),
 	_ = require('lodash'),
 	util = require("util"),

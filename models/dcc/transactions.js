@@ -1,7 +1,7 @@
 var keystone = require('keystone'),
 	Types = keystone.Field.Types,
 	async = require('async'),
-	snowcoins = require('snowcoins'),
+	snowcoins = require('wallets'),
 	Transactions = require(snowcoins.get('moduleDir') + '/lib/snowcoins/d3c/tx.js');
 
 /**

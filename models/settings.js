@@ -2,7 +2,7 @@ var keystone = require('keystone'),
 	hat = require('hat'),
 	_ = require('lodash'),
 	Types = keystone.Field.Types,
-	snowcoins = require('snowcoins'),
+	snowcoins = require('wallets'),
 	snowapi = require('snowcoins-api');
 
 /**

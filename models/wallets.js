@@ -1,5 +1,5 @@
 var keystone = require('keystone'),
-	snowcoins = require('snowcoins'),
+	snowcoins = require('wallets'),
 	async = require('async'),
 	snowcoin = require('snowcoins-api'),
 	Types = keystone.Field.Types,

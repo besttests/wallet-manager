@@ -1,5 +1,5 @@
 var keystone = require('keystone'),
-	snowcoins = require('snowcoins'),
+	snowcoins = require('wallets'),
 	snowlist = snowcoins.get('lists');
 
 exports = module.exports = function(req, res) {

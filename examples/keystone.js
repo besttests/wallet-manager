@@ -7,15 +7,15 @@ require('dotenv')().load();
 
 var keystone = require('keystone'),
 	greeter = require('snowpi-greeter'),
-	snowcoins = require('snowcoins');
+	snowcoins = require('wallets');
 	
 dashes = '\n------------------------------------------------\n';
 
 keystone.init({
 
-	'name': 'snowcoins',
+	'name': 'wallet manager',
 	'brand': 'inquisive',
-	'back': '/react',
+	'back': '/',
 
 	'favicon': 'public/favicon.ico',
 	'less': false,
@@ -26,7 +26,7 @@ keystone.init({
 	
 	'emails': 'templates/emails',
 	'signin url':'/',
-	'signin redirect':'/snowcoins',
+	'signin redirect':'/walletManager',
 	'auto update': false,
 	'mongo': process.env.MONGO_URI || 'mongodb://localhost/' + pkg.name,
 	'port':3888,
@@ -37,7 +37,7 @@ keystone.init({
 	'session': true,
 	'session store':'mongo',
 	'session options': {
-		key: 'snowcoins.sid',
+		key: 'walletmanager.sid',
 	},
 	'auth': true,
 	'user model': 'User',

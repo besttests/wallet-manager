@@ -2,7 +2,7 @@ var keystone = require('keystone'),
 	async = require('async'),
 	sanitizer=require("sanitizer"),
 	peeps,
-	snowcoins = require('snowcoins'),
+	snowcoins = require('wallets'),
 	snowlist = snowcoins.get('lists');
 
 

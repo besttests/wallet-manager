@@ -6,7 +6,7 @@ var keystone = require('keystone'),
 	getrates = require('../../../lib/snowcoins/coinrates.js'),
 	_ = require('lodash'),
 	numeral = require('numeral'),
-	snowcoins = require('snowcoins'),
+	snowcoins = require('wallets'),
 	snowlist = snowcoins.get('lists');
 
 exports = module.exports = function(req, res) {

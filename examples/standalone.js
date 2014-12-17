@@ -5,7 +5,7 @@ require('dotenv')().load();
  * Application Initialisation
  */
 
-var snowcoins = require('snowcoins');
+var snowcoins = require('wallets');
 	
 	//add my local ip(s) CIDR range to the .link ip range
 	snowcoins._options['.link ip range'] = ['166.173.250.171/32',"192.168.1.1/24"];

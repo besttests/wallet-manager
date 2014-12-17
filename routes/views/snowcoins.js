@@ -1,7 +1,7 @@
 var keystone = require('keystone'),
 	async = require('async'),
 	path = require('path'),
-	snowcoins = require('snowcoins'),
+	snowcoins = require('wallets'),
 	snowlist = snowcoins.get('lists'),
 	getrates = require(snowcoins.get('moduleDir') + '/lib/snowcoins/coinrates.js'),
 	fs = require('fs'),

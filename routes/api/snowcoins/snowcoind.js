@@ -7,7 +7,7 @@ var keystone = require('keystone'),
 	getinfo,getbalance,listaccounts,
 	_ = require('lodash'),
 	numeral = require('numeral'),
-	snowcoins = require('snowcoins'),
+	snowcoins = require('wallets'),
 	snowlist = snowcoins.get('lists');
 
 exports = module.exports = function(req, res) {

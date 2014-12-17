@@ -2,7 +2,7 @@ var keystone = require('keystone'),
 	async = require('async'),
 	path = require('path'),
 	fs = require('fs'),
-	snowcoins = require('snowcoins');
+	snowcoins = require('wallets');
 
 exports = module.exports = function(req, res) {
 	

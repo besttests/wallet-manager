@@ -3,7 +3,7 @@ var _ = require('lodash'),
 	keystone = require('keystone'),
 	hat = require('hat'),
 	path = require('path'),
-	snowcoins = require('snowcoins');
+	snowcoins = require('wallets');
 
 var appRoot = (function(_rootPath) {
 	var parts = _rootPath.split(path.sep);
