@@ -3,7 +3,7 @@ var keystone = require('keystone');
 //console.log('models',keystone.list('User'));
 var list = keystone.get('model user') || 'User';
 
-if(typeof  keystone.list(list) !== 'object')require('./users');
+if(typeof  keystone.lists[list] !== 'object')require('./users');
 
 require('./dcc/coins.js');
 require('./settings.js');

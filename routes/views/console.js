@@ -1,7 +1,7 @@
 var k = require('keystone'),
 	async = require('async'),
 	path = require('path'),
-	_ = require('underscore'),
+	_ = require('lodash'),
 	fs = require('fs');
 
 exports = module.exports = function(req, res) {

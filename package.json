@@ -1,7 +1,7 @@
 {
   "name": "snowcoins",
-  "version": "0.0.11",
-  "uri": "https://code.snowpi.org/snowcoins",
+  "version": "0.0.4",
+  "uri": "https://inquisive.link/docs/snowcoins",
   "private": false,
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "react": "0.11.x",
     "request": "~2.33.0",
     "sanitizer": "~0.1.1",
+    "snowcoins-api": "~0.0.x",
     "snowcoins-link": "~0.0.x",
     "snowcoins-link-server": "~0.0.x",
     "snowcoins-tracker": "0.0.x",
@@ -58,15 +59,16 @@
     "bitcoin",
     "dogecoin",
     "litecoin",
-    "coordinator"
+    "coordinator",
+    "coin"
   ],
   "readmeFilename": "README.md",
   "gitHead": "",
   "bugs": {
     "url": "https://github.com/snowkeeper/snowcoins/issues"
   },
-  "_id": "snowcoins@0.0.11",
-  "_from": "snowcoins@0.0.10",
+  "_id": "snowcoins@0.0.4",
+  "_from": "snowcoins@0.0.3",
   "devDependencies": {
     "expose-loader": "^0.5.3",
     "grunt": "^0.4.5",

@@ -142,7 +142,7 @@ snowUI.settings.UI = React.createClass({displayName: 'UI',
 					React.DOM.ul({className: "nav nav-pills dccnavlis", role: "tablist", 'data-tabs': "pills"}, 
 						React.DOM.li({className: "active"}, React.DOM.a({onClick: this.changeTab, 'data-target': "rates", role: "pill", 'data-toggle': "pill", title: snowUI.snowText.settings.menu.rates.title}, snowUI.snowText.settings.menu.rates.text)), 
 						React.DOM.li(null, React.DOM.a({onClick: this.changeTab, 'data-target': "language", role: "pill", 'data-toggle': "pill", title: snowUI.snowText.settings.menu.language.title}, snowUI.snowText.settings.menu.language.text)), 
-						React.DOM.li(null, React.DOM.a({role: "pill", 'data-toggle': "pill", onClick: snowUI.methods.hrefRoute, title: snowUI.snowText.settings.menu.autobot.title, href: snowUI.snowPath.link}, snowUI.snowText.settings.menu.autobot.text)), 
+						React.DOM.li(null, React.DOM.a({role: "pill", 'data-toggle': "pill", onClick: this.changeTab, 'data-target': ".link", title: snowUI.snowText.settings.menu.autobot.title}, snowUI.snowText.settings.menu.autobot.text)), 
 						React.DOM.li(null, React.DOM.a({onClick: this.reload}, React.DOM.span({className: "glyphicon glyphicon-refresh"})))
 					), 
 					React.DOM.div({className: "clearfix", style: {marginTop:10}}, 
@@ -542,7 +542,7 @@ snowUI.settings.language = React.createClass({displayName: 'language',
 });
 
 //inq component
-snowUI.link.UI = React.createClass({displayName: 'UI',
+snowUI.settings['.link'] = React.createClass({
 	getInitialState: function() {
 		return ({
 			connecting:true,

@@ -312,7 +312,7 @@ snowUI.UI = React.createClass({
 	mixins: [React.addons.LinkedStateMixin],
 	getDefaultProps: function() {
 		return {
-			section: 'wallet',
+			section: snowUI.snowPath.router.wallet,
 			moon:  false,
 			wallet:  false,
 			params: false,
@@ -794,7 +794,7 @@ snowUI.UI = React.createClass({
 		
 		var mycomp = comp[this.props.section]
 		if(!mycomp){
-			if(snowUI.debug) snowLog.error(' mycomp failed, probably a 404:',mycomp,comp[this.props.section])
+			if(snowUI.debug) snowLog.info(' mycomp failed, probably a 404:',this.props.section,mycomp,comp[this.props.section])
 			mycomp=snowUI.wallet.UI
 			gates.showWarning = '404 Not Found';
 			gates.showWarningPage = true;
@@ -905,10 +905,11 @@ snowUI.AppInfo = React.createClass({
 				<div>
 				<div className="blocks col-xs-offset-1 col-xs-10 col-md-offset-1 col-md-5 col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-4">
 				  
-				  <h4>Get Snowcoins</h4>
+				  <h4>Get Wallet Manager</h4>
 				  <div className="row">
-				    <div className="col-sm-offset-1 col-sm-11"><a href="https://github.com/snowkeeper/snowcoins" target="_blank">GitHub / Installation</a></div>
-				    <div className="col-sm-offset-1 col-sm-11"> <a href="https://github.com/snowkeeper/snowcoins/latest.zip" target="_blank">Download zip</a>&nbsp;|&nbsp;<a href="https://github.com/snowkeeper/snowcoins/latest.tar.gz" target="_blank">Download gz</a></div>
+				    <div className="col-sm-offset-1 col-sm-11"><a href="https://github.com/inquisive/wallets" target="_blank">GitHub / Installation</a></div>
+				    <div className="col-sm-offset-1 col-sm-11"><a href="https://www.npmjs.com/package/wallets" target="_blank">NPM</a></div>
+				    <div className="col-sm-offset-1 col-sm-11"> <a href="https://github.com/inquisive/wallets/latest.zip" target="_blank">Download zip</a>&nbsp;|&nbsp;<a href="https://github.com/snowkeeper/snowcoins/latest.tar.gz" target="_blank">Download gz</a></div>
 				  </div>
 				  <div style={{borderBottom:'transparent 15px solid'}} />
 				  <h4>Built With</h4>

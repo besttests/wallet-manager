@@ -824,7 +824,7 @@ snowUI.wallet.accounts = React.createClass({
 	},
 	dropStart: function(e) {
 		var highlight = $(e.currentTarget).closest('.eachaddress')
-		var balance = $('.eachaccount').find('.balance')
+		var balance = $('.eachaccount').not('.skip').find('.balance')
 		
 		highlight.addClass('dropcandidate')
 		balance.append('<div class="dropzone bstooltip" data-placement="top" data-toggle="tooltip"  data-trigger="hover focus" title="Click me to move the selected address to this account"></div>')
@@ -837,7 +837,7 @@ snowUI.wallet.accounts = React.createClass({
 	},
 	dropEnd: function(e) {
 		
-		var balance = $('.eachaccount').find('.balance')
+		var balance = $('.eachaccount').not('.skip').find('.balance')
 		balance.find('.dropzone').remove()
 		$('.eachaddress').removeClass('dropcandidate')
 		this._dropAddress = false
@@ -849,12 +849,12 @@ snowUI.wallet.accounts = React.createClass({
 	dropZone: function(e) {
 		var _this = this
 		
-		var account = $(e.currentTarget).closest('.eachaccount').attr('data-snowaccount'),
+		var account = $(e.currentTarget).closest('.eachaccount').not('.skip').attr('data-snowaccount'),
 			address = this._dropCandidate.attr('data-snowaddress')
 			
 		
 		
-		if($(e.currentTarget).closest('.eachaccount').find('.addresses').css('display') === 'none')$(e.currentTarget).closest('.eachaccount').find('.addresses').toggle("fast")
+		if($(e.currentTarget).closest('.eachaccount').not('.skip').find('.addresses').css('display') === 'none')$(e.currentTarget).closest('.eachaccount').find('.addresses').toggle("fast")
 		
 		var details = $(e.currentTarget).closest('.details')
 			
@@ -871,7 +871,7 @@ snowUI.wallet.accounts = React.createClass({
 		
 		}
 		
-		if($(e.currentTarget).closest('.eachaccount').attr('class')  !== $(this._dropCandidate).closest('.eachaccount').attr('class') ) {
+		if($(e.currentTarget).closest('.eachaccount').not('.skip').attr('class')  !== $(this._dropCandidate).closest('.eachaccount').attr('class') ) {
 			this._dropCandidate.fadeOut()
 			_this.dropEnd()
 			_this.moveAddressCall(account,address,finish)
@@ -883,7 +883,7 @@ snowUI.wallet.accounts = React.createClass({
 	dragDrop: function(e) {
 		var _this = this
 		$('.eachaccount').find('.bs-warning').removeClass('bs-warning')
-		var account = $(e.currentTarget).closest('.eachaccount').attr('data-snowaccount'),
+		var account = $(e.currentTarget).closest('.eachaccount').not('.skip').attr('data-snowaccount'),
 			address = $(this.dragged).attr('data-snowaddress')
 		
 		
@@ -946,7 +946,7 @@ snowUI.wallet.accounts = React.createClass({
 		e.dataTransfer.effectAllowed = 'move';
 		e.dataTransfer.dropEffect = 'move';
 		
-		$(e.currentTarget).closest('.eachaccount').find('.addresses').addClass('skip')
+		$(e.currentTarget).closest('.eachaccount').not('.skip').find('.addresses').addClass('skip')
 		this._openAddresses = $('.eachaccount').find('.addresses.open')
 		//this._openAddresses.not('.skip').hide()
 		
@@ -965,7 +965,7 @@ snowUI.wallet.accounts = React.createClass({
 	over: false,
 	dragOver: function(e) {
 		e.preventDefault()
-		var zone = $(e.target).closest('.eachaccount')
+		var zone = $(e.target).closest('.eachaccount').not('.skip')
 		
 		if(zone.hasClass("dragover")) return;
 		

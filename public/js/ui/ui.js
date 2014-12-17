@@ -312,7 +312,7 @@ snowUI.UI = React.createClass({displayName: 'UI',
 	mixins: [React.addons.LinkedStateMixin],
 	getDefaultProps: function() {
 		return {
-			section: 'wallet',
+			section: snowUI.snowPath.router.wallet,
 			moon:  false,
 			wallet:  false,
 			params: false,
@@ -794,7 +794,7 @@ snowUI.UI = React.createClass({displayName: 'UI',
 		
 		var mycomp = comp[this.props.section]
 		if(!mycomp){
-			if(snowUI.debug) snowLog.error(' mycomp failed, probably a 404:',mycomp,comp[this.props.section])
+			if(snowUI.debug) snowLog.info(' mycomp failed, probably a 404:',this.props.section,mycomp,comp[this.props.section])
 			mycomp=snowUI.wallet.UI
 			gates.showWarning = '404 Not Found';
 			gates.showWarningPage = true;
@@ -905,10 +905,11 @@ snowUI.AppInfo = React.createClass({displayName: 'AppInfo',
 				React.DOM.div(null, 
 				React.DOM.div({className: "blocks col-xs-offset-1 col-xs-10 col-md-offset-1 col-md-5 col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-4"}, 
 				  
-				  React.DOM.h4(null, "Get Snowcoins"), 
+				  React.DOM.h4(null, "Get Wallet Manager"), 
 				  React.DOM.div({className: "row"}, 
-				    React.DOM.div({className: "col-sm-offset-1 col-sm-11"}, React.DOM.a({href: "https://github.com/snowkeeper/snowcoins", target: "_blank"}, "GitHub / Installation")), 
-				    React.DOM.div({className: "col-sm-offset-1 col-sm-11"}, " ", React.DOM.a({href: "https://github.com/snowkeeper/snowcoins/latest.zip", target: "_blank"}, "Download zip"), " | ", React.DOM.a({href: "https://github.com/snowkeeper/snowcoins/latest.tar.gz", target: "_blank"}, "Download gz"))
+				    React.DOM.div({className: "col-sm-offset-1 col-sm-11"}, React.DOM.a({href: "https://github.com/inquisive/wallets", target: "_blank"}, "GitHub / Installation")), 
+				    React.DOM.div({className: "col-sm-offset-1 col-sm-11"}, React.DOM.a({href: "https://www.npmjs.com/package/wallets", target: "_blank"}, "NPM")), 
+				    React.DOM.div({className: "col-sm-offset-1 col-sm-11"}, " ", React.DOM.a({href: "https://github.com/inquisive/wallets/latest.zip", target: "_blank"}, "Download zip"), " | ", React.DOM.a({href: "https://github.com/snowkeeper/snowcoins/latest.tar.gz", target: "_blank"}, "Download gz"))
 				  ), 
 				  React.DOM.div({style: {borderBottom:'transparent 15px solid'}}), 
 				  React.DOM.h4(null, "Built With"), 

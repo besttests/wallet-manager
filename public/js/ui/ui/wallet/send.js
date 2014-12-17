@@ -255,14 +255,8 @@ snowUI.wallet.send = React.createClass({displayName: 'send',
 							
 			};
 			
-			if(_this.props.config.unlocked === false) {
-				
-				_this.setState({confirm:false,unlock:true,persist:options});
-				snowUI.methods.modals.unlockWallet.open();
-				
-			} else {
-				_this.setState({confirm:true,unlock:false,persist:options});
-			}
+			_this.setState({confirm:true,unlock:false,persist:options});
+			
 		}
 		
 	},
@@ -273,19 +267,31 @@ snowUI.wallet.send = React.createClass({displayName: 'send',
 			url= "/api/snowcoins/local/gated",
 			data =  { checkauth:nowtime,account:this.state.persist.from,comment:this.state.persist.memo,commentto:this.state.persist.message,wallet: this.props.config.wally.key,command:command,amount:this.state.persist.amount,toaddress:this.state.persist.to};
 		
-		snowUI.ajax.GET(url,data,function(resp) {
-			if(snowUI.debug) snowLog.log(resp)
-			if(resp.success === true)
-			{
-				_this.setState({persist:{},confirm:false,receipt:true,transaction:resp.tx});
-			}
-			else
-			{
-				_this.setState({confirm:false,error:resp.error,});
-			}
-		});
-			  
-		return false;	
+		
+		if(_this.props.config.unlocked === false) {
+				
+			_this.setState({confirm:true,unlock:true});
+			snowUI.methods.modals.unlockWallet.open();
+			
+			return false;	
+			
+		} else {
+			snowUI.ajax.GET(url,data,function(resp) {
+				if(snowUI.debug) snowLog.log(resp)
+				if(resp.success === true)
+				{
+					_this.setState({persist:{},confirm:false,receipt:true,transaction:resp.tx});
+				}
+				else
+				{
+					_this.setState({confirm:false,error:resp.error,});
+				}
+			});
+				  
+			return false;	
+
+		}
+		
 	},
 	cancelConfirm: function() {
 		var _this = this; 
@@ -335,7 +341,7 @@ snowUI.wallet.send = React.createClass({displayName: 'send',
 						
 							React.DOM.div({dangerouslySetInnerHTML: {__html: html}}), 
 							
-							React.DOM.button({onClick: _this.sendConfirmed, className: "btn btn-warning"}, "Send Coins Now"), 
+							React.DOM.button({onClick: _this.sendConfirmed, className: _this.props.config.unlocked ? "btn btn-warning" : "btn "}, _this.props.config.unlocked ? "Send Coins Now" : "Unlock Wallet"), 
 							React.DOM.span(null, "   "), 
 							React.DOM.button({className: "btn btn-default ", onClick: _this.cancelConfirm}, "Cancel")
 						)

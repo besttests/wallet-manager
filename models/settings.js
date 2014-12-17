@@ -45,7 +45,7 @@ Settings.schema.statics.linkServer = function linkServer(state,cb) {
 	//grab the settings
 	_this.findOne({'setting':'snowcoins-linkserver'}).select('-_id -__v').lean().exec(function(err,doc){
 		if(err) return cb(err)
-		if(!doc)state = 'off';	
+		if(!doc)state = {state:'off'};	
 		if(typeof state !== 'object') {
 			if(typeof cb === 'function')
 				return cb(null,doc.value)

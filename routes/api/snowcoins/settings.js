@@ -184,7 +184,6 @@ exports = module.exports = function(req, res) {
 						next();
 					});
 					//console.log(locals.data.currentrates)
-					
 				});
 				
 			} else next();			

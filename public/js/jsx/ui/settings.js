@@ -142,7 +142,7 @@ snowUI.settings.UI = React.createClass({
 					<ul className="nav nav-pills dccnavlis"  role="tablist" data-tabs="pills" >
 						<li className="active" ><a onClick={this.changeTab}  data-target="rates" role="pill" data-toggle="pill" title={snowUI.snowText.settings.menu.rates.title} >{snowUI.snowText.settings.menu.rates.text}</a></li>
 						<li  ><a onClick={this.changeTab}  data-target="language" role="pill" data-toggle="pill" title={snowUI.snowText.settings.menu.language.title}>{snowUI.snowText.settings.menu.language.text}</a></li>
-						<li ><a  role="pill" data-toggle="pill"  onClick={snowUI.methods.hrefRoute} title={snowUI.snowText.settings.menu.autobot.title} href={snowUI.snowPath.link}>{snowUI.snowText.settings.menu.autobot.text}</a></li>
+						<li ><a  role="pill" data-toggle="pill" onClick={this.changeTab} data-target=".link"   title={snowUI.snowText.settings.menu.autobot.title}>{snowUI.snowText.settings.menu.autobot.text}</a></li>
 						<li><a onClick={this.reload}><span className="glyphicon glyphicon-refresh"></span></a></li>
 					</ul>
 					<div className="clearfix" style={{marginTop:10}}>
@@ -542,7 +542,7 @@ snowUI.settings.language = React.createClass({
 });
 
 //inq component
-snowUI.link.UI = React.createClass({
+snowUI.settings['.link'] = React.createClass({
 	getInitialState: function() {
 		return ({
 			connecting:true,

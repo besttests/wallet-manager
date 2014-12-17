@@ -11,7 +11,7 @@ snowUI.wallet.add = React.createClass({displayName: 'add',
 			validated:false,
 			refresh:false,
 			port:22555
-		}
+		} 
 	},
 	componentWillReceiveProps: function (nextProps) {
 		

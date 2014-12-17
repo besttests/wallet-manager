@@ -147,9 +147,10 @@ snowUI.controllers.ui.modals = function() {
 			open: function() {
 				var modals = _this.state.modals;
 				modals.unlockWallet = true;
-				_this.setState({modals:modals});
+				_this.setState({modals:modals,unlockphrase:''});
 			},
 			close: function() {
+				
 				snowUI.methods.modals.close('unlockWallet')
 			},
 			request: function(e) {
@@ -172,7 +173,7 @@ snowUI.controllers.ui.modals = function() {
 							var tt=(new Date().getTime());
 							snowUI.methods.changelock(Math.floor(tt+timeout*1000));
 							snowUI.methods.modals.unlockWallet.close()
-							
+							$('#unlockphrase').val('');
 						} else {
 							snowUI.flash('error',resp.error,3500)
 							errorDiv.fadeIn().html(resp.error);
@@ -191,15 +192,16 @@ snowUI.controllers.ui.modals = function() {
 			if(_this.state.modals[me]) {
 				var modals = _this.state.modals;
 				modals[me] = false;
-				_this.setState({requesting:false,modals:modals})
+				_this.setState({requesting:false,modals:modals,unlockphrase:''})
 				
 			} else {
-				_this.setState({requesting:false,modals: {
+				_this.setState({requesting:false,unlockphrase:'',modals: {
 					unlockWallet: false,
 					encryptWallet: false,
 					removeItem: false,
 					genericModal: false,
 					addressBook: false,
+					
 				}});
 			}
 		},

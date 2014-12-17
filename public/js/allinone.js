@@ -9,9 +9,9 @@ var snowUI = {
 			host: 'http://snow8:12888/',
 		},
 		router: {
-			root: 'snowcoins',
-			wallet: 'wallet',
-			receive: 'receive',
+			root: 'walletManager',
+			wallet: 'wallets',
+			receive: 'manage',
 			settings: 'settings',
 			profile: 'profile',
 			inq: '.link',
@@ -19,14 +19,14 @@ var snowUI = {
 			d2c: 'd2c',
 			d3c: 'd3c'
 		},
-		routeRoot: 'snowcoins',
-		root: '/snowcoins',
-		wallet: '/wallet',
-		receive: '/receive',
+		routeRoot: 'walletManager',
+		root: '/walletManager',
+		wallet: '/wallets',
+		receive: '/manage',
 		settings: '/settings',
 		profile: '/profile',
-		inq: '/.link',
-		link: '/.link',
+		inq: '/settings/.link',
+		link: '/settings/.link',
 		d2c: '/d2c',
 		d3c: '/d3c',
 		share: '/share',
@@ -738,7 +738,7 @@ snowUI.UI = React.createClass({displayName: 'UI',
 	mixins: [React.addons.LinkedStateMixin],
 	getDefaultProps: function() {
 		return {
-			section: 'wallet',
+			section: snowUI.snowPath.router.wallet,
 			moon:  false,
 			wallet:  false,
 			params: false,
@@ -1220,7 +1220,7 @@ snowUI.UI = React.createClass({displayName: 'UI',
 		
 		var mycomp = comp[this.props.section]
 		if(!mycomp){
-			if(snowUI.debug) snowLog.error(' mycomp failed, probably a 404:',mycomp,comp[this.props.section])
+			if(snowUI.debug) snowLog.info(' mycomp failed, probably a 404:',this.props.section,mycomp,comp[this.props.section])
 			mycomp=snowUI.wallet.UI
 			gates.showWarning = '404 Not Found';
 			gates.showWarningPage = true;
@@ -1331,10 +1331,11 @@ snowUI.AppInfo = React.createClass({displayName: 'AppInfo',
 				React.DOM.div(null, 
 				React.DOM.div({className: "blocks col-xs-offset-1 col-xs-10 col-md-offset-1 col-md-5 col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-4"}, 
 				  
-				  React.DOM.h4(null, "Get Snowcoins"), 
+				  React.DOM.h4(null, "Get Wallet Manager"), 
 				  React.DOM.div({className: "row"}, 
-				    React.DOM.div({className: "col-sm-offset-1 col-sm-11"}, React.DOM.a({href: "https://github.com/snowkeeper/snowcoins", target: "_blank"}, "GitHub / Installation")), 
-				    React.DOM.div({className: "col-sm-offset-1 col-sm-11"}, " ", React.DOM.a({href: "https://github.com/snowkeeper/snowcoins/latest.zip", target: "_blank"}, "Download zip"), " | ", React.DOM.a({href: "https://github.com/snowkeeper/snowcoins/latest.tar.gz", target: "_blank"}, "Download gz"))
+				    React.DOM.div({className: "col-sm-offset-1 col-sm-11"}, React.DOM.a({href: "https://github.com/inquisive/wallets", target: "_blank"}, "GitHub / Installation")), 
+				    React.DOM.div({className: "col-sm-offset-1 col-sm-11"}, React.DOM.a({href: "https://www.npmjs.com/package/wallets", target: "_blank"}, "NPM")), 
+				    React.DOM.div({className: "col-sm-offset-1 col-sm-11"}, " ", React.DOM.a({href: "https://github.com/inquisive/wallets/latest.zip", target: "_blank"}, "Download zip"), " | ", React.DOM.a({href: "https://github.com/snowkeeper/snowcoins/latest.tar.gz", target: "_blank"}, "Download gz"))
 				  ), 
 				  React.DOM.div({style: {borderBottom:'transparent 15px solid'}}), 
 				  React.DOM.h4(null, "Built With"), 
@@ -1538,9 +1539,10 @@ snowUI.controllers.ui.modals = function() {
 			open: function() {
 				var modals = _this.state.modals;
 				modals.unlockWallet = true;
-				_this.setState({modals:modals});
+				_this.setState({modals:modals,unlockphrase:''});
 			},
 			close: function() {
+				
 				snowUI.methods.modals.close('unlockWallet')
 			},
 			request: function(e) {
@@ -1563,7 +1565,7 @@ snowUI.controllers.ui.modals = function() {
 							var tt=(new Date().getTime());
 							snowUI.methods.changelock(Math.floor(tt+timeout*1000));
 							snowUI.methods.modals.unlockWallet.close()
-							
+							$('#unlockphrase').val('');
 						} else {
 							snowUI.flash('error',resp.error,3500)
 							errorDiv.fadeIn().html(resp.error);
@@ -1582,15 +1584,16 @@ snowUI.controllers.ui.modals = function() {
 			if(_this.state.modals[me]) {
 				var modals = _this.state.modals;
 				modals[me] = false;
-				_this.setState({requesting:false,modals:modals})
+				_this.setState({requesting:false,modals:modals,unlockphrase:''})
 				
 			} else {
-				_this.setState({requesting:false,modals: {
+				_this.setState({requesting:false,unlockphrase:'',modals: {
 					unlockWallet: false,
 					encryptWallet: false,
 					removeItem: false,
 					genericModal: false,
 					addressBook: false,
+					
 				}});
 			}
 		},
@@ -3411,7 +3414,7 @@ snowUI.settings.UI = React.createClass({displayName: 'UI',
 					React.DOM.ul({className: "nav nav-pills dccnavlis", role: "tablist", 'data-tabs': "pills"}, 
 						React.DOM.li({className: "active"}, React.DOM.a({onClick: this.changeTab, 'data-target': "rates", role: "pill", 'data-toggle': "pill", title: snowUI.snowText.settings.menu.rates.title}, snowUI.snowText.settings.menu.rates.text)), 
 						React.DOM.li(null, React.DOM.a({onClick: this.changeTab, 'data-target': "language", role: "pill", 'data-toggle': "pill", title: snowUI.snowText.settings.menu.language.title}, snowUI.snowText.settings.menu.language.text)), 
-						React.DOM.li(null, React.DOM.a({role: "pill", 'data-toggle': "pill", onClick: snowUI.methods.hrefRoute, title: snowUI.snowText.settings.menu.autobot.title, href: snowUI.snowPath.link}, snowUI.snowText.settings.menu.autobot.text)), 
+						React.DOM.li(null, React.DOM.a({role: "pill", 'data-toggle': "pill", onClick: this.changeTab, 'data-target': ".link", title: snowUI.snowText.settings.menu.autobot.title}, snowUI.snowText.settings.menu.autobot.text)), 
 						React.DOM.li(null, React.DOM.a({onClick: this.reload}, React.DOM.span({className: "glyphicon glyphicon-refresh"})))
 					), 
 					React.DOM.div({className: "clearfix", style: {marginTop:10}}, 
@@ -3811,7 +3814,7 @@ snowUI.settings.language = React.createClass({displayName: 'language',
 });
 
 //inq component
-snowUI.link.UI = React.createClass({displayName: 'UI',
+snowUI.settings['.link'] = React.createClass({
 	getInitialState: function() {
 		return ({
 			connecting:true,
@@ -5225,7 +5228,7 @@ snowUI.wallet.add = React.createClass({displayName: 'add',
 			validated:false,
 			refresh:false,
 			port:22555
-		}
+		} 
 	},
 	componentWillReceiveProps: function (nextProps) {
 		
@@ -6474,7 +6477,7 @@ snowUI.wallet.accounts = React.createClass({displayName: 'accounts',
 	},
 	dropStart: function(e) {
 		var highlight = $(e.currentTarget).closest('.eachaddress')
-		var balance = $('.eachaccount').find('.balance')
+		var balance = $('.eachaccount').not('.skip').find('.balance')
 		
 		highlight.addClass('dropcandidate')
 		balance.append('<div class="dropzone bstooltip" data-placement="top" data-toggle="tooltip"  data-trigger="hover focus" title="Click me to move the selected address to this account"></div>')
@@ -6487,7 +6490,7 @@ snowUI.wallet.accounts = React.createClass({displayName: 'accounts',
 	},
 	dropEnd: function(e) {
 		
-		var balance = $('.eachaccount').find('.balance')
+		var balance = $('.eachaccount').not('.skip').find('.balance')
 		balance.find('.dropzone').remove()
 		$('.eachaddress').removeClass('dropcandidate')
 		this._dropAddress = false
@@ -6499,12 +6502,12 @@ snowUI.wallet.accounts = React.createClass({displayName: 'accounts',
 	dropZone: function(e) {
 		var _this = this
 		
-		var account = $(e.currentTarget).closest('.eachaccount').attr('data-snowaccount'),
+		var account = $(e.currentTarget).closest('.eachaccount').not('.skip').attr('data-snowaccount'),
 			address = this._dropCandidate.attr('data-snowaddress')
 			
 		
 		
-		if($(e.currentTarget).closest('.eachaccount').find('.addresses').css('display') === 'none')$(e.currentTarget).closest('.eachaccount').find('.addresses').toggle("fast")
+		if($(e.currentTarget).closest('.eachaccount').not('.skip').find('.addresses').css('display') === 'none')$(e.currentTarget).closest('.eachaccount').find('.addresses').toggle("fast")
 		
 		var details = $(e.currentTarget).closest('.details')
 			
@@ -6521,7 +6524,7 @@ snowUI.wallet.accounts = React.createClass({displayName: 'accounts',
 		
 		}
 		
-		if($(e.currentTarget).closest('.eachaccount').attr('class')  !== $(this._dropCandidate).closest('.eachaccount').attr('class') ) {
+		if($(e.currentTarget).closest('.eachaccount').not('.skip').attr('class')  !== $(this._dropCandidate).closest('.eachaccount').attr('class') ) {
 			this._dropCandidate.fadeOut()
 			_this.dropEnd()
 			_this.moveAddressCall(account,address,finish)
@@ -6533,7 +6536,7 @@ snowUI.wallet.accounts = React.createClass({displayName: 'accounts',
 	dragDrop: function(e) {
 		var _this = this
 		$('.eachaccount').find('.bs-warning').removeClass('bs-warning')
-		var account = $(e.currentTarget).closest('.eachaccount').attr('data-snowaccount'),
+		var account = $(e.currentTarget).closest('.eachaccount').not('.skip').attr('data-snowaccount'),
 			address = $(this.dragged).attr('data-snowaddress')
 		
 		
@@ -6596,7 +6599,7 @@ snowUI.wallet.accounts = React.createClass({displayName: 'accounts',
 		e.dataTransfer.effectAllowed = 'move';
 		e.dataTransfer.dropEffect = 'move';
 		
-		$(e.currentTarget).closest('.eachaccount').find('.addresses').addClass('skip')
+		$(e.currentTarget).closest('.eachaccount').not('.skip').find('.addresses').addClass('skip')
 		this._openAddresses = $('.eachaccount').find('.addresses.open')
 		//this._openAddresses.not('.skip').hide()
 		
@@ -6615,7 +6618,7 @@ snowUI.wallet.accounts = React.createClass({displayName: 'accounts',
 	over: false,
 	dragOver: function(e) {
 		e.preventDefault()
-		var zone = $(e.target).closest('.eachaccount')
+		var zone = $(e.target).closest('.eachaccount').not('.skip')
 		
 		if(zone.hasClass("dragover")) return;
 		
@@ -6896,14 +6899,8 @@ snowUI.wallet.send = React.createClass({displayName: 'send',
 							
 			};
 			
-			if(_this.props.config.unlocked === false) {
-				
-				_this.setState({confirm:false,unlock:true,persist:options});
-				snowUI.methods.modals.unlockWallet.open();
-				
-			} else {
-				_this.setState({confirm:true,unlock:false,persist:options});
-			}
+			_this.setState({confirm:true,unlock:false,persist:options});
+			
 		}
 		
 	},
@@ -6914,19 +6911,31 @@ snowUI.wallet.send = React.createClass({displayName: 'send',
 			url= "/api/snowcoins/local/gated",
 			data =  { checkauth:nowtime,account:this.state.persist.from,comment:this.state.persist.memo,commentto:this.state.persist.message,wallet: this.props.config.wally.key,command:command,amount:this.state.persist.amount,toaddress:this.state.persist.to};
 		
-		snowUI.ajax.GET(url,data,function(resp) {
-			if(snowUI.debug) snowLog.log(resp)
-			if(resp.success === true)
-			{
-				_this.setState({persist:{},confirm:false,receipt:true,transaction:resp.tx});
-			}
-			else
-			{
-				_this.setState({confirm:false,error:resp.error,});
-			}
-		});
-			  
-		return false;	
+		
+		if(_this.props.config.unlocked === false) {
+				
+			_this.setState({confirm:true,unlock:true});
+			snowUI.methods.modals.unlockWallet.open();
+			
+			return false;	
+			
+		} else {
+			snowUI.ajax.GET(url,data,function(resp) {
+				if(snowUI.debug) snowLog.log(resp)
+				if(resp.success === true)
+				{
+					_this.setState({persist:{},confirm:false,receipt:true,transaction:resp.tx});
+				}
+				else
+				{
+					_this.setState({confirm:false,error:resp.error,});
+				}
+			});
+				  
+			return false;	
+
+		}
+		
 	},
 	cancelConfirm: function() {
 		var _this = this; 
@@ -6976,7 +6985,7 @@ snowUI.wallet.send = React.createClass({displayName: 'send',
 						
 							React.DOM.div({dangerouslySetInnerHTML: {__html: html}}), 
 							
-							React.DOM.button({onClick: _this.sendConfirmed, className: "btn btn-warning"}, "Send Coins Now"), 
+							React.DOM.button({onClick: _this.sendConfirmed, className: _this.props.config.unlocked ? "btn btn-warning" : "btn "}, _this.props.config.unlocked ? "Send Coins Now" : "Unlock Wallet"), 
 							React.DOM.span(null, "   "), 
 							React.DOM.button({className: "btn btn-default ", onClick: _this.cancelConfirm}, "Cancel")
 						)

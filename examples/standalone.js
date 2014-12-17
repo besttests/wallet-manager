@@ -10,11 +10,11 @@ var snowcoins = require('snowcoins');
 	//add my local ip(s) CIDR range to the .link ip range
 	snowcoins._options['.link ip range'] = ['166.173.250.171/32',"192.168.1.1/24"];
 	
-	snowcoins.set('path snowcoins','snowcoins');
+	snowcoins.set('path snowcoins','walletManager');
 	snowcoins.set('path share','give');
 	snowcoins.set('path d3c','abby');
 	snowcoins.set('path d2c','d2c');
-	snowcoins.set('path logout', '/keystone/signout');
+	snowcoins.set('path logout', 'keystone/signout');
 	
 	//routes/apis/sockets are all true by default
 	snowcoins.set('route share',true);
@@ -32,9 +32,9 @@ var snowcoins = require('snowcoins');
 	snowcoins.set('ssl key', '/home/snow/projects/snowcoins/key.pem');
 	snowcoins.set('ssl cert','/home/snow/projects/snowcoins/cert.pem');
 	
-	snowcoins.set('name','snowcoins');
+	snowcoins.set('name','Wallet Manager');
 	snowcoins.set('brand','inquisive');
-	
+	snowcoins.set('session key','inquisive.sid');
 	/* set up the model names. The defualts are what you see here but with Snowcoins prepended
 	 * */
 	//set the name of the user model.  Must be set even if using a custom user setup
