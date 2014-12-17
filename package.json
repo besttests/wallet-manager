@@ -1,11 +1,11 @@
 {
-  "name": "snowcoins",
-  "version": "0.0.4",
-  "uri": "https://inquisive.link/docs/snowcoins",
+  "name": "wallets",
+  "version": "0.0.82",
+  "uri": "https://inquisive.link/docs/walletManager",
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/snowkeeper/snowcoins.git"
+    "url": "https://github.com/inquisive/wallet-manager.git"
   },
   "dependencies": {
     "async": "~0.9.x",
@@ -65,10 +65,10 @@
   "readmeFilename": "README.md",
   "gitHead": "",
   "bugs": {
-    "url": "https://github.com/snowkeeper/snowcoins/issues"
+    "url": "https://github.com/inquisive/wallet-manager/issues"
   },
-  "_id": "snowcoins@0.0.4",
-  "_from": "snowcoins@0.0.3",
+  "_id": "wallets@0.0.82",
+  "_from": "wallets@0.0.81",
   "devDependencies": {
     "expose-loader": "^0.5.3",
     "grunt": "^0.4.5",
