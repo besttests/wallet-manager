@@ -1,6 +1,6 @@
 {
   "name": "wallets",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "uri": "https://inquisive.link/docs/walletManager",
   "private": false,
   "repository": {
@@ -65,6 +65,6 @@
   "bugs": {
     "url": "https://github.com/inquisive/wallet-manager/issues"
   },
-  "_id": "wallets@1.0.1",
-  "_from": "wallets@0.0.81"
+  "_id": "wallets@1.0.3",
+  "_from": "wallets@1.0.1"
 }

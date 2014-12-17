@@ -907,9 +907,10 @@ snowUI.AppInfo = React.createClass({displayName: 'AppInfo',
 				  
 				  React.DOM.h4(null, "Get Wallet Manager"), 
 				  React.DOM.div({className: "row"}, 
-				    React.DOM.div({className: "col-sm-offset-1 col-sm-11"}, React.DOM.a({href: "https://github.com/inquisive/wallets", target: "_blank"}, "GitHub / Installation")), 
+				    React.DOM.div({className: "col-sm-offset-1 col-sm-11"}, React.DOM.a({href: "https://inquisive.link/docs/walletManager", target: "_blank"}, "Documentation")), 
+				    React.DOM.div({className: "col-sm-offset-1 col-sm-11"}, React.DOM.a({href: "https://github.com/inquisive/wallet-manager", target: "_blank"}, "GitHub / Installation")), 
 				    React.DOM.div({className: "col-sm-offset-1 col-sm-11"}, React.DOM.a({href: "https://www.npmjs.com/package/wallets", target: "_blank"}, "NPM")), 
-				    React.DOM.div({className: "col-sm-offset-1 col-sm-11"}, " ", React.DOM.a({href: "https://github.com/inquisive/wallets/latest.zip", target: "_blank"}, "Download zip"), " | ", React.DOM.a({href: "https://github.com/snowkeeper/snowcoins/latest.tar.gz", target: "_blank"}, "Download gz"))
+				    React.DOM.div({className: "col-sm-offset-1 col-sm-11"}, " ", React.DOM.a({href: "https://github.com/inquisive/wallet-manager/archive/latest.zip", target: "_blank"}, "Download zip"), " | ", React.DOM.a({href: "https://github.com/inquisive/wallet-manager/archive/latest.tar.gz", target: "_blank"}, "Download gz"))
 				  ), 
 				  React.DOM.div({style: {borderBottom:'transparent 15px solid'}}), 
 				  React.DOM.h4(null, "Built With"), 
@@ -918,7 +919,8 @@ snowUI.AppInfo = React.createClass({displayName: 'AppInfo',
 				    React.DOM.div({className: "col-sm-6 col-md-4"}, React.DOM.a({href: "http://keystonejs.com", target: "_blank"}, "KeystoneJS")), 
 				    React.DOM.div({className: "col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-4"}, React.DOM.a({href: "http://getbootstrap.com/", target: "_blank"}, "Bootstrap")), 
 				    React.DOM.div({className: "col-sm-6 col-md-4"}, React.DOM.a({href: "https://github.com/countable/node-dogecoin", target: "_blank"}, "node-dogecoin")), 
-				    React.DOM.div({className: "col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-4"}, React.DOM.a({href: "http://mongoosejs.com/", target: "_blank"}, "mongoose"))
+				    React.DOM.div({className: "col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-4"}, React.DOM.a({href: "http://mongoosejs.com/", target: "_blank"}, "mongoose")), 
+				    React.DOM.div({className: "col-sm-6 col-md-4"}, React.DOM.a({href: "http://facebook.github.io/react/docs/thinking-in-react.html", target: "_blank"}, "React"))
 				  )
 				 
 				), 

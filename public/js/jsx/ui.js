@@ -907,9 +907,10 @@ snowUI.AppInfo = React.createClass({
 				  
 				  <h4>Get Wallet Manager</h4>
 				  <div className="row">
-				    <div className="col-sm-offset-1 col-sm-11"><a href="https://github.com/inquisive/wallets" target="_blank">GitHub / Installation</a></div>
+				    <div className="col-sm-offset-1 col-sm-11"><a href="https://inquisive.link/docs/walletManager" target="_blank">Documentation</a></div>
+				    <div className="col-sm-offset-1 col-sm-11"><a href="https://github.com/inquisive/wallet-manager" target="_blank">GitHub / Installation</a></div>
 				    <div className="col-sm-offset-1 col-sm-11"><a href="https://www.npmjs.com/package/wallets" target="_blank">NPM</a></div>
-				    <div className="col-sm-offset-1 col-sm-11"> <a href="https://github.com/inquisive/wallets/latest.zip" target="_blank">Download zip</a>&nbsp;|&nbsp;<a href="https://github.com/snowkeeper/snowcoins/latest.tar.gz" target="_blank">Download gz</a></div>
+				    <div className="col-sm-offset-1 col-sm-11"> <a href="https://github.com/inquisive/wallet-manager/archive/latest.zip" target="_blank">Download zip</a>&nbsp;|&nbsp;<a href="https://github.com/inquisive/wallet-manager/archive/latest.tar.gz" target="_blank">Download gz</a></div>
 				  </div>
 				  <div style={{borderBottom:'transparent 15px solid'}} />
 				  <h4>Built With</h4>
@@ -919,6 +920,7 @@ snowUI.AppInfo = React.createClass({
 				    <div className="col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-4"><a href="http://getbootstrap.com/" target="_blank">Bootstrap</a></div>
 				    <div className="col-sm-6 col-md-4"><a href="https://github.com/countable/node-dogecoin" target="_blank">node-dogecoin</a></div>
 				    <div className="col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-4"><a href="http://mongoosejs.com/" target="_blank">mongoose</a></div>
+				    <div className="col-sm-6 col-md-4"><a href="http://facebook.github.io/react/docs/thinking-in-react.html" target="_blank">React</a></div>
 				  </div>
 				 
 				</div>
