@@ -841,7 +841,7 @@ snowUI.UI = React.createClass({displayName: 'UI',
 			}.bind(_this),/*end changelock - binded to snowUI React component*/
 		}
 		return {
-			section: 'wallet',
+			section: snowUI.snowPath.router.wallet,
 			moon:  false,
 			wallet:  false,
 			page: false,
@@ -7484,7 +7484,7 @@ snowUI.wallet.transactions = React.createClass({displayName: 'transactions',
 	    redirect: function() {
 		
 		var args = window.location.pathname.split('/').slice(2);
-		var section = args[0],
+		var section = args[0] || snowUI.snowPath.router.wallet,
 			wallet = args[1],
 			moon = args[2]	
 		snowLog.warn('REDIRECT',section,wallet,moon,args)

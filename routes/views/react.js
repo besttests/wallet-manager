@@ -13,7 +13,7 @@ exports = module.exports = function(req, res) {
 		locals = res.locals,
 		imported=[];
 	
-	locals.section = 'snowcoin';
+	locals.title = snowcoins.get('name');
 	locals.data = {
 		wallets: [],
 		accounts: []

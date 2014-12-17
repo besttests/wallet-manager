@@ -1,7 +1,9 @@
-var keystone = require('keystone');
+var keystone = require('keystone'),
+	snowcoins = require('snowcoins');
 
 //console.log('models',keystone.list('User'));
-var list = keystone.get('model user') || 'User';
+var list = keystone.get('model user');
+if(!list) list = keystone.set('model user',snowcoins.get('snowcoins user model')).get('model user');
 
 if(typeof  keystone.lists[list] !== 'object')require('./users');
 

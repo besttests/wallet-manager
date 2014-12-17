@@ -415,7 +415,7 @@ snowUI.UI = React.createClass({
 			}.bind(_this),/*end changelock - binded to snowUI React component*/
 		}
 		return {
-			section: 'wallet',
+			section: snowUI.snowPath.router.wallet,
 			moon:  false,
 			wallet:  false,
 			page: false,

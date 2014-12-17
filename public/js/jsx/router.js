@@ -66,7 +66,7 @@
 	    redirect: function() {
 		
 		var args = window.location.pathname.split('/').slice(2);
-		var section = args[0],
+		var section = args[0] || snowUI.snowPath.router.wallet,
 			wallet = args[1],
 			moon = args[2]	
 		snowLog.warn('REDIRECT',section,wallet,moon,args)

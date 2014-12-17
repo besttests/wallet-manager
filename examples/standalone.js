@@ -34,7 +34,7 @@ var snowcoins = require('snowcoins');
 	
 	snowcoins.set('name','Wallet Manager');
 	snowcoins.set('brand','inquisive');
-	snowcoins.set('session key','inquisive.sid');
+	snowcoins.set('session key','inquisive-man.sid');
 	/* set up the model names. The defualts are what you see here but with Snowcoins prepended
 	 * */
 	//set the name of the user model.  Must be set even if using a custom user setup
