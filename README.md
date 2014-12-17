@@ -1,8 +1,9 @@
-##SNOWCOINS
+##Wallet Manager
 nodejs digital coin coordinator (DCC) and wallet manager
 
-Development branch of Wallet Manager(wallets).
+```
+npm install wallets
+```
 
-
-[Documentation](http://inquisive.link/docs/snowcoins)   
+[Documentation](http://inquisive.link/docs/walletManager)   
 
